@@ -1,15 +1,11 @@
 # Réseau d'entreprise TheBigOffice
 ## Portfolio réseau junior — Cisco Packet Tracer / CompTIA Network+
 
-Ce dépôt documente, en autodidacte, une architecture réseau d'entreprise complète : conception, configuration, validation, dépannage et gestion des limites — y compris les endroits où un choix initial était perfectible et comment il a été identifié puis corrigé.
+Ce dépôt documente, en autodidacte, une architecture réseau d'entreprise complète : conception, configuration, validation, dépannage et gestion des limites, y compris les endroits où un choix initial était perfectible et comment il a été identifié puis corrigé.
 
 L'objectif : construire de zéro un lab pratique couvrant l'ensemble du programme **CompTIA Network+** (et quelques sujets au-delà), sans s'arrêter à la théorie mais en ancrant chaque concept dans une implémentation qui fonctionne, jusqu'au débogage. 
 
-**La certification Network+ a été obtenue** ; le lab en est la contrepartie pratique.
-
-C'est un **lab d'apprentissage structuré, pas une architecture de référence de production** — conçu pour démontrer des compétences d'ingénierie réseau fondamentales : concevoir, configurer, dépanner et documenter un réseau d'entreprise cohérent. 
-
-Le projet s'arrête volontairement à la Partie 6, là où Packet Tracer devient le facteur limitant : reconnaître qu'un outil a atteint sa limite et basculer vers GNS3 / Cisco CML est une décision d'ingénierie, pas un renoncement.
+C'est un **lab d'apprentissage structuré, pas une architecture de référence de production**, conçu pour démontrer des compétences d'ingénierie réseau fondamentales : concevoir, configurer, dépanner et documenter un réseau d'entreprise cohérent. 
 
 > **Ce projet est un rebuild.** La v1 était mon premier home lab autodidacte — trop d'erreurs techniques au regard de l'ambition, beaucoup de dépannage. Cette v2 vise l'efficacité : plus vite, plus propre, plus droit au but. Elle garde des imperfections, mais elle est presque reproductible telle quelle. La capacité à identifier et corriger ses propres erreurs est elle-même un livrable.
 
@@ -133,4 +129,4 @@ Au-delà de la théorie CompTIA Network+, ce projet a imposé une pratique de te
 
 Le débogage a produit l'apprentissage le plus réel : boucles de routage, conflits d'adressage, asymétries TFTP et collisions de Router-ID ne s'apprennent pas dans un cours ; ils se comprennent en les résolvant. 
 
-Le pari de l'apprentissage par la pratique a payé, et il dépasse la simple préparation à la certification que j'ai obtenu. 
+Le pari de l'apprentissage par la pratique a payé, et il dépasse la simple préparation à la certification que j'ai obtenu avec succès. 
