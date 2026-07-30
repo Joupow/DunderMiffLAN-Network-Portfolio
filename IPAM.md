@@ -1,7 +1,8 @@
 # IPAM — TheBigOffice
-## Plan d'adressage IP · source unique
+## Plan d'adressage IP 
 
-> **Source unique du plan d'adressage.** Toute autre mention d'adressage dans le dépôt **renvoie ici** — on ne recopie pas.
+> **Source unique du plan d'adressage.** Toute autre mention d'adressage dans le dépôt **renvoie ici** —on ne recopie pas.
+> 
 > Ce document est une référence : il liste *quoi vit où*, pas *pourquoi* (justification d'architecture → `TECHNICAL_OVERVIEW.md`) ni *comment* (CLI → `WORKFLOW_PX.md`).
 
 Trois espaces d'adressage, séparés par rôle :
@@ -105,25 +106,30 @@ Le plan est **stable de P1 à P6** : chaque partie *ajoute* un segment, aucune n
 ## 5. Conventions d'allocation
 
 **Passerelles & SVI**
+
 - `.1` = passerelle de chaque VLAN L3 — **VIP HSRP/HSRPv2** partagée (10/20/30/99/300), IP directe pour les SVI de leaf DC (`172.16.2.1`, `172.16.3.1`) et la DMZ (`172.16.0.1`, ASA).
 - SVI réels de la Distribution : `.2` = DIST-SW1, `.3` = DIST-SW2 (ex. `192.168.30.2`/`.3`, `192.168.100.2`/`.3`).
 
 **Adresses de service (haut ou fixe)**
+
 - CME-Router `192.168.30.254` · Generic WLC `192.168.100.200` · WLC 3504 (réf. prod, déconnecté) `192.168.100.201` · IDS-Sensor `192.168.99.20`.
 - Serveurs DMZ : WEB-PUBLIC `172.16.0.10`, PROXY `172.16.0.20`.
 - Serveurs DC : LB-APP (VIP) `172.16.2.10`, APP-WEB1 `172.16.2.11`, APP-WEB2 `172.16.2.12`, SAN `172.16.3.10`.
 
 **Plages de baux & exclusions**
+
 - VLAN 30 — baux `192.168.30.50–.99` · exclusions `.1–.49` et `.100–.254`.
 - VLAN 300 — baux `192.168.100.10–.50` · exclusions `.1–.9` et `.51–.254`.
 - VLAN 10 / 20 — baux à partir de `.50` · exclusions `.1–.49` (`ip dhcp excluded-address .1 .49` sur le HQ-Router — voir WORKFLOW P2 §5).
 - Adresses basses (`.1`–`.9`) réservées passerelles, VIP et services ; jamais distribuées par DHCP.
 
 **VLAN structurants**
+
 - VLAN natif `999` (blackhole) sur tous les trunks — trafic untagged jeté.
 - VLAN `998` (quarantaine) — ports inutilisés, en `shutdown`.
 
 **Masques**
+
 - Transit interne en `/30` (et non `/31`) : deux IP « perdues » par lien, choix de lisibilité pédagogique assumé.
 
 ---

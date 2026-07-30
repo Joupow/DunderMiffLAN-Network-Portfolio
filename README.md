@@ -122,11 +122,15 @@ Le plan initial incluait davantage de sujets pour couvrir la majorité des objec
 
 Packet Tracer est un excellent outil d'**apprentissage** pour comprendre la logique réseau, mais il reste un **simulateur** : il modélise le comportement des protocoles sans exécuter un vrai IOS. Au-delà d'un certain niveau de complexité, le travail se réduit à documenter ce que l'outil *ne peut pas* faire.
 
-**La décision.** Continuer les sujets restants sur **GNS3 / Cisco CML**, qui émulent de vraies images IOS et permettent de tester réellement ce que Packet Tracer ne peut que représenter. L'objectif : passer du simulateur à l'émulateur, un standard plus exigeant quand le sujet l'impose. 
+**La décision.** Continuer les sujets restants sur **GNS3 / Cisco CML**, qui émulent de vraies images IOS et permettent de tester réellement ce que Packet Tracer ne peut que représenter. L'objectif : passer du simulateur à l'émulateur, un standard plus exigeant quand le sujet l'impose, et au passage, monter en compétence sur des outils professionnels.
 
 ---
 ## 🏁 Conclusion
 
-Ce projet est **volontairement clôturé** à la Partie 6, et ce choix est lui-même une décision d'ingénierie (voir *Étape suivante*).
+L'objectif initial de l'apprentissage est largement dépassé. 
 
-**Bilan d'apprentissage.** L'objectif initial est **largement dépassé**. Au-delà de la théorie CompTIA Network+ — dont **la certification a été obtenue** — ce projet a imposé une pratique de terrain : concevoir une architecture cohérente, l'implémenter, et surtout **la déboguer**. Le débogage, non prévu au périmètre de départ, a produit les apprentissages les plus réels : boucles de routage, conflits d'adressage, asymétries TFTP, collisions de Router-ID ne s'apprennent pas dans un cours ; ils se comprennent en les résolvant. Le pari de l'apprentissage par la pratique a payé, et il va bien au-delà de la simple préparation à une certification.
+Au-delà de la théorie CompTIA Network+, ce projet a imposé une pratique de terrain : concevoir une architecture cohérente, la mettre en œuvre et, surtout, la déboguer. 
+
+Le débogage a produit l'apprentissage le plus réel : boucles de routage, conflits d'adressage, asymétries TFTP et collisions de Router-ID ne s'apprennent pas dans un cours ; ils se comprennent en les résolvant. 
+
+Le pari de l'apprentissage par la pratique a payé, et il dépasse la simple préparation à la certification que j'ai obtenu. 

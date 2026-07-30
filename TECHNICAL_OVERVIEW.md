@@ -4,7 +4,9 @@
 
 Ce document donne à un relecteur technique une vue **consolidée** du portfolio Packet Tracer TheBigOffice : architecture, choix de conception, limites connues du lab, apprentissages. Il porte le consolidé unique des **écarts de production**.
 
-À lire comme un **lab d'ingénierie réseau junior, pas comme une architecture de référence de production**. L'état décrit est l'état **as-built** : chaque partie (P1→P6) livre une base propre validée avant la suivante, et les décisions structurantes sont explicitées au fil du texte. Le détail de reproduction vit dans les `WORKFLOW_PX` ; l'adressage dans `IPAM.md` ; ce document renvoie, il ne recopie pas.
+À lire comme un **lab d'ingénierie réseau junior, pas comme une architecture de référence de production**. 
+
+L'état décrit est l'état **as-built** : chaque partie (P1→P6) livre une base propre validée avant la suivante, et les décisions structurantes sont explicitées au fil du texte. Le détail de reproduction vit dans les `WORKFLOW_PX` ; l'adressage dans `IPAM.md` ; ce document renvoie, il ne recopie pas.
 
 ---
 ## Ce qu'un reviewer challengera
