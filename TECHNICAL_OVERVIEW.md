@@ -1,20 +1,31 @@
 # Vue d'ensemble technique — TheBigOffice
 
-## Objet
+## Objectif
 
 Ce document donne à un relecteur technique une vue **consolidée** du portfolio Packet Tracer TheBigOffice : architecture, choix de conception, limites connues du lab, apprentissages. Il porte le consolidé unique des **écarts de production**.
 
 À lire comme un **lab d'ingénierie réseau junior, pas comme une architecture de référence de production**. L'état décrit est l'état **as-built** : chaque partie (P1→P6) livre une base propre validée avant la suivante, et les décisions structurantes sont explicitées au fil du texte. Le détail de reproduction vit dans les `WORKFLOW_PX` ; l'adressage dans `IPAM.md` ; ce document renvoie, il ne recopie pas.
 
 ---
+## Ce qu'un reviewer challengera
 
-## Ce qu'un relecteur challengera
+**« Pourquoi Packet Tracer ? »** 
 
-**« Pourquoi Packet Tracer ? »** — PT sert à pratiquer et documenter des concepts de niveau Network+ dans une topologie simulée cohérente. Il démontre la logique de configuration, mais ne modélise pas les fonctionnalités avancées. Le projet s'arrête à la Partie 6 parce qu'au-delà, chaque sujet demanderait GNS3 / Cisco CML ou de l'équipement physique pour valider un comportement réel. Cette limite est **documentée, pas cachée**.
+PT sert à pratiquer et documenter des concepts de niveau Network+ dans une topologie simulée cohérente. Il démontre la logique de configuration, mais ne modélise pas les fonctionnalités avancées. Le projet s'arrête à la Partie 6 parce qu'au-delà, chaque sujet demanderait GNS3 / Cisco CML ou de l'équipement physique pour valider un comportement réel. Cette limite est **documentée, pas cachée**.
 
-**« Est-ce prêt pour la production ? »** — Non, et les écarts sont suivis explicitement (table ci-dessous). C'est un lab de portfolio junior ; l'honnêteté sur les limites est le levier de crédibilité.
+**« Est-ce prêt pour la production ? »** 
 
-**« Qu'est-ce qui prouve que ce n'est pas du copier-coller ? »** — Trois choses qu'un copier-coller ne produit pas : (1) le raisonnement de conception est **justifié**, pas seulement appliqué — pourquoi HSRP sur la Distribution et non le Core, pourquoi un `/20` transit contigu résumable en une route à l'ASA, pourquoi les deux Border Leafs sur le Core (ECMP) ; (2) les **incidents de build sont documentés** comme apprentissages (table anti-copier-coller) ; (3) les **matrices de validation sont honnêtes** — chaque partie distingue ✅ prouvé / ⚠️ configuré non prouvé / ❌ non simulable, et un flux bloqué se prouve par le **compteur d'ACL**, jamais par un timeout.
+Non, et les écarts sont suivis explicitement (table ci-dessous). C'est un lab de portfolio junior ; l'honnêteté sur les limites est le levier de crédibilité.
+
+**« Qu'est-ce qui prouve que ce n'est pas du copier-coller ? »** 
+
+Trois choses qu'un copier-coller ne produit pas : 
+
+- (1) le raisonnement de conception est **justifié**, pas seulement appliqué : pourquoi HSRP sur la Distribution et non le Core, pourquoi un `/20` transit contigu résumable en une route à l'ASA, pourquoi les deux Border Leafs sur le Core (ECMP) ; 
+
+- (2) les **incidents de build sont documentés** comme apprentissages (table anti-copier-coller) ; 
+
+- (3) les **matrices de validation sont honnêtes** — chaque partie distingue ✅ prouvé / ⚠️ configuré non prouvé / ❌ non simulable, et un flux bloqué se prouve par le **compteur d'ACL**, jamais par un timeout.
 
 ---
 
@@ -49,7 +60,16 @@ Ce document donne à un relecteur technique une vue **consolidée** du portfolio
 
 ## Intention d'architecture
 
-Le lab simule un petit réseau d'entreprise en six blocs fonctionnels : (1) fondations LAN du siège, (2) routage et redondance, (3) pare-feu périmétrique et DMZ, (4) fabric datacenter, (5) services VoIP, (6) services Wi-Fi. L'objectif est de démontrer comment **commutation, routage, sécurité, services, haute disponibilité et dépannage** interagissent dans un environnement cohérent unique — chaque bloc s'appuyant sur une base validée par le précédent.
+Le lab simule un petit réseau d'entreprise en six blocs fonctionnels : 
+
+- (1) fondations LAN du siège, 
+- (2) routage et redondance, 
+- (3) pare-feu périmétrique et DMZ, 
+- (4) fabric datacenter, 
+- (5) services VoIP, 
+- (6) services Wi-Fi. 
+
+L'objectif est de démontrer comment **commutation, routage, sécurité, services, haute disponibilité et dépannage** interagissent dans un environnement cohérent unique. Chaque bloc s'appuyant sur une base validée par le précédent.
 
 ---
 
