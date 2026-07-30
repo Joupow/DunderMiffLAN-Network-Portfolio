@@ -1,0 +1,62 @@
+<svg viewBox="0 0 920 660" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="920" height="660" rx="12" fill="#ffffff"/>
+
+  <text x="460" y="38" text-anchor="middle" font-size="23" font-weight="700" fill="#1a2b4a">Réseau d'entreprise TheBigOffice</text>
+  <text x="460" y="60" text-anchor="middle" font-size="13" fill="#6b7280">Architecture globale · 5 blocs fonctionnels · ~24 équipements Cisco · CompTIA Network+</text>
+
+  <!-- ===== INTERNET ===== -->
+  <ellipse cx="460" cy="102" rx="72" ry="26" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="460" y="106" text-anchor="middle" font-size="13" font-weight="700" fill="#475569">INTERNET (FAI)</text>
+  <line x1="460" y1="128" x2="460" y2="158" stroke="#94a3b8" stroke-width="2.5"/>
+
+  <!-- ===== BLOC SÉCURITÉ (P3) ===== -->
+  <rect x="330" y="158" width="260" height="70" rx="10" fill="#7f1d1d"/>
+  <text x="460" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">① Sécurité périmétrique — P3</text>
+  <text x="460" y="200" text-anchor="middle" font-size="11" fill="#fecaca">Pare-feu ASA 5506-X · DMZ · NAT/PAT</text>
+  <text x="460" y="216" text-anchor="middle" font-size="10" fill="#fecaca">3 ACL (proxy forcé) · IDS SPAN · route par défaut</text>
+  <line x1="460" y1="228" x2="460" y2="258" stroke="#94a3b8" stroke-width="2.5"/>
+
+  <!-- ===== BLOC SIÈGE (P1/P2) ===== -->
+  <rect x="290" y="258" width="340" height="96" rx="10" fill="#1d4ed8"/>
+  <text x="460" y="282" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">② Campus siège — P1 &amp; P2</text>
+  <text x="460" y="301" text-anchor="middle" font-size="11" fill="#bfdbfe">LAN 3 niveaux · VLANs · Rapid PVST+ · routage inter-VLAN</text>
+  <text x="460" y="317" text-anchor="middle" font-size="11" fill="#bfdbfe">OSPF point-à-point · HSRP sur la Distribution · DHCP par domaine + relais</text>
+  <text x="460" y="337" text-anchor="middle" font-size="10" fill="#93c5fd">Core 3650 · 2× Distribution 3560 · 4× Access 2960 · 8 PC</text>
+
+  <!-- liaisons vers les 3 blocs du bas -->
+  <line x1="380" y1="354" x2="180" y2="410" stroke="#94a3b8" stroke-width="2.5"/>
+  <line x1="460" y1="354" x2="460" y2="410" stroke="#94a3b8" stroke-width="2.5"/>
+  <line x1="540" y1="354" x2="740" y2="410" stroke="#94a3b8" stroke-width="2.5"/>
+
+  <!-- ===== BLOC DATACENTER (P4) ===== -->
+  <rect x="55" y="410" width="250" height="92" rx="10" fill="#0f766e"/>
+  <text x="180" y="434" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">③ Datacenter — P4</text>
+  <text x="180" y="453" text-anchor="middle" font-size="11" fill="#99f6e4">Spine-Leaf routée · fabric OSPF</text>
+  <text x="180" y="469" text-anchor="middle" font-size="11" fill="#99f6e4">Tier applicatif (LB + APP-WEB1/2) · SAN</text>
+  <text x="180" y="487" text-anchor="middle" font-size="10" fill="#5eead4">2 Border Leafs sur le Core (ECMP) · Jumbo (doc.)</text>
+
+  <!-- ===== BLOC VOIX (P5) ===== -->
+  <rect x="335" y="410" width="250" height="92" rx="10" fill="#334155"/>
+  <text x="460" y="434" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">④ Téléphonie IP — P5</text>
+  <text x="460" y="453" text-anchor="middle" font-size="11" fill="#cbd5e1">CallManager Express (CME)</text>
+  <text x="460" y="469" text-anchor="middle" font-size="11" fill="#cbd5e1">SCCP · DHCP Option 150 · QoS</text>
+  <text x="460" y="487" text-anchor="middle" font-size="10" fill="#94a3b8">VLAN voix 30 · CME co-localisé Active/root</text>
+
+  <!-- ===== BLOC WI-FI (P6) ===== -->
+  <rect x="615" y="410" width="250" height="92" rx="10" fill="#6d28d9"/>
+  <text x="740" y="434" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">⑤ Réseau Wi-Fi — P6</text>
+  <text x="740" y="453" text-anchor="middle" font-size="11" fill="#ddd6fe">WLC 3504 · APs lightweight 3702i</text>
+  <text x="740" y="469" text-anchor="middle" font-size="11" fill="#ddd6fe">CAPWAP · SSID Corp (301) / Guest (310)</text>
+  <text x="740" y="487" text-anchor="middle" font-size="10" fill="#c4b5fd">WPA2 · VLAN mgmt Wi-Fi 300 (HSRPv2, DIST-SW1)</text>
+
+  <!-- ===== BANDEAU AVANCEMENT ===== -->
+  <rect x="55" y="528" width="810" height="44" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/>
+  <text x="70" y="547" font-size="12" font-weight="700" fill="#15803d">Avancement</text>
+  <text x="70" y="564" font-size="11" fill="#166534">Parties 1 à 6 terminées ✅ (siège, sécurité, datacenter, voix, Wi-Fi) — Parties 7 à 11 planifiées (DNS/IPv6, monitoring, PKI/RADIUS, cloud, attaques)</text>
+
+  <!-- ===== BANDEAU MÉTHODE ===== -->
+  <rect x="55" y="580" width="810" height="52" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
+  <text x="70" y="600" font-size="12" font-weight="700" fill="#1e40af">Méthode</text>
+  <text x="70" y="617" font-size="11" fill="#1e3a8a">Chaque partie passe par des cycles d'audit technique : les erreurs de conception sont trouvées, corrigées et documentées.</text>
+  <text x="70" y="631" font-size="11" fill="#3b82f6">Exemple : un conflit d'adressage IP entre deux sous-projets, détecté et résolu par une renumérotation documentée.</text>
+</svg>

@@ -1,0 +1,51 @@
+<svg viewBox="0 0 1180 700" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="1180" height="700" fill="#ffffff"/>
+<rect x="0" y="0" width="1180" height="58" fill="#1a2332"/>
+<text x="26" y="30" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="19" font-weight="700">Part 5 — IP Telephony: CME, DHCP Option 150, QoS (v2)</text>
+<text x="26" y="48" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5">CME co-located with HSRP Active + STP root of VLAN 30 (DIST-SW1) · single DHCP authority · boot chain DHCP→TFTP→SCCP · conditional QoS trust</text>
+<text x="1154" y="34" text-anchor="end" fill="#64748b" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11">TheBigOffice · as-built v2</text>
+<rect x="430" y="90" width="300" height="64" rx="8" fill="#a16207" stroke="#0f172a" stroke-opacity="0.25"/>
+<text x="580.0" y="120.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">CME on DIST-SW1</text>
+<text x="580.0" y="136.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">Fa0/0 = 192.168.30.254 · SCCP</text>
+<text x="580.0" y="149.0" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">HSRP Active 30 + root · telephony-service port 2000</text>
+<rect x="60" y="200" width="300" height="200" rx="8" fill="#f1f5f9" stroke="#a16207" stroke-width="1.3"/>
+<text x="76" y="222" text-anchor="start" fill="#a16207" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="700">Phone boot chain (one broken link = all fails)</text>
+<rect x="80" y="234" width="260" height="22" rx="4" fill="#fef3c7"/>
+<text x="90" y="250" text-anchor="start" fill="#78350f" font-family="Consolas,Menlo,monospace" font-size="10" font-weight="400">1  DHCP Discover (VLAN 30)</text>
+<line x1="210" y1="256" x2="210" y2="264" stroke="#a16207" stroke-width="1.4"/>
+<rect x="80" y="264" width="260" height="22" rx="4" fill="#fef3c7"/>
+<text x="90" y="280" text-anchor="start" fill="#78350f" font-family="Consolas,Menlo,monospace" font-size="10" font-weight="400">2  Offer + Option 150 → .254</text>
+<line x1="210" y1="286" x2="210" y2="294" stroke="#a16207" stroke-width="1.4"/>
+<rect x="80" y="294" width="260" height="22" rx="4" fill="#fef3c7"/>
+<text x="90" y="310" text-anchor="start" fill="#78350f" font-family="Consolas,Menlo,monospace" font-size="10" font-weight="400">3  TFTP download config</text>
+<line x1="210" y1="316" x2="210" y2="324" stroke="#a16207" stroke-width="1.4"/>
+<rect x="80" y="324" width="260" height="22" rx="4" fill="#fef3c7"/>
+<text x="90" y="340" text-anchor="start" fill="#78350f" font-family="Consolas,Menlo,monospace" font-size="10" font-weight="400">4  SCCP register (port 2000)</text>
+<line x1="210" y1="346" x2="210" y2="354" stroke="#a16207" stroke-width="1.4"/>
+<rect x="80" y="354" width="260" height="22" rx="4" fill="#fef3c7"/>
+<text x="90" y="370" text-anchor="start" fill="#78350f" font-family="Consolas,Menlo,monospace" font-size="10" font-weight="400">5  Phone REGISTERED</text>
+<rect x="560" y="240" width="260" height="58" rx="8" fill="#a16207" stroke="#0f172a" stroke-opacity="0.25"/>
+<text x="690.0" y="267.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">IP Phone 7960 (ACC Fa0/5)</text>
+<text x="690.0" y="283.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">switchport access 10 + voice 30</text>
+<text x="690.0" y="296.0" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">DHCP .30.50-.99 · gw = VIP .30.1</text>
+<line x1="580" y1="154" x2="690" y2="240" stroke="#a16207" stroke-width="2.2"/>
+<rect x="598.0" y="181.0" width="74.0" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
+<text x="635.0" y="192.0" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">voice trunk</text>
+<rect x="560" y="360" width="260" height="54" rx="8" fill="#475569" stroke="#0f172a" stroke-opacity="0.25"/>
+<text x="690.0" y="385.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">Daisy-chained PC</text>
+<text x="690.0" y="401.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">data VLAN 10</text>
+<text x="690.0" y="414.0" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">port-security maximum 2</text>
+<line x1="690" y1="298" x2="690" y2="360" stroke="#475569" stroke-width="1.4"/>
+<rect x="880" y="200" width="270" height="150" rx="8" fill="#f1f5f9" stroke="#a16207" stroke-width="1.3"/>
+<text x="896" y="222" text-anchor="start" fill="#a16207" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">QoS trust boundary</text>
+<text x="896" y="248" text-anchor="start" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5" font-weight="400">mls qos trust device</text>
+<text x="896" y="270" text-anchor="start" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5" font-weight="400">  cisco-phone   (CDP-gated)</text>
+<text x="896" y="292" text-anchor="start" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5" font-weight="400">trust DSCP only IF real</text>
+<text x="896" y="314" text-anchor="start" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5" font-weight="400">Cisco phone detected —</text>
+<text x="896" y="336" text-anchor="start" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5" font-weight="400">a PC cannot spoof EF.</text>
+<rect x="60" y="430" width="760" height="83" rx="7" fill="#fffbeb" stroke="#a16207" stroke-width="1.2"/>
+<text x="72" y="448" text-anchor="start" fill="#a16207" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">Design notes &amp; closed debts</text>
+<text x="72" y="466" text-anchor="start" fill="#78350f" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="400">ASA loop pre-fixed in P3: route inside 10.0.0.0/22 replaced by exact /30 routes (no summary over unallocated space).</text>
+<text x="72" y="481" text-anchor="start" fill="#78350f" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="400">No ip helper-address for VLAN 30 — CME sits in VLAN 30 with the phones (direct broadcast).</text>
+<text x="72" y="496" text-anchor="start" fill="#78350f" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="400">CME = assumed SPOF (no TFTP/call-control redundancy in lab). Prod: CME IP on Loopback0 + ip tftp source-interface.</text>
+</svg>

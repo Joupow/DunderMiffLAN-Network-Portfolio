@@ -1,0 +1,64 @@
+<svg viewBox="0 0 1180 700" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="1180" height="700" fill="#ffffff"/>
+<rect x="0" y="0" width="1180" height="58" fill="#1a2332"/>
+<text x="26" y="30" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="19" font-weight="700">Part 3 — Perimeter: ASA, DMZ, NAT/PAT &amp; Filtering (v2)</text>
+<text x="26" y="48" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5">3-zone ASA · security-levels · default-route into OSPF · NAT/PAT + static publish · 3 ACLs (3 philosophies) · forced proxy · passive IDS (SPAN)</text>
+<text x="1154" y="34" text-anchor="end" fill="#64748b" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11">TheBigOffice · as-built v2</text>
+<rect x="60" y="120" width="150" height="48" rx="8" fill="#0f172a" stroke="#0f172a" stroke-opacity="0.25"/>
+<text x="135.0" y="142.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">ISP</text>
+<text x="135.0" y="158.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">203.0.113.1</text>
+<rect x="60" y="250" width="170" height="48" rx="8" fill="#0f172a" stroke="#0f172a" stroke-opacity="0.25"/>
+<text x="145.0" y="272.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">PC-EXTERIEUR</text>
+<text x="145.0" y="288.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">198.51.100.10</text>
+<text x="145.0" y="301.0" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">&quot;the Internet side&quot;</text>
+<rect x="300" y="170" width="210" height="80" rx="8" fill="#b91c1c" stroke="#0f172a" stroke-opacity="0.25"/>
+<text x="405.0" y="208.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">ASA 5506-X</text>
+<text x="405.0" y="224.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">outside .2/30 (sec 0)</text>
+<text x="405.0" y="237.0" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">dmz .1 (50) · inside .1 (100)</text>
+<line x1="210" y1="144" x2="300" y2="190" stroke="#0f172a" stroke-width="2.2"/>
+<rect x="185.0" y="151.0" width="140.0" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
+<text x="255.0" y="162.0" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">outside 203.0.113.0/30</text>
+<line x1="230" y1="274" x2="300" y2="235" stroke="#0f172a" stroke-width="1.5" stroke-dasharray="7 5"/>
+<rect x="560" y="90" width="420" height="150" rx="12" fill="#fffbeb" stroke="#b45309" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="574" y="110" fill="#b45309" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12.5" font-weight="700">DMZ 172.16.0.0/24 · sec 50</text>
+<rect x="580" y="118" width="180" height="50" rx="8" fill="#b91c1c" stroke="#0f172a" stroke-opacity="0.25"/>
+<text x="670.0" y="141.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">WEB-PUBLIC .10</text>
+<text x="670.0" y="157.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">static NAT → 203.0.113.2:80</text>
+<text x="670.0" y="170.0" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">cannot initiate outbound</text>
+<rect x="780" y="118" width="180" height="50" rx="8" fill="#b91c1c" stroke="#0f172a" stroke-opacity="0.25"/>
+<text x="870.0" y="141.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">PROXY .20</text>
+<text x="870.0" y="157.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">forced egress (TCP/ICMP/DNS)</text>
+<rect x="580" y="182" width="180" height="44" rx="8" fill="#7c2d12" stroke="#0f172a" stroke-opacity="0.25"/>
+<text x="670.0" y="202.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="700">IDS-Sensor 192.168.99.20</text>
+<text x="670.0" y="218.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">SPAN copy only (passive)</text>
+<line x1="510" y1="190" x2="560" y2="150" stroke="#b91c1c" stroke-width="2.2"/>
+<rect x="522.0" y="154.0" width="26.0" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
+<text x="535.0" y="165.0" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">dmz</text>
+<rect x="300" y="340" width="210" height="58" rx="8" fill="#c2410c" stroke="#0f172a" stroke-opacity="0.25"/>
+<text x="405.0" y="367.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">HQ-Router 2911</text>
+<text x="405.0" y="383.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">inside .2/30 · OSPF</text>
+<text x="405.0" y="396.0" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">default-information originate</text>
+<line x1="405" y1="250" x2="405" y2="340" stroke="#b91c1c" stroke-width="2.2"/>
+<rect x="332.0" y="279.0" width="146.0" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
+<text x="405.0" y="290.0" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">inside 192.168.200.0/30</text>
+<rect x="300" y="460" width="210" height="50" rx="8" fill="#1e3a5f" stroke="#0f172a" stroke-opacity="0.25"/>
+<text x="405.0" y="483.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">→ Campus (P1/P2)</text>
+<text x="405.0" y="499.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">Core · DIST · VLANs</text>
+<text x="405.0" y="512.0" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">reachable via default route</text>
+<line x1="405" y1="398" x2="405" y2="460" stroke="#1e3a5f" stroke-width="1.6"/>
+<rect x="560" y="270" width="420" height="120" rx="8" fill="#f1f5f9" stroke="#b91c1c" stroke-width="1.2"/>
+<text x="576" y="292" text-anchor="start" fill="#b91c1c" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="700">NAT / PAT (3 rules)</text>
+<text x="576" y="314" text-anchor="start" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5" font-weight="400">OBJ-INSIDE-PAT   dynamic  192.168.0.0/16 → outside .2</text>
+<text x="576" y="336" text-anchor="start" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5" font-weight="400">OBJ-DMZ-PAT      dynamic  172.16.0.0/24 → outside .2</text>
+<text x="576" y="358" text-anchor="start" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5" font-weight="400">OBJ-WEB-PUBLIC   static   .0.10 ↔ 203.0.113.2 (ACL :80)</text>
+<rect x="560" y="410" width="420" height="120" rx="8" fill="#f1f5f9" stroke="#b91c1c" stroke-width="1.2"/>
+<text x="576" y="432" text-anchor="start" fill="#b91c1c" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="700">ACLs — 3 opposite philosophies</text>
+<text x="576" y="454" text-anchor="start" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5" font-weight="400">OUTSIDE-IN     deny-default; open only :80 → WEB</text>
+<text x="576" y="476" text-anchor="start" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5" font-weight="400">INSIDE-PROXY   permit proxy; deny direct 80/443 · permit ip any any ✔</text>
+<text x="576" y="498" text-anchor="start" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5" font-weight="400">DMZ-RESTRICT   only PROXY egress · deny ip host WEB · NO permit any ✘</text>
+<rect x="60" y="340" width="210" height="83" rx="7" fill="#fffbeb" stroke="#b45309" stroke-width="1.2"/>
+<text x="72" y="358" text-anchor="start" fill="#b45309" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">As-built</text>
+<text x="72" y="376" text-anchor="start" fill="#78350f" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="400">Outside is /30: ASA .2 is both PAT overload</text>
+<text x="72" y="391" text-anchor="start" fill="#78350f" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="400">and the WEB-PUBLIC publish address.</text>
+<text x="72" y="406" text-anchor="start" fill="#78350f" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="400">#8 Port Security closed on access layer.</text>
+</svg>
