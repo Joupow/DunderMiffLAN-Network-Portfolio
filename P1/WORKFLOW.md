@@ -77,7 +77,7 @@ show interfaces status
 
 **Attendu :** ports câblés (`Gig` uplinks Core/DIST, `Fa0/1-4` DIST, `Fa0/1-4` ACC) en `connected` ; le reste `notconnect`. À l'écran, chaque lien passe **ambre** (STP listening/learning) puis **vert** ; un uplink par ACC et un bout de l'inter-Distribution restent ambre = ports bloqués par STP (standby), attendu.
 
-> 📷 **[P-00]** topologie as-built · **[P-01]** CORE `show interfaces status` (Gi1/0/1-2 trunk).
+> 📷 **[P-00](#p-00)** topologie as-built · **[P-01]** CORE `show interfaces status` (Gi1/0/1-2 trunk).
 
 ---
 
@@ -505,7 +505,7 @@ write memory
 > ⚠️ **Collisions de numérotation à réconcilier avec les fichiers réels** (noms préservés verbatim, non corrigés) : `Capture_P1_17` sert à la fois de jumeau ACC-SW3 (P-04) et de root DIST-SW1 (P-08) ; `Capture_P1_15` de root DIST-SW2 (P-09) et d'état « connected 1 » avant-correction (P-TS1) ; `Capture_P1_14` de trunk DIST-SW2 (P-03) et d'état avant-correction (P-TS1).
 > ⚠️ **Captures à re-tirer après retrait du VLAN 300 dans le `.pkt` :** [P-02] (`show vlan brief` sans 300), [P-08] (root DIST-SW1 = 10/30/999), [P-09] (root DIST-SW2 = 20/99). Le mode rapid-pvst ([P-10]) n'est pas affecté.
 
-**[P-00] · Topologie as-built** — 3 niveaux, accès dual-homed
+**<a id="p-00"></a> [P-00] · Topologie as-built** — 3 niveaux, accès dual-homed
 ![Capture P1-08](../assets/captures/P1/Capture_P1_08.png)
 
 **[P-01] · CORE `show interfaces status`** — Gi1/0/1-2 `connected trunk`
