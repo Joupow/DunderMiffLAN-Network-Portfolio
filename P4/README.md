@@ -41,7 +41,12 @@ Construire le datacenter comme une fabric Spine-Leaf **routée**, boulée sur le
 | Haute disponibilité | Concept load balancer / VIP                     | ✅ documenté (LB fonctionnel = prod)          |
 
 ---
+## Network Overview
 
+![Networ-overview-P4](../assets/network-overview/NO_P4.png)
+
+
+---
 ## Matrice de validation (locale)
 
 
