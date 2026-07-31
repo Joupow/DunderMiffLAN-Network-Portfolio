@@ -21,6 +21,9 @@ Construire le datacenter comme une fabric Spine-Leaf **routée**, boulée sur le
 
 **Décision de continuité (héritée de P3).** Le campus atteint déjà Internet. Le DC a seulement besoin qu'OSPF porte `172.16.2.0/24` + `172.16.3.0/24` jusqu'à l'edge, plus un objet PAT dédié. La route ASA + NAT se fait **en dernier**, une fois la fabric prouvée.
 
+---
+## Topologie logique
+
 ![Topologie P4](../assets/topologies/topology_p4.svg)
 
 ---
@@ -39,14 +42,6 @@ Construire le datacenter comme une fabric Spine-Leaf **routée**, boulée sur le
 | 🛡️ Sécurité           | Exposition en tiers (backend sortie-seule)      | ✅ sortie prouvée, entrée refusée par hitcnt  |
 | 🛡️ Sécurité           | Confinement des ports inutilisés (VLAN 998)     | ✅ sur tous les switches de fabric            |
 | 🔁 Haute disponibilité | Concept load balancer / VIP                     | ✅ documenté (LB fonctionnel = prod)          |
-
-
----
-
-## Network Overview
-
-![Networ-overview-P4](../assets/network-overview/NO_P4.png)
-
 
 ---
 

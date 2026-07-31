@@ -16,7 +16,11 @@
 > Plan d'adressage complet → [`IPAM.md`](../IPAM.md)
 
 ---
+## Topologie As-Built
 
+![Networ-overview-P4](../assets/network-overview/NO_P4.png)
+
+---
 ## Niveaux & équipements
 
 | Rôle            | Équipement                                              | Rôle dans la partie                                                                      |
