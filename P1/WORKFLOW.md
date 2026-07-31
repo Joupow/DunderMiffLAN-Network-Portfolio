@@ -77,7 +77,7 @@ show interfaces status
 
 **Attendu :** ports câblés (`Gig` uplinks Core/DIST, `Fa0/1-4` DIST, `Fa0/1-4` ACC) en `connected` ; le reste `notconnect`. À l'écran, chaque lien passe **ambre** (STP listening/learning) puis **vert** ; un uplink par ACC et un bout de l'inter-Distribution restent ambre = ports bloqués par STP (standby), attendu.
 
-> 📷 **[P-00](#p-00)** topologie as-built · **[P-01]** CORE `show interfaces status` (Gi1/0/1-2 trunk).
+> 📷 **[P-00](#p-00)** topologie as-built · **[P-01](#p-01)** CORE `show interfaces status` (Gi1/0/1-2 trunk).
 
 ---
 
@@ -114,7 +114,7 @@ show vlan brief
 
 **Attendu :** VLANs 10, 20, 30, 99, 998, 999 tous `active`, sur chaque switch.
 
-> 📷 **[P-02]** `show vlan brief` — CORE canonique (jumeaux par switch pour les 7).
+> 📷 **[P-02](#p-02)** `show vlan brief` — CORE canonique (jumeaux par switch pour les 7).
 
 ---
 
@@ -200,7 +200,7 @@ show interfaces trunk
 
 **Attendu :** Native vlan = 999 sur chaque trunk ; listes allowed complètes et identiques ; DIST `Fa0/1-4` présents en trunk.
 
-> 📷 **[P-03]** `show interfaces trunk` — DIST-SW1 + DIST-SW2, `Fa0/1-4` en trunk, natif 999.
+> 📷 **[P-03](#p-03)** `show interfaces trunk` — DIST-SW1 + DIST-SW2, `Fa0/1-4` en trunk, natif 999.
 
 ---
 
@@ -250,7 +250,7 @@ show vlan brief
 show spanning-tree interface fastEthernet 0/3 portfast   ! -> enabled
 ```
 
-> 📷 **[P-04]** ACC `show interfaces status` — `Fa0/3`=10, `Fa0/4`=20, inutilisés disabled/998.
+> 📷 **[P-04](#p-04)** ACC `show interfaces status` — `Fa0/3`=10, `Fa0/4`=20, inutilisés disabled/998.
 
 ---
 
@@ -310,7 +310,7 @@ show ip interface brief
 show ip route            ! 4 routes connectées 'C' : 10/20/30/99
 ```
 
-> 📷 **[P-05]** PC1 ping inter-VLAN `.20.10` + intra-VLAN cross-switch `.10.12`.
+> 📷 **[P-05](#p-05)** PC1 ping inter-VLAN `.20.10` + intra-VLAN cross-switch `.10.12`.
 
 ---
 
@@ -374,7 +374,7 @@ ping 192.168.99.16
 
 Puis depuis un PC du VLAN 10 : `ping 192.168.99.1` — la passerelle de management doit répondre.
 
-> 📷 **[P-06]** DIST-SW2 `show ip interface brief` (Vlan99 `192.168.99.12` up/up) · **[P-07]** PC1 ping `192.168.99.1`.
+> 📷 **[P-06](#p-06)** DIST-SW2 `show ip interface brief` (Vlan99 `192.168.99.12` up/up) · **[P-07](#p-07)** PC1 ping `192.168.99.1`.
 
 ---
 
@@ -431,7 +431,7 @@ show spanning-tree summary | include mode   ! rapid-pvst mode sur chaque boîtie
 
 **Attendu :** root conforme au split ; `Switch is in rapid-pvst mode` sur les 7. Les ports edge PortFast (`Fa0/3–4`) montent immédiatement ; l'uplink redondant reste `Altn BLK` mais transitionne via proposal/agreement au lieu du cycle listen/learn de 30 s.
 
-> 📷 **[P-08]** DIST-SW1 root `{10,30,999}` (rapid-pvst) · **[P-09]** DIST-SW2 root `{20,99}` (rapid-pvst) · **[P-10]** les 7 switches en `rapid-pvst mode`.
+> 📷 **[P-08](#p-08)** DIST-SW1 root `{10,30,999}` (rapid-pvst) · **[P-09](#p-09)** DIST-SW2 root `{20,99}` (rapid-pvst) · **[P-10](#p-10)** les 7 switches en `rapid-pvst mode`.
 
 ---
 
@@ -439,18 +439,18 @@ show spanning-tree summary | include mode   ! rapid-pvst mode sur chaque boîtie
 
 | Couche | Commande clé | Attendu | Preuve |
 |---|---|---|---|
-| VLANs | `show vlan brief` | 10/20/30/99/998/999 actifs sur les 7 switches | [P-02] |
-| Trunks | `show interfaces trunk` | DIST `Fa0/1-4` + Gig en trunk, natif 999, liste allowed complète | [P-03] |
-| Uplinks Core | `show interfaces status` | Gi1/0/1-2 `connected trunk` | [P-01] |
-| Bordure access | `show interfaces status` | `Fa0/3`=10, `Fa0/4`=20, inutilisés disabled/998 | [P-04] |
-| Inter/intra-VLAN | PC1 `ping .20.10` + `.10.12` | réponse (1er paquet ARP toléré) | [P-05] |
-| Management | DIST-SW2 `show ip int brief` + PC `ping .99.1` | Vlan99 `.99.12` up/up ; passerelle répond | [P-06], [P-07] |
-| Root STP | `show spanning-tree summary` | DIST1 root `{10,30,999}`, DIST2 root `{20,99}` | [P-08], [P-09] |
-| Mode STP | `show spanning-tree summary` | `rapid-pvst mode` sur les 7 | [P-10] |
-| **Failover (mécanisme)** | couper l'uplink `Root FWD` d'un ACC, re-ping la passerelle | uplink bloqué (`Altn BLK`→`Root FWD`) promu, trafic repris ; `no shutdown` restaure | [P-11]→[P-14] |
+| VLANs | `show vlan brief` | 10/20/30/99/998/999 actifs sur les 7 switches | [P-02](#p-02) |
+| Trunks | `show interfaces trunk` | DIST `Fa0/1-4` + Gig en trunk, natif 999, liste allowed complète | [P-03](#p-03) |
+| Uplinks Core | `show interfaces status` | Gi1/0/1-2 `connected trunk` | [P-01](#p-01) |
+| Bordure access | `show interfaces status` | `Fa0/3`=10, `Fa0/4`=20, inutilisés disabled/998 | [P-04](#p-04) |
+| Inter/intra-VLAN | PC1 `ping .20.10` + `.10.12` | réponse (1er paquet ARP toléré) | [P-05](#p-05) |
+| Management | DIST-SW2 `show ip int brief` + PC `ping .99.1` | Vlan99 `.99.12` up/up ; passerelle répond | [P-06](#p-06), [P-07](#p-07) |
+| Root STP | `show spanning-tree summary` | DIST1 root `{10,30,999}`, DIST2 root `{20,99}` | [P-08](#p-08), [P-09](#p-09) |
+| Mode STP | `show spanning-tree summary` | `rapid-pvst mode` sur les 7 | [P-10](#p-10) |
+| **Failover (mécanisme)** | couper l'uplink `Root FWD` d'un ACC, re-ping la passerelle | uplink bloqué (`Altn BLK`→`Root FWD`) promu, trafic repris ; `no shutdown` restaure | [P-11](#p-11)→[P-14](#p-14) |
 
 > ℹ️ Un unique `Request timed out` sur le **premier** paquet d'un nouveau flux (puis 0 %) est de la résolution ARP + convergence STP — pas une faute. Une perte persistante sur un flux établi est un vrai symptôme.
-> ⚠️ **Timing du failover :** rapid-pvst confirmé ([P-10]) → reconvergence sous-seconde attendue ; le ping de **mesure directe** sous rapid-pvst reste à capturer.
+> ⚠️ **Timing du failover :** rapid-pvst confirmé ([P-10](#p-10)) → reconvergence sous-seconde attendue ; le ping de **mesure directe** sous rapid-pvst reste à capturer.
 
 ---
 
@@ -460,7 +460,7 @@ show spanning-tree summary | include mode   ! rapid-pvst mode sur chaque boîtie
 
 | # | Symptôme | Cause | Diagnostic | Correctif |
 |---|---|---|---|---|
-| 1 | Downlink DIST `connected 1` (pas `trunk`) ; `%CDP-4-NATIVE_VLAN_MISMATCH` face à l'Access | `Fa0/1-4` de la Distribution laissés en access VLAN 1 (bloc downlink de l'étape 3 non appliqué) | `show interfaces status` + `show interfaces trunk` | Appliquer la config trunk aux DIST `Fa0/1-4` (natif 999, allowed) · avant : [P-TS1] · après : [P-03] |
+| 1 | Downlink DIST `connected 1` (pas `trunk`) ; `%CDP-4-NATIVE_VLAN_MISMATCH` face à l'Access | `Fa0/1-4` de la Distribution laissés en access VLAN 1 (bloc downlink de l'étape 3 non appliqué) | `show interfaces status` + `show interfaces trunk` | Appliquer la config trunk aux DIST `Fa0/1-4` (natif 999, allowed) · avant : [P-TS1](#p-ts1) · après : [P-03](#p-03) |
 | 2 | Port uplink rouge / case GUI "On" qui se décoche | **BPDU Guard placé sur un uplink inter-switch** → err-disable à la 1re BPDU légitime | `show interfaces status err-disabled` (raison `bpduguard`) | `no spanning-tree bpduguard enable` + `no spanning-tree portfast` sur l'uplink ; `shutdown`/`no shutdown` pour récupérer ; guard sur `Fa0/3-4` uniquement |
 | 3 | 1er ping inter-VLAN : 1 timeout puis réponses (25 % puis 0 %) | Résolution ARP + convergence STP sur le 1er paquet | Re-ping → 0 % confirme | Aucun — attendu. `clear mac address-table dynamic` seulement si ça persiste |
 
@@ -508,53 +508,53 @@ write memory
 **<a id="p-00"></a> [P-00] · Topologie as-built** — 3 niveaux, accès dual-homed
 ![Capture P1-08](../assets/captures/P1/Capture_P1_08.png)
 
-**[P-01] · CORE `show interfaces status`** — Gi1/0/1-2 `connected trunk`
+**<a id="p-01"></a> [P-01] · CORE `show interfaces status`** — Gi1/0/1-2 `connected trunk`
 ![Capture P1-10](../assets/captures/P1/Capture_P1_10.png)
 
-**[P-02] · Base de données VLAN** — CORE canonique `show vlan brief`
+**<a id="p-02"></a> [P-02] · Base de données VLAN** — CORE canonique `show vlan brief`
 ![Capture P1-12](../assets/captures/P1/Capture_P1_12.png)
 > Jumeaux par switch : DIST-SW1 `Capture_P1_25` · DIST-SW2 `Capture_P1_24` · ACC-SW1 `Capture_P1_23` · ACC-SW2 `Capture_P1_22` · ACC-SW3 `Capture_P1_21` · ACC-SW4 `Capture_P1_20`.
 
-**[P-03] · Trunks (clôt l'incident #1)** — DIST-SW1 + DIST-SW2 `show interfaces trunk`, `Fa0/1-4` en trunk, natif 999
+**<a id="p-03"></a> [P-03] · Trunks (clôt l'incident #1)** — DIST-SW1 + DIST-SW2 `show interfaces trunk`, `Fa0/1-4` en trunk, natif 999
 ![Capture P1-13](../assets/captures/P1/Capture_P1_13.png)
 ![Capture P1-14](../assets/captures/P1/Capture_P1_14.png)
 
-**[P-04] · Bordure access + durcissement** — ACC-SW4 `show interfaces status` (`Fa0/3`=10, `Fa0/4`=20, inutilisés disabled/998)
+**<a id="p-04"></a> [P-04] · Bordure access + durcissement** — ACC-SW4 `show interfaces status` (`Fa0/3`=10, `Fa0/4`=20, inutilisés disabled/998)
 ![Capture P1-11](../assets/captures/P1/Capture_P1_11.png)
 > Jumeaux : ACC-SW3 `Capture_P1_17` · ACC-SW2 `Capture_P1_18` · ACC-SW1 `Capture_P1_19`.
 
-**[P-05] · Inter- & intra-VLAN** — PC1 `ping .20.10` (routé) + `.10.12` (cross-switch)
+**<a id="p-05"></a> [P-05] · Inter- & intra-VLAN** — PC1 `ping .20.10` (routé) + `.10.12` (cross-switch)
 ![Capture P1-07](../assets/captures/P1/Capture_P1_07.png)
 
-**[P-06] · SVI de management** — DIST-SW2 `show ip interface brief`, Vlan99 `192.168.99.12` up/up
+**<a id="p-06"></a> [P-06] · SVI de management** — DIST-SW2 `show ip interface brief`, Vlan99 `192.168.99.12` up/up
 ![Capture P1-05](../assets/captures/P1/Capture_P1_05.png)
 
-**[P-07] · Joignabilité management** — PC1 `ping 192.168.99.1`
+**<a id="p-07"></a> [P-07] · Joignabilité management** — PC1 `ping 192.168.99.1`
 ![Capture P1-06](../assets/captures/P1/Capture_P1_06.png)
 
-**[P-08] · Root STP DIST-SW1 (rapid-pvst)** — `show spanning-tree summary` : `rapid-pvst mode`, Root pour RH (10) + VOIP (30) + NATIVE_BLACKHOLE (999)
+**<a id="p-08"></a> [P-08] · Root STP DIST-SW1 (rapid-pvst)** — `show spanning-tree summary` : `rapid-pvst mode`, Root pour RH (10) + VOIP (30) + NATIVE_BLACKHOLE (999)
 ![Capture P1-17](../assets/captures/P1/Capture_P1_17.png)
 
-**[P-09] · Root STP DIST-SW2 (rapid-pvst)** — `show spanning-tree summary` : `rapid-pvst mode`, Root pour IT (20) + MGMT (99)
+**<a id="p-09"></a> [P-09] · Root STP DIST-SW2 (rapid-pvst)** — `show spanning-tree summary` : `rapid-pvst mode`, Root pour IT (20) + MGMT (99)
 ![Capture P1-15](../assets/captures/P1/Capture_P1_15.png)
 
-**[P-10] · Rapid PVST+ sur chaque switch** — `show spanning-tree summary` = `Switch is in rapid-pvst mode`, CORE canonique
+**<a id="p-10"></a> [P-10] · Rapid PVST+ sur chaque switch** — `show spanning-tree summary` = `Switch is in rapid-pvst mode`, CORE canonique
 ![Capture P1-16](../assets/captures/P1/Capture_P1_16.png)
 > Preuve tous-switches (7/7) : ACC-SW1 `Capture_P1_29` · ACC-SW2 `Capture_P1_37` · ACC-SW3 `Capture_P1_31` · ACC-SW4 `Capture_P1_32` · DIST-SW1 `Capture_P1_36` (root 10/30/999) · DIST-SW2 `Capture_P1_34` (root 20/99).
 
-**[P-11] · Failover — avant** — ACC-SW1 STP v10 : `Fa0/1` `Root FWD`, `Fa0/2` `Altn BLK`
+**<a id="p-11"></a> [P-11] · Failover — avant** — ACC-SW1 STP v10 : `Fa0/1` `Root FWD`, `Fa0/2` `Altn BLK`
 ![Capture P1-04](../assets/captures/P1/Capture_P1_04.png)
 
-**[P-12] · Failover — action** — ACC-SW1 `interface Fa0/1` → `shutdown`
+**<a id="p-12"></a> [P-12] · Failover — action** — ACC-SW1 `interface Fa0/1` → `shutdown`
 ![Capture P1-03](../assets/captures/P1/Capture_P1_03.png)
 
-**[P-13] · Failover — pendant** — PC1 `ping .10.1` : reprise après perte. ⚠️ Ping de mesure du timing sous rapid-pvst encore à re-tirer.
+**<a id="p-13"></a> [P-13] · Failover — pendant** — PC1 `ping .10.1` : reprise après perte. ⚠️ Ping de mesure du timing sous rapid-pvst encore à re-tirer.
 ![Capture P1-02](../assets/captures/P1/Capture_P1_02.png)
 
-**[P-14] · Failover — après** — ACC-SW1 STP v10 : `Fa0/2` promu `Root FWD` (coût 23 via DIST-SW2)
+**<a id="p-14"></a> [P-14] · Failover — après** — ACC-SW1 STP v10 : `Fa0/2` promu `Root FWD` (coût 23 via DIST-SW2)
 ![Capture P1-01](../assets/captures/P1/Capture_P1_01.png)
 
-**[P-TS1] · Incident #1 · Mismatch natif (AVANT correction)** — DIST-SW2 `%CDP-4-NATIVE_VLAN_MISMATCH` `Fa0/3-4`
+**<a id="p-ts1"></a> [P-TS1] · Incident #1 · Mismatch natif (AVANT correction)** — DIST-SW2 `%CDP-4-NATIVE_VLAN_MISMATCH` `Fa0/3-4`
 ![Capture P1-09](../assets/captures/P1/Capture_P1_09.png)
 > Compagnons périmés (état *avant* correction, dépannage uniquement — jamais en validation) : DIST-SW2 `Capture_P1_14` · DIST-SW1 `Capture_P1_15` (`Fa0/1-4 connected 1`).
 
