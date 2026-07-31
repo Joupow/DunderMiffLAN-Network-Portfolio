@@ -1,9 +1,10 @@
 # Partie 4 : Datacenter 
 
-**Outil :** Cisco Packet Tracer (Catalyst 3650) · **Concepts clés** : Spine-Leaf, Border Leafs, tiers serveurs & load balancer · **Certification :** CompTIA Network+
+**Outil :** Cisco Packet Tracer (Catalyst 3650) 
+**Concepts clés** : Spine-Leaf, Border Leafs, tiers serveurs & load balancer 
+**Certification :** CompTIA Network+
 
 - Plan d'adressage complet → [`IPAM.md`](../IPAM.md)
-
 - Progression étape par étape → [`WORKFLOW P4`](./WORKFLOW.md)
 
 ---
