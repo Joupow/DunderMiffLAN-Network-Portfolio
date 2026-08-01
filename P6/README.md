@@ -23,7 +23,7 @@ Trois SSID / VLAN structurent la couche radio :
 | `TheBigOffice-Guest` | 310 | WPA2-PSK / AES | Guest (via LAP, CAPWAP) |
 | `TheBigOffice-Corp-Auto` | 300 (pont) | WPA2-PSK / AES | AP autonome — **seul data plane client fonctionnel en PT** |
 
-**Décision de continuité (héritée de P5).** DIST-SW1 est déjà HSRP Active + root STP des VLANs 10/30 ; le VLAN 300 suit. **On ne touche jamais au VLAN 30** : rejouer un side-fix qui basculerait son root casserait la co-localisation CME/Active de la décision A1. Vérifié après coup ([P-12]).
+**Décision de continuité (héritée de P5).** DIST-SW1 est déjà HSRP Active + root STP des VLANs 10/30 ; le VLAN 300 suit. **On ne touche jamais au VLAN 30** : rejouer un side-fix qui basculerait son root casserait la co-localisation CME/Active de la décision A1. Vérifié après coup ([P-12](./WORKFLOW.md#p-12)).
 
 ![Topologie P6](../assets/topologies/topology_p6.svg)
 
@@ -70,20 +70,20 @@ Tout le campus P1–P5 est **inchangé** — P6 n'ajoute que les VLANs 300/301/3
 
 ## Matrice de validation (locale)
 
-> Chaque `✅` cite un `[P-##]` de l'**[Annexe — Captures de preuve du WORKFLOW P6](./WORKFLOW.md)**.
+> Chaque `✅` cite un `[P-##]` de l'**[Annexe — Captures de preuve du WORKFLOW P6](./WORKFLOW.md#annexe--captures-de-preuve)**.
 
 | ✅ Prouvé (par état, appel ou trafic) | ⚠️ Configuré / limité par PT |
 |---|---|
-| **Enregistrement CAPWAP : 4 LAP `Online`**, MACs `.10-.13` = baux DHCP — [P-18], [P-06] | Data plane client **via WLC** (301/310) : droppé en PT (L5) |
-| **Data plane client : laptop → `.100.1` (4/4) puis → `.10.52` (TTL 127)** via AP autonome — [P-20], [P-21] | DHCP Wi-Fi centralisé auto : APIPA en PT (L6) — contourné par AP autonome |
-| Diffusion SSID Corp + Guest — [P-18], [P-18b] | Isolation Guest : non testée en data plane (captive portal ❌) |
-| HSRPv2 VLAN 300 : Active `.100.1` + Standby stabilisé — [P-12], [P-13] | WPA3 / 6 GHz / band steering : non simulables |
-| Root STP VLAN 300 exécuté : `This bridge is the root` — [P-15] | Segmentation 301/310 : définie, jamais sur le fil (port WLC access) |
-| **VLAN 30 (voix P5) non régressé** : DIST-SW1 Active 30 — [P-12] | |
-| DHCP mono-autorité VLAN 300 : baux `.10-.14`, WLC DHCP off — [P-06] | |
-| Trunks liste complète, 301/310 confinés inter-DIST — [P-07], [P-08], [P-09] | |
-| Voix P5 intacte : `Fa0/5` en 10/30, jamais écrasé par un AP — [P-01] | |
-| WLC joignable : `ping .200` 5/5 — [P-16], [P-17] | |
+| **Enregistrement CAPWAP : 4 LAP `Online`**, MACs `.10-.13` = baux DHCP — [P-18](./WORKFLOW.md#p-18), [P-06](./WORKFLOW.md#p-06) | Data plane client **via WLC** (301/310) : droppé en PT (L5) |
+| **Data plane client : laptop → `.100.1` (4/4) puis → `.10.52` (TTL 127)** via AP autonome — [P-20](./WORKFLOW.md#p-20), [P-21](./WORKFLOW.md#p-21) | DHCP Wi-Fi centralisé auto : APIPA en PT (L6) — contourné par AP autonome |
+| Diffusion SSID Corp + Guest — [P-18](./WORKFLOW.md#p-18), [P-18b](./WORKFLOW.md#p-18b) | Isolation Guest : non testée en data plane (captive portal ❌) |
+| HSRPv2 VLAN 300 : Active `.100.1` + Standby stabilisé — [P-12](./WORKFLOW.md#p-12), [P-13](./WORKFLOW.md#p-13) | WPA3 / 6 GHz / band steering : non simulables |
+| Root STP VLAN 300 exécuté : `This bridge is the root` — [P-15](./WORKFLOW.md#p-15) | Segmentation 301/310 : définie, jamais sur le fil (port WLC access) |
+| **VLAN 30 (voix P5) non régressé** : DIST-SW1 Active 30 — [P-12](./WORKFLOW.md#p-12) | |
+| DHCP mono-autorité VLAN 300 : baux `.10-.14`, WLC DHCP off — [P-06](./WORKFLOW.md#p-06) | |
+| Trunks liste complète, 301/310 confinés inter-DIST — [P-07](./WORKFLOW.md#p-07), [P-08](./WORKFLOW.md#p-08), [P-09](./WORKFLOW.md#p-09) | |
+| Voix P5 intacte : `Fa0/5` en 10/30, jamais écrasé par un AP — [P-01](./WORKFLOW.md#p-01) | |
+| WLC joignable : `ping .200` 5/5 — [P-16](./WORKFLOW.md#p-16), [P-17](./WORKFLOW.md#p-17) | |
 
 > Un `Request timed out` sur le **premier** paquet d'un flux frais (ARP/build) n'est pas une faute. Le succès du ping laptop **prouve par élimination** le chemin AP autonome : via un LAP, PT dropperait le data plane.
 
