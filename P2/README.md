@@ -63,19 +63,19 @@ Seul le lien HQ-Router est nouveau ; les uplinks Core↔DIST passent de trunk à
 
 ## Matrice de validation (locale)
 
-> Chaque `✅` cite un `[P-##]` de l'**[Annexe — Captures de preuve du WORKFLOW P2](./WORKFLOW.md)**.
+> Chaque `✅` cite un `[P-##]` de l'**[Annexe — Captures de preuve du WORKFLOW P2](./WORKFLOW.md#annexe--captures-de-preuve)**.
 
 | ✅ Prouvé (par résultat, appel ou état) | ⚠️ Configuré / limité par PT |
 |---|---|
-| Uplinks routés du Core `up` (Gi1/0/1/2/24) — [P-01] | Comportement du relais DHCP **pendant** un failover (dette #16 documentée, non capturée) |
-| Adjacences OSPF `FULL/ -`, **zéro DR/BDR** — Core voit 3 voisins [P-02] ; DIST1 [P-04], DIST2 [P-06], HQ [P-08] | Joignabilité management complète depuis **chaque** ACC (vérifiée par sondage, non exhaustive) |
-| Core `show ip route ospf` = ECMP vers les VLANs via les deux `/30` — [P-03] ; routes DIST1 [P-05] ; propagation HQ [P-07] | |
-| Répartition HSRP : DIST1 Active `{10,30}`, DIST2 Active `{20,99}`, preempt flaggé — [P-09], [P-10] | |
-| Root STP = l'Active du VLAN : `{10}`→[P-11], `{20}`→[P-12], `{30}`→[P-13], `{99}`→[P-14] | |
-| Baux DHCP distribués (`.10.50–.53`, `.20.51–.54`), **serveur unique** — [P-20] | |
-| Ping inter-VLAN PC V10 → `192.168.20.51` (TTL=127, un saut) — [P-21] | |
-| **Failover** : DIST1 SVI 10 coupé → DIST2 promu Active, ping rétabli (~3 perdus) — [P-15], [P-16], [P-17] | |
-| **Preempt** : DIST1 SVI 10 `no shutdown` → priorité 110 reprend l'Active — [P-18], [P-19] | |
+| Uplinks routés du Core `up` (Gi1/0/1/2/24) — [P-01](./WORKFLOW.md#p-01) | Comportement du relais DHCP **pendant** un failover (dette #16 documentée, non capturée) |
+| Adjacences OSPF `FULL/ -`, **zéro DR/BDR** — Core voit 3 voisins [P-02](./WORKFLOW.md#p-02) ; DIST1 [P-04](./WORKFLOW.md#p-04), DIST2 [P-06](./WORKFLOW.md#p-06), HQ [P-08](./WORKFLOW.md#p-08) | Joignabilité management complète depuis **chaque** ACC (vérifiée par sondage, non exhaustive) |
+| Core `show ip route ospf` = ECMP vers les VLANs via les deux `/30` — [P-03](./WORKFLOW.md#p-03) ; routes DIST1 [P-05](./WORKFLOW.md#p-05) ; propagation HQ [P-07](./WORKFLOW.md#p-07) | |
+| Répartition HSRP : DIST1 Active `{10,30}`, DIST2 Active `{20,99}`, preempt flaggé — [P-09](./WORKFLOW.md#p-09), [P-10](./WORKFLOW.md#p-10) | |
+| Root STP = l'Active du VLAN : `{10}`→[P-11](./WORKFLOW.md#p-11), `{20}`→[P-12](./WORKFLOW.md#p-12), `{30}`→[P-13](./WORKFLOW.md#p-13), `{99}`→[P-14](./WORKFLOW.md#p-14) | |
+| Baux DHCP distribués (`.10.50–.53`, `.20.51–.54`), **serveur unique** — [P-20](./WORKFLOW.md#p-20) | |
+| Ping inter-VLAN PC V10 → `192.168.20.51` (TTL=127, un saut) — [P-21](./WORKFLOW.md#p-21) | |
+| **Failover** : DIST1 SVI 10 coupé → DIST2 promu Active, ping rétabli (~3 perdus) — [P-15](./WORKFLOW.md#p-15), [P-16](./WORKFLOW.md#p-16), [P-17](./WORKFLOW.md#p-17) | |
+| **Preempt** : DIST1 SVI 10 `no shutdown` → priorité 110 reprend l'Active — [P-18](./WORKFLOW.md#p-18), [P-19](./WORKFLOW.md#p-19) | |
 
 > Le timeout sur le premier paquet d'un flux inter-VLAN frais (puis 0 %) est ARP + convergence, **pas** une faute.
 

@@ -66,7 +66,7 @@ Légende : `Core` = 3650 · `DIST` = 3560 (×2) · `HQ-Router` = ISR 2911.
 
 **Validation** (sur le Core) : `show interfaces status | include 1/0/24` → `notconnect` jusqu'à ce que l'interface routeur soit montée à l'étape 3.
 
-> 📷 **[P-22]** topologie as-built (`/30` en 10.0.2/3, labels HSRP par VLAN, MGMT `.2`/`.3`, « ALL PCs – DHCP Lease »).
+> 📷 **[P-22](#p-22)** topologie as-built (`/30` en 10.0.2/3, labels HSRP par VLAN, MGMT `.2`/`.3`, « ALL PCs – DHCP Lease »).
 
 ---
 
@@ -112,7 +112,7 @@ write memory
 
 **Validation :** `show ip interface brief | include 10.0.` → `Gi1/0/1=10.0.2.1`, `Gi1/0/2=10.0.3.1`, `Gi1/0/24=10.0.1.1`, tous `up/up`. Les SVIs data/mgmt n'apparaissent plus.
 
-> 📷 **[P-01]** CORE `show ip interface brief` — uplinks routés up.
+> 📷 **[P-01](#p-01)** CORE `show ip interface brief` — uplinks routés up.
 
 ---
 
@@ -169,7 +169,7 @@ write memory
 > ⚠️ Si un VLAN montre `Active` sur les **deux** switches → le trunk inter-Dist `Gi0/2` ne porte pas ce VLAN (split-brain). Vérifier que sa liste allowed inclut `10,20,30,99,999` (retaper la liste complète — `add` rejeté sur PT 9.0).
 > ⚠️ Sur un switch L3 (`ip routing` actif), `ip default-gateway` est ignoré — ne pas le poser sur la DIST ; elles apprennent leurs routes via OSPF.
 
-> 📷 **[P-09]** HSRP DIST-SW1 (Active V10/V30, Pri 110 P) · **[P-10]** HSRP DIST-SW2 miroir (Active V20/V99).
+> 📷 **[P-09](#p-09)** HSRP DIST-SW1 (Active V10/V30, Pri 110 P) · **[P-10](#p-10)** HSRP DIST-SW2 miroir (Active V20/V99).
 
 ---
 
@@ -237,7 +237,7 @@ show ip route ospf           ! Core : ECMP vers les VLANs via les deux /30 ; HQ 
 
 **Attendu :** le Core voit `4.4.4.4` (Gi1/0/24), `2.2.2.2` (Gi1/0/1), `3.3.3.3` (Gi1/0/2), tous `FULL/ -`. HQ `show ip route ospf` liste `10.0.2/3` et `192.168.10/20/30/99`.
 
-> 📷 **[P-02]** OSPF neighbor Core (3 voisins `FULL`) · **[P-03]** ECMP Core vers VLANs · **[P-04]/[P-05]** DIST-SW1 adjacence + routes · **[P-06]** DIST-SW2 · **[P-07]/[P-08]** HQ-Router propagation + adjacence.
+> 📷 **[P-02](#p-02)** OSPF neighbor Core (3 voisins `FULL`) · **[P-03](#p-03)** ECMP Core vers VLANs · **[P-04](#p-04)/[P-05](#p-05)** DIST-SW1 adjacence + routes · **[P-06](#p-06)** DIST-SW2 · **[P-07](#p-07)/[P-08](#p-08)** HQ-Router propagation + adjacence.
 
 ---
 
@@ -286,7 +286,7 @@ interface vlan 20
 
 **Validation :** passer un PC du VLAN 10 en DHCP → `show ip dhcp binding` sur le HQ-Router. Confirmé ce build : baux `.10.50–.53` et `.20.51–.54`, serveur unique.
 
-> 📷 **[P-20]** baux DHCP centralisés (serveur unique).
+> 📷 **[P-20](#p-20)** baux DHCP centralisés (serveur unique).
 
 ---
 
@@ -294,18 +294,18 @@ interface vlan 20
 
 | Couche | Commande clé | Attendu | Preuve |
 |---|---|---|---|
-| Uplinks | Core `show ip interface brief` | Gi1/0/1=10.0.2.1 · Gi1/0/2=10.0.3.1 · Gi1/0/24=10.0.1.1 up | [P-01] |
-| OSPF | Core `show ip ospf neighbor` | 3× `FULL/ -` (2.2.2.2, 3.3.3.3, 4.4.4.4), pas de DR/BDR | [P-02] |
-| Routage | Core `show ip route ospf` | ECMP vers tous les VLANs via 10.0.2.2 et 10.0.3.2 | [P-03] |
-| OSPF | DIST1 `neighbor` + `route ospf` | 10.255.255.1 via 10.0.2.1 | [P-04], [P-05] |
-| OSPF | DIST2 `neighbor` + `route ospf` | 10.255.255.1 via 10.0.3.1 | [P-06] |
-| OSPF | HQ `route ospf` / `neighbor` | transits + VLANs via 10.0.1.1 | [P-07], [P-08] |
-| HSRP | `show standby brief` (les deux DIST) | DIST1 Active 10/30 · DIST2 Active 20/99 | [P-09], [P-10] |
-| STP | `show spanning-tree vlan 10/20/30/99` | root = l'Active du VLAN, les quatre `This bridge is the root` | [P-11]→[P-14] |
-| Data | PC V10 `ping <PC V20>` | routé, TTL=127 (1er paquet ARP puis OK) | [P-21] |
-| DHCP | `show ip dhcp binding` | serveur unique, baux .10.50–.53 / .20.51–.54 | [P-20] |
-| **Failover** | DIST1 `int vlan 10 / shutdown`, ping VIP `-t` | DIST2 promu Active, ping repris (~3 perdus) | [P-15], [P-16], [P-17] |
-| **Preempt** | DIST1 `int vlan 10 / no shutdown` | priorité 110 reprend l'Active sur DIST1 | [P-18], [P-19] |
+| Uplinks | Core `show ip interface brief` | Gi1/0/1=10.0.2.1 · Gi1/0/2=10.0.3.1 · Gi1/0/24=10.0.1.1 up | [P-01](#p-01) |
+| OSPF | Core `show ip ospf neighbor` | 3× `FULL/ -` (2.2.2.2, 3.3.3.3, 4.4.4.4), pas de DR/BDR | [P-02](#p-02) |
+| Routage | Core `show ip route ospf` | ECMP vers tous les VLANs via 10.0.2.2 et 10.0.3.2 | [P-03](#p-03) |
+| OSPF | DIST1 `neighbor` + `route ospf` | 10.255.255.1 via 10.0.2.1 | [P-04](#p-04), [P-05](#p-05) |
+| OSPF | DIST2 `neighbor` + `route ospf` | 10.255.255.1 via 10.0.3.1 | [P-06](#p-06) |
+| OSPF | HQ `route ospf` / `neighbor` | transits + VLANs via 10.0.1.1 | [P-07](#p-07), [P-08](#p-08) |
+| HSRP | `show standby brief` (les deux DIST) | DIST1 Active 10/30 · DIST2 Active 20/99 | [P-09](#p-09), [P-10](#p-10) |
+| STP | `show spanning-tree vlan 10/20/30/99` | root = l'Active du VLAN, les quatre `This bridge is the root` | [P-11](#p-11)→[P-14](#p-14) |
+| Data | PC V10 `ping <PC V20>` | routé, TTL=127 (1er paquet ARP puis OK) | [P-21](#p-21) |
+| DHCP | `show ip dhcp binding` | serveur unique, baux .10.50–.53 / .20.51–.54 | [P-20](#p-20) |
+| **Failover** | DIST1 `int vlan 10 / shutdown`, ping VIP `-t` | DIST2 promu Active, ping repris (~3 perdus) | [P-15](#p-15), [P-16](#p-16), [P-17](#p-17) |
+| **Preempt** | DIST1 `int vlan 10 / no shutdown` | priorité 110 reprend l'Active sur DIST1 | [P-18](#p-18), [P-19](#p-19) |
 
 > ℹ️ Un unique `Request timed out` sur le premier paquet d'un flux frais (puis 0 %) est ARP + convergence — pas une faute.
 
@@ -355,70 +355,70 @@ clear ip ospf process        write memory
 > Une capture **canonique** par affirmation ; jumeaux périmés/dupliqués écartés au triage. Les validations d'étape et le gate citent le `[P-##]` pertinent. Embeds Obsidian.
 > ⚠️ **Préfixe de nom non uniforme entre lots** (préservé verbatim) : les captures `08–23` sont `Capture_P2_##`, les `25–36` sont `Captures_P2_##` (avec un « s »).
 
-**[P-01] · Uplinks routés du Core up** — CORE-SW `show ip interface brief | include 10.0` → Gi1/0/1=10.0.2.1, Gi1/0/2=10.0.3.1, Gi1/0/24=10.0.1.1, tous up
+**<a id="p-01"></a> [P-01] · Uplinks routés du Core up** — CORE-SW `show ip interface brief | include 10.0` → Gi1/0/1=10.0.2.1, Gi1/0/2=10.0.3.1, Gi1/0/24=10.0.1.1, tous up
 ![Capture P2-36](../assets/captures/P2/Capture_P2_36.png)
 
-**[P-02] · Adjacences OSPF du Core (3 voisins)** — `show ip ospf neighbor` → 2.2.2.2 via 10.0.2.2, 3.3.3.3 via 10.0.3.2, 4.4.4.4 via 10.0.1.2, tous `FULL/ -`
+**<a id="p-02"></a> [P-02] · Adjacences OSPF du Core (3 voisins)** — `show ip ospf neighbor` → 2.2.2.2 via 10.0.2.2, 3.3.3.3 via 10.0.3.2, 4.4.4.4 via 10.0.1.2, tous `FULL/ -`
 ![Capture P2-35](../assets/captures/P2/Capture_P2_35.png)
 
-**[P-03] · ECMP du Core vers les VLANs** — `show ip route ospf` → 192.168.10/20/30/99 via 10.0.2.2 **et** 10.0.3.2
+**<a id="p-03"></a> [P-03] · ECMP du Core vers les VLANs** — `show ip route ospf` → 192.168.10/20/30/99 via 10.0.2.2 **et** 10.0.3.2
 ![Capture P2-34](../assets/captures/P2/Capture_P2_34.png)
 
-**[P-04] · Adjacence DIST-SW1** — `show ip ospf neighbor` → 10.255.255.1 via 10.0.2.1 `FULL/ -`
+**<a id="p-04"></a> [P-04] · Adjacence DIST-SW1** — `show ip ospf neighbor` → 10.255.255.1 via 10.0.2.1 `FULL/ -`
 ![Capture P2-32](../assets/captures/P2/Capture_P2_32.png)
 
-**[P-05] · Routes DIST-SW1** — `show ip route ospf` → transits via 10.0.2.1
+**<a id="p-05"></a> [P-05] · Routes DIST-SW1** — `show ip route ospf` → transits via 10.0.2.1
 ![Capture P2-31](../assets/captures/P2/Capture_P2_31.png)
 
-**[P-06] · Adjacence + routes DIST-SW2** — `show ip ospf neighbor` + `route ospf` → 10.255.255.1 via 10.0.3.1
+**<a id="p-06"></a> [P-06] · Adjacence + routes DIST-SW2** — `show ip ospf neighbor` + `route ospf` → 10.255.255.1 via 10.0.3.1
 ![Capture P2-26](../assets/captures/P2/Capture_P2_26.png)
 
-**[P-07] · Propagation HQ-Router** — `show ip route ospf` → transits 10.0.2/3 + VLANs via 10.0.1.1
+**<a id="p-07"></a> [P-07] · Propagation HQ-Router** — `show ip route ospf` → transits 10.0.2/3 + VLANs via 10.0.1.1
 ![Capture P2-33](../assets/captures/P2/Capture_P2_33.png)
 
-**[P-08] · Adjacence HQ-Router (Core↔HQ)** — `show ip ospf neighbor` → 10.255.255.1 via 10.0.1.1
+**<a id="p-08"></a> [P-08] · Adjacence HQ-Router (Core↔HQ)** — `show ip ospf neighbor` → 10.255.255.1 via 10.0.1.1
 ![Capture P2-08](../assets/captures/P2/Capture_P2_08.png)
 
-**[P-09] · Répartition HSRP DIST-SW1** — `show standby brief` → Active V10/V30 (Pri 110 P), Standby V20/V99
+**<a id="p-09"></a> [P-09] · Répartition HSRP DIST-SW1** — `show standby brief` → Active V10/V30 (Pri 110 P), Standby V20/V99
 ![Capture P2-11](../assets/captures/P2/Capture_P2_11.png)
 
-**[P-10] · Répartition HSRP DIST-SW2 (miroir)** — `show standby brief` → Active V20/V99 (Pri 110 P), Standby V10/V30
+**<a id="p-10"></a> [P-10] · Répartition HSRP DIST-SW2 (miroir)** — `show standby brief` → Active V20/V99 (Pri 110 P), Standby V10/V30
 ![Capture P2-23](../assets/captures/P2/Capture_P2_23.png)
 
-**[P-11] · Root STP VLAN 10 = DIST1** — `show spanning-tree vlan 10` → `This bridge is the root`
+**<a id="p-11"></a> [P-11] · Root STP VLAN 10 = DIST1** — `show spanning-tree vlan 10` → `This bridge is the root`
 ![Capture P2-22](../assets/captures/P2/Capture_P2_22.png)
 
-**[P-12] · Root STP VLAN 20 = DIST2** — `show spanning-tree vlan 20` → `This bridge is the root`
+**<a id="p-12"></a> [P-12] · Root STP VLAN 20 = DIST2** — `show spanning-tree vlan 20` → `This bridge is the root`
 ![Capture P2-20](../assets/captures/P2/Capture_P2_20.png)
 
-**[P-13] · Root STP VLAN 30 = DIST1** — `show spanning-tree vlan 30` → `This bridge is the root`
+**<a id="p-13"></a> [P-13] · Root STP VLAN 30 = DIST1** — `show spanning-tree vlan 30` → `This bridge is the root`
 ![Capture P2-14](../assets/captures/P2/Capture_P2_14.png)
 
-**[P-14] · Root STP VLAN 99 = DIST2** — `show spanning-tree vlan 99` → `This bridge is the root`
+**<a id="p-14"></a> [P-14] · Root STP VLAN 99 = DIST2** — `show spanning-tree vlan 99` → `This bridge is the root`
 ![Capture P2-13](../assets/captures/P2/Capture_P2_13.png)
 
-**[P-15] · Déclenchement du failover** — DIST-SW1 `interface vlan 10 / shutdown` → SVI down
+**<a id="p-15"></a> [P-15] · Déclenchement du failover** — DIST-SW1 `interface vlan 10 / shutdown` → SVI down
 ![Capture P2-30](../assets/captures/P2/Capture_P2_30.png)
 
-**[P-16] · Promotion du failover** — DIST-SW2 `show standby brief` → V10 `Active`, Standby `unknown` (DIST1 parti)
+**<a id="p-16"></a> [P-16] · Promotion du failover** — DIST-SW2 `show standby brief` → V10 `Active`, Standby `unknown` (DIST1 parti)
 ![Capture P2-16](../assets/captures/P2/Capture_P2_16.png)
 
-**[P-17] · Data-plane du failover** — PC `ping -t 192.168.10.1` → 3 timeouts puis reprise
+**<a id="p-17"></a> [P-17] · Data-plane du failover** — PC `ping -t 192.168.10.1` → 3 timeouts puis reprise
 ![Capture P2-18](../assets/captures/P2/Capture_P2_18.png)
 
-**[P-18] · Preempt (log de transition)** — DIST-SW1 `interface vlan 10 / no shutdown` → `%HSRP-6-STATECHANGE: Vlan10 Grp 10 Standby -> Active`
+**<a id="p-18"></a> [P-18] · Preempt (log de transition)** — DIST-SW1 `interface vlan 10 / no shutdown` → `%HSRP-6-STATECHANGE: Vlan10 Grp 10 Standby -> Active`
 ![Capture P2-29](../assets/captures/P2/Capture_P2_29.png)
 
-**[P-19] · Preempt confirmé** — DIST-SW1 `show standby brief` → V10 `Active`/local, Standby 192.168.10.3
+**<a id="p-19"></a> [P-19] · Preempt confirmé** — DIST-SW1 `show standby brief` → V10 `Active`/local, Standby 192.168.10.3
 ![Capture P2-28](../assets/captures/P2/Capture_P2_28.png)
 
-**[P-20] · Baux DHCP centralisés** — HQ-ROUTER `show ip dhcp binding` → .10.50–.53 / .20.51–.54, serveur unique
+**<a id="p-20"></a> [P-20] · Baux DHCP centralisés** — HQ-ROUTER `show ip dhcp binding` → .10.50–.53 / .20.51–.54, serveur unique
 ![Capture P2-21](../assets/captures/P2/Capture_P2_21.png)
 
-**[P-21] · Inter-VLAN routé** — PC campus `ping .10.51` (0 %) + `ping .20.51` (TTL=127, un saut)
+**<a id="p-21"></a> [P-21] · Inter-VLAN routé** — PC campus `ping .10.51` (0 %) + `ping .20.51` (TTL=127, un saut)
 ![Capture P2-19](../assets/captures/P2/Capture_P2_19.png)
 
-**[P-22] · Topologie as-built** — schéma PT : `/30` en 10.0.2/3, labels HSRP par VLAN, MGMT `.2`/`.3`, « ALL PCs – DHCP Lease »
+**<a id="p-22"></a> [P-22] · Topologie as-built** — schéma PT : `/30` en 10.0.2/3, labels HSRP par VLAN, MGMT `.2`/`.3`, « ALL PCs – DHCP Lease »
 ![Capture P2-25](../assets/captures/P2/Capture_P2_25.png)
 
 ---
