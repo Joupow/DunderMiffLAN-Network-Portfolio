@@ -216,7 +216,7 @@ write memory
 
 **Validation :** `show ip dhcp binding` → baux `.10-.14`.
 
-> 📷 **[P-06](#p-06)** baux `.10-.14`, WLC DHCP off.
+> 📷 **[P-04](#p-06)** baux `.10-.14`, WLC DHCP off.
 
 ---
 
@@ -445,7 +445,7 @@ show ip route                      ping 192.168.100.200            ping 192.168.
 **<a id="p-03"></a> [P-03] · VLANs Wi-Fi (DIST-SW2)** — `show vlan brief` : 300/301/310 actifs, aucun port access
 ![Capture P6-30](../assets/captures/P6/Capture_P6_30.png)
 
-**<a id="p-06"></a> [P-06] · DHCP mono-autorité VLAN 300** — DIST-SW1 `show ip dhcp binding` : `.10-.13` (LAP) + `.14` (laptop), tous `Automatic`
+**<a id="p-06"></a> [P-04] · DHCP mono-autorité VLAN 300** — DIST-SW1 `show ip dhcp binding` : `.10-.13` (LAP) + `.14` (laptop), tous `Automatic`
 ![Capture P6-12](../assets/captures/P6/Capture_P6_12.png)
 
 **<a id="p-07"></a> [P-07] · Trunk DIST-SW1 (liste complète)** — `show interfaces trunk` : `Gi0/2` = `10,20,30,99,300-301,310,999` ; `Fa0/1-4` = `…300,999`
