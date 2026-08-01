@@ -55,20 +55,20 @@ Tout le campus P1/P2, le périmètre P3 et le datacenter P4 sont **inchangés** 
 
 ## Matrice de validation (locale)
 
-> Chaque `✅` cite un `[P-##]` de l'**[Annexe — Captures de preuve du WORKFLOW P5](./WORKFLOW.md)**.
+> Chaque `✅` cite un `[P-##]` de l'**[Annexe — Captures de preuve du WORKFLOW P5](./WORKFLOW.md#annexe--captures-de-preuve)**.
 
 | ✅ Prouvé (par résultat, appel ou état) | ⚠️ Configuré / limité par PT |
 |---|---|
-| **Appel inter-poste : 1001 → 1002 = `Connected`** (`Ring Out` → `From:1001 ringing` → `Connected`) — [P-01], [P-02], [P-03] | LB / media stream avancé : hors périmètre (téléphonie basique) |
-| Enregistrement SCCP : `show ephone` = **`REGISTERED in SCCP`**, IP `.50`/`.51`, `button 1: dn 1/2 … IDLE` — [P-04] | `ip tftp source-interface Loopback0` : non supporté PT (dette D1/D2, réf. prod) |
-| Liaison bouton→DN : `show run \| section ephone` = `button 1:1` / `1:2` (corrige I-2) — [P-05] | |
-| DHCP mono-autorité (VLAN 30) : `show ip dhcp binding` sur le CME = baux `.50`/`.51` uniquement — [P-06], [P-06b] | |
-| Preuve d'absence de 2e serveur : HQ-Router `section dhcp` = pools 10/20 seulement, aucun `192.168.30.x` — [P-07] | |
-| Placement du service : DIST-SW1 `show standby brief` = `Vl30 … 110 P Active` — [P-08] | |
-| Audit résumé : ASA `show route` = `S 10.0.0.0 255.255.240.0` (un seul `/20`, aucun `/8`/`/16`) — [P-09] | |
-| Voice VLAN + tag : ACC-SW1 `show interfaces Fa0/5 switchport` = `Access 10 / Voice 30` — [P-10], [P-10c] | |
-| QoS trust conditionnel : ACC-SW1 `show mls qos interface Fa0/5` = `trust device: cisco-phone` — [P-11] | |
-| Liaison CME : `Fa0/0 .254 up/up`, `ping .1` 5/5, `show arp` `.1` résolu — [P-12a], [P-12b], [P-12c] | |
+| **Appel inter-poste : 1001 → 1002 = `Connected`** (`Ring Out` → `From:1001 ringing` → `Connected`) — [P-01](./WORKFLOW.md#p-01), [P-02](./WORKFLOW.md#p-02), [P-03](./WORKFLOW.md#p-03) | LB / media stream avancé : hors périmètre (téléphonie basique) |
+| Enregistrement SCCP : `show ephone` = **`REGISTERED in SCCP`**, IP `.50`/`.51`, `button 1: dn 1/2 … IDLE` — [P-04](./WORKFLOW.md#p-04) | `ip tftp source-interface Loopback0` : non supporté PT (dette D1/D2, réf. prod) |
+| Liaison bouton→DN : `show run \| section ephone` = `button 1:1` / `1:2` (corrige I-2) — [P-05](./WORKFLOW.md#p-05) | |
+| DHCP mono-autorité (VLAN 30) : `show ip dhcp binding` sur le CME = baux `.50`/`.51` uniquement — [P-06](./WORKFLOW.md#p-06), [P-06b](./WORKFLOW.md#p-06b) | |
+| Preuve d'absence de 2e serveur : HQ-Router `section dhcp` = pools 10/20 seulement, aucun `192.168.30.x` — [P-07](./WORKFLOW.md#p-07) | |
+| Placement du service : DIST-SW1 `show standby brief` = `Vl30 … 110 P Active` — [P-08](./WORKFLOW.md#p-08) | |
+| Audit résumé : ASA `show route` = `S 10.0.0.0 255.255.240.0` (un seul `/20`, aucun `/8`/`/16`) — [P-09](./WORKFLOW.md#p-09) | |
+| Voice VLAN + tag : ACC-SW1 `show interfaces Fa0/5 switchport` = `Access 10 / Voice 30` — [P-10](./WORKFLOW.md#p-10), [P-10c](./WORKFLOW.md#p-10c) | |
+| QoS trust conditionnel : ACC-SW1 `show mls qos interface Fa0/5` = `trust device: cisco-phone` — [P-11](./WORKFLOW.md#p-11) | |
+| Liaison CME : `Fa0/0 .254 up/up`, `ping .1` 5/5, `show arp` `.1` résolu — [P-12a](./WORKFLOW.md#p-12a), [P-12b](./WORKFLOW.md#p-12b), [P-12c](./WORKFLOW.md#p-12c) | |
 
 > Un ou plusieurs `Request timed out` sur le **premier** paquet d'un flux frais (ARP/build) ne sont pas une faute. Un poste plus long sur `Configuring CM List` après `reset all` est un délai d'inscription (30-60 s), à distinguer du blocage permanent de I-2 (`button` manquant).
 

@@ -66,7 +66,7 @@ show run | include Null0
 ! Attendu : ip route 10.0.0.0 255.255.240.0 Null0 254  (verrou des trous du /20)
 ```
 
-> 📷 **[P-09]** ASA `show route` : `S 10.0.0.0 255.255.240.0`, aucun `/8`/`/16`.
+> 📷 **[P-09](#p-09)** ASA `show route` : `S 10.0.0.0 255.255.240.0`, aucun `/8`/`/16`.
 
 ---
 
@@ -92,7 +92,7 @@ write memory
 
 **Vérif :** `show interfaces status Fa0/10` → `connected`, VLAN `30`. Placement confirmé par `show standby brief` → `Vl30 … Active` sur DIST-SW1.
 
-> 📷 **[P-08]** DIST-SW1 `show standby brief` : `Vl30 30 110 P Active`.
+> 📷 **[P-08](#p-08)** DIST-SW1 `show standby brief` : `Vl30 30 110 P Active`.
 
 ---
 
@@ -123,7 +123,7 @@ ping 192.168.30.1            ! atteint la VIP HSRP (DIST-SW1 vivant)
 show arp                     ! .1 résolu = VLAN 30 présent sur la Distribution
 ```
 
-> 📷 **[P-12a]** `Fa0/0 .254 up/up` · **[P-12b]** `ping .1` = 5/5 · **[P-12c]** `show arp` (`.1` résolu).
+> 📷 **[P-12a](#p-12a)** `Fa0/0 .254 up/up` · **[P-12b](#p-12b)** `ping .1` = 5/5 · **[P-12c](#p-12c)** `show arp` (`.1` résolu).
 
 ---
 
@@ -155,7 +155,7 @@ show ip dhcp binding         ! baux .50 / .51, "Automatic", tous issus du CME
 
 Preuve d'absence de 2e serveur, côté HQ-Router : `show run | section dhcp` = pools `VLAN10`/`VLAN20` seulement, aucun `192.168.30.x`.
 
-> 📷 **[P-06]** baux `.50`/`.51` · **[P-06b]** pool `VOIP_PHONES` · **[P-07]** HQ-Router : pools 10/20 seulement.
+> 📷 **[P-06](#p-06)** baux `.50`/`.51` · **[P-06b](#p-06b)** pool `VOIP_PHONES` · **[P-07](#p-07)** HQ-Router : pools 10/20 seulement.
 
 ---
 
@@ -204,7 +204,7 @@ show run | section ephone    ! ephone-dn 1001/1002 + ephone 1/2 avec "button 1:1
 show ephone                  ! REGISTERED in SCCP, IP .50/.51, "button 1: dn 1 number 1001 ... IDLE"
 ```
 
-> 📷 **[P-05]** `show run | section ephone` (button 1:1/1:2, corrige I-2) · **[P-04]** `show ephone` (`REGISTERED in SCCP`).
+> 📷 **[P-05](#p-05)** `show run | section ephone` (button 1:1/1:2, corrige I-2) · **[P-04](#p-04)** `show ephone` (`REGISTERED in SCCP`).
 
 ---
 
@@ -239,7 +239,7 @@ show interfaces Fa0/5 switchport | include Access|Voice   ! Access VLAN 10, Voic
 show vlan brief                                           ! Fa0/5 en 10 et 30, plus en 998
 ```
 
-> 📷 **[P-10]** ACC-SW1 `switchport` (Access 10 / Voice 30) · **[P-10b]** `vlan brief` (preuve D6) · **[P-10c]** symétrie ACC-SW2.
+> 📷 **[P-10](#p-10)** ACC-SW1 `switchport` (Access 10 / Voice 30) · **[P-10b](#p-10b)** `vlan brief` (preuve D6) · **[P-10c](#p-10c)** symétrie ACC-SW2.
 
 ---
 
@@ -266,7 +266,7 @@ write memory
 
 **Vérif :** `show mls qos interface Fa0/5` → `trust device: cisco-phone`, `trust state: trust dscp`.
 
-> 📷 **[P-11]** ACC-SW1 `show mls qos interface Fa0/5` : `trust device: cisco-phone`.
+> 📷 **[P-11](#p-11)** ACC-SW1 `show mls qos interface Fa0/5` : `trust device: cisco-phone`.
 
 ---
 
@@ -287,14 +287,14 @@ La chaîne complète, de l'héritage P3 à l'appel — chaque maillon prouvé pa
 
 | Maillon | Commande clé | Attendu | Preuve |
 |---|---|---|---|
-| Routage (héritage P3) | ASA `show route \| include inside` | `S 10.0.0.0/20`, aucun `/8`/`/16` | [P-09] |
-| Placement du service | DIST-SW1 `show standby brief` | `Vl30 … Active` | [P-08] |
-| Liaison CME | CME `show ip int brief` + `ping .1` + `show arp` | `Fa0/0 .254 up/up`, `.1` résolu | [P-12a], [P-12b], [P-12c] |
-| DHCP mono-autorité | CME `show ip dhcp binding` + HQ `show run \| sect dhcp` | baux `.50`/`.51` (CME seul), aucun pool 30 sur HQ | [P-06], [P-07] |
-| Voice VLAN + tag | ACC `show int Fa0/5 switchport` | Access 10 / Voice 30 | [P-10], [P-10c] |
-| QoS trust conditionnel | ACC `show mls qos interface Fa0/5` | `trust device: cisco-phone` | [P-11] |
-| Enregistrement SCCP | CME `show ephone` + `show run \| section ephone` | `REGISTERED in SCCP`, `button 1:1`/`1:2` | [P-04], [P-05] |
-| **Appel bout-en-bout** | 1001 → 1002 | `Ring Out` → `ringing` → `Connected` | [P-01], [P-02], [P-03] |
+| Routage (héritage P3) | ASA `show route \| include inside` | `S 10.0.0.0/20`, aucun `/8`/`/16` | [P-09](#p-09) |
+| Placement du service | DIST-SW1 `show standby brief` | `Vl30 … Active` | [P-08](#p-08) |
+| Liaison CME | CME `show ip int brief` + `ping .1` + `show arp` | `Fa0/0 .254 up/up`, `.1` résolu | [P-12a](#p-12a), [P-12b](#p-12b), [P-12c](#p-12c) |
+| DHCP mono-autorité | CME `show ip dhcp binding` + HQ `show run \| sect dhcp` | baux `.50`/`.51` (CME seul), aucun pool 30 sur HQ | [P-06](#p-06), [P-07](#p-07) |
+| Voice VLAN + tag | ACC `show int Fa0/5 switchport` | Access 10 / Voice 30 | [P-10](#p-10), [P-10c](#p-10c) |
+| QoS trust conditionnel | ACC `show mls qos interface Fa0/5` | `trust device: cisco-phone` | [P-11](#p-11) |
+| Enregistrement SCCP | CME `show ephone` + `show run \| section ephone` | `REGISTERED in SCCP`, `button 1:1`/`1:2` | [P-04](#p-04), [P-05](#p-05) |
+| **Appel bout-en-bout** | 1001 → 1002 | `Ring Out` → `ringing` → `Connected` | [P-01](#p-01), [P-02](#p-02), [P-03](#p-03) |
 
 > Un ou plusieurs `Request timed out` sur le **premier** paquet (ARP/build) ne sont pas une faute. Un poste qui reste sur `Configuring CM List` après un `reset all` est un simple délai d'inscription (30-60 s), **pas** le blocage permanent de l'incident I-2 (qui, lui, vient d'un `button` manquant).
 
@@ -307,7 +307,7 @@ La chaîne complète, de l'héritage P3 à l'appel — chaque maillon prouvé pa
 | # | Symptôme | Cause racine | Diagnostic | Correctif |
 |---|---|---|---|---|
 | **I-1** | DIST-SW1 `Fa0/10` reste `Down` alors que la CLI a été tapée | Interface `Fa0/0` du CME laissée en `shutdown` (les interfaces **routeur** naissent éteintes) | `show ip interface brief` sur le CME | `no shutdown` sur CME `Fa0/0` — le lien monte des deux côtés |
-| **I-2** | Postes bloqués sur « Configuring CM List » [P-14] ; `show ephone` = `UNREGISTERED`, `IP:0.0.0.0` [P-13] | ephones auto-créés **sans ligne `button`** [P-15] → aucun DN présenté | `show run \| section ephone` → pas de `button 1:X` | Ajouter `button 1:1` / `1:2` explicites, puis `reset all` — corrigé = [P-05] |
+| **I-2** | Postes bloqués sur « Configuring CM List » [P-14](#p-14) ; `show ephone` = `UNREGISTERED`, `IP:0.0.0.0` [P-13](#p-13) | ephones auto-créés **sans ligne `button`** [P-15](#p-15) → aucun DN présenté | `show run \| section ephone` → pas de `button 1:X` | Ajouter `button 1:1` / `1:2` explicites, puis `reset all` — corrigé = [P-05](#p-05) |
 | **I-3** | `Fa0/5` trouvé en VLAN 998 + `shutdown` | Quarantaine appliquée plus large (`0/5-24`) que le plan (`0/20-24`) | `show vlan brief` → `Fa0/5` sous 998 | Réaffecté en `access 10` + `voice 30` ; sans impact — voir dette **D6** |
 
 > **Point de conception clarifié (pas un incident) :** « tout centraliser sur un seul DHCP au HQ-Router » écarté. Un DHCP global = SPOF de tout l'adressage (data + voix) sur le boîtier le plus exposé. La voix reste locale au CME pour booter sans dépendre du routage campus. Décision : **une autorité par domaine**.
@@ -368,66 +368,66 @@ La chaîne complète, de l'héritage P3 à l'appel — chaque maillon prouvé pa
 
 **Validation**
 
-**[P-01] · Appel émis** — Phone 1001 `To: 1002 / Ring Out`
+**<a id="p-01"></a> [P-01] · Appel émis** — Phone 1001 `To: 1002 / Ring Out`
 ![Capture P5-07](../assets/captures/P5/Capture_P5_07.png)
 
-**[P-02] · Appel reçu (SCCP)** — Phone 1002 `From: 1001 / ringing`
+**<a id="p-02"></a> [P-02] · Appel reçu (SCCP)** — Phone 1002 `From: 1001 / ringing`
 ![Capture P5-06](../assets/captures/P5/Capture_P5_06.png)
 
-**[P-03] · Média établi** — Phone 1002 `Connected`
+**<a id="p-03"></a> [P-03] · Média établi** — Phone 1002 `Connected`
 ![Capture P5-05](../assets/captures/P5/Capture_P5_05.png)
 
-**[P-04] · Enregistrement SCCP** — CME `show ephone` : `REGISTERED in SCCP`, IP `.50`/`.51`, `button 1: dn 1/2 … IDLE`
+**<a id="p-04"></a> [P-04] · Enregistrement SCCP** — CME `show ephone` : `REGISTERED in SCCP`, IP `.50`/`.51`, `button 1: dn 1/2 … IDLE`
 ![Capture P5-04](../assets/captures/P5/Capture_P5_04.png)
 
-**[P-05] · button→DN (corrige I-2) + telephony-service** — CME `show run | section ephone` : `ip source-address .254`, `max 10`, `ephone 1/2` avec `button 1:1`/`1:2`, `type 7960`
+**<a id="p-05"></a> [P-05] · button→DN (corrige I-2) + telephony-service** — CME `show run | section ephone` : `ip source-address .254`, `max 10`, `ephone 1/2` avec `button 1:1`/`1:2`, `type 7960`
 ![Capture P5-27](../assets/captures/P5/Capture_P5_27.png)
 
-**[P-06] · DHCP baux** — CME `show ip dhcp binding` : `.50`/`.51` `Automatic`
+**<a id="p-06"></a> [P-06] · DHCP baux** — CME `show ip dhcp binding` : `.50`/`.51` `Automatic`
 ![Capture P5-18](../assets/captures/P5/Capture_P5_18.png)
 
-**[P-06b] · DHCP pool** — CME `show ip dhcp pool` : `VOIP_PHONES`
+**<a id="p-06b"></a> [P-06b] · DHCP pool** — CME `show ip dhcp pool` : `VOIP_PHONES`
 ![Capture P5-19](../assets/captures/P5/Capture_P5_19.png)
 
-**[P-07] · Absence de 2e serveur DHCP** — HQ-Router `show run | section dhcp` : `VLAN10`/`VLAN20` seulement
+**<a id="p-07"></a> [P-07] · Absence de 2e serveur DHCP** — HQ-Router `show run | section dhcp` : `VLAN10`/`VLAN20` seulement
 ![Capture P5-03](../assets/captures/P5/Capture_P5_03.png)
 
-**[P-08] · Placement du service** — DIST-SW1 `show standby brief` : `Vl30 30 110 P Active`
+**<a id="p-08"></a> [P-08] · Placement du service** — DIST-SW1 `show standby brief` : `Vl30 30 110 P Active`
 ![Capture P5-01](../assets/captures/P5/Capture_P5_01.png)
 
-**[P-09] · Audit résumé clos** — ASA `show route` : `S 10.0.0.0 255.255.240.0`, aucun `/8`/`/16`
+**<a id="p-09"></a> [P-09] · Audit résumé clos** — ASA `show route` : `S 10.0.0.0 255.255.240.0`, aucun `/8`/`/16`
 ![Capture P5-02](../assets/captures/P5/Capture_P5_02.png)
 
-**[P-10] · Voice VLAN (ACC-SW1)** — `show interfaces Fa0/5 switchport` : `Access 10 / Voice 30`
+**<a id="p-10"></a> [P-10] · Voice VLAN (ACC-SW1)** — `show interfaces Fa0/5 switchport` : `Access 10 / Voice 30`
 ![Capture P5-21](../assets/captures/P5/Capture_P5_21.png)
 
-**[P-10b] · VLAN brief + preuve D6** — ACC-SW1 `show vlan brief` : `Fa0/5` en 10 et 30
+**<a id="p-10b"></a> [P-10b] · VLAN brief + preuve D6** — ACC-SW1 `show vlan brief` : `Fa0/5` en 10 et 30
 ![Capture P5-15](../assets/captures/P5/Capture_P5_15.png)
 
-**[P-10c] · Symétrie 2e poste (ACC-SW2)** — `show interfaces Fa0/5 switchport` : `Access 10 / Voice 30`
+**<a id="p-10c"></a> [P-10c] · Symétrie 2e poste (ACC-SW2)** — `show interfaces Fa0/5 switchport` : `Access 10 / Voice 30`
 ![Capture P5-20](../assets/captures/P5/Capture_P5_20.png)
 
-**[P-11] · QoS trust conditionnel** — ACC-SW1 `show mls qos interface Fa0/5` : `trust device: cisco-phone`
+**<a id="p-11"></a> [P-11] · QoS trust conditionnel** — ACC-SW1 `show mls qos interface Fa0/5` : `trust device: cisco-phone`
 ![Capture P5-14](../assets/captures/P5/Capture_P5_14.png)
 
-**[P-12a] · Liaison CME (interface)** — CME `show ip interface brief` : `Fa0/0 .254 up/up`
+**<a id="p-12a"></a> [P-12a] · Liaison CME (interface)** — CME `show ip interface brief` : `Fa0/0 .254 up/up`
 ![Capture P5-25](../assets/captures/P5/Capture_P5_25.png)
 
-**[P-12b] · Liaison CME (ping)** — CME `ping 192.168.30.1` = 5/5
+**<a id="p-12b"></a> [P-12b] · Liaison CME (ping)** — CME `ping 192.168.30.1` = 5/5
 ![Capture P5-23](../assets/captures/P5/Capture_P5_23.png)
 
-**[P-12c] · Liaison CME (ARP)** — CME `show arp` : `.1` et `.254` résolus
+**<a id="p-12c"></a> [P-12c] · Liaison CME (ARP)** — CME `show arp` : `.1` et `.254` résolus
 ![Capture P5-22](../assets/captures/P5/Capture_P5_22.png)
 
 **Incidents (état *avant* correction — jamais en validation)**
 
-**[P-13] · I-2 symptôme (SCCP)** — CME `show ephone` : `UNREGISTERED`, `IP:0.0.0.0`, `button 1: dn CH1 DOWN`
+**<a id="p-13"></a> [P-13] · I-2 symptôme (SCCP)** — CME `show ephone` : `UNREGISTERED`, `IP:0.0.0.0`, `button 1: dn CH1 DOWN`
 ![Capture P5-11](../assets/captures/P5/Capture_P5_11.png)
 
-**[P-14] · I-2 symptôme (LCD)** — Phone bloqué sur `Configuring CM List`
+**<a id="p-14"></a> [P-14] · I-2 symptôme (LCD)** — Phone bloqué sur `Configuring CM List`
 ![Capture P5-13](../assets/captures/P5/Capture_P5_13.png)
 
-**[P-15] · I-2 cause** — CME `show run | section ephone` **sans** ligne `button`
+**<a id="p-15"></a> [P-15] · I-2 cause** — CME `show run | section ephone` **sans** ligne `button`
 ![Capture P5-10](../assets/captures/P5/Capture_P5_10.png)
 
 > **Écartées au triage :** `Captures_P5_26` (doublon de 27), `_17` (doublon de 10), `_24` (ping 4/5 dégradé), `_16` (redondant avec 21), `_12` (telephony-service tronqué), `_8`/`_9` (postes au repos).
