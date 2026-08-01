@@ -232,7 +232,7 @@ write memory
 
 > ⚠️ Si tu changes un mapping NAT, lance `clear xlate` — l'ancienne traduction est en cache.
 
-> 📷 **[P-05]** `show xlate` (dynamique `flags i` + statique `flags s`).
+> 📷 **[P-05](#p-05)** `show xlate` (dynamique `flags i` + statique `flags s`).
 
 ---
 
@@ -366,7 +366,7 @@ write memory
 
 **Validation :** sur un switch d'accès — `show port-security address` (2 MAC `SecureSticky`, V10 `Fa0/3` / V20 `Fa0/4`), `show port-security interface fa0/3` (`Secure-up`, `maximum 2`, `Restrict`). Sur CORE-SW — `show monitor session 1` (destination `Gi1/0/5` ; source absente, attendu).
 
-> 📷 **[P-11]** port-security · **[P-12]** SPAN/IDS.
+> 📷 **[P-11](#p-11)** port-security · **[P-12](#p-12)** SPAN/IDS.
 
 ---
 
@@ -378,30 +378,30 @@ Le **protocole du groupe B** : noter le hitcnt de la ligne cible, lancer le flux
 
 | # | Depuis | Action | Attendu | Preuve |
 |---|---|---|---|---|
-| A1 | PC1 | `ping 8.8.8.8` | réponse 4/4 (TTL=251) | OUTSIDE-IN `echo-reply` hitcnt monte — survit à l'ACL — [P-01], [P-06] |
-| A2 | PC1 | `http://172.16.0.20` | page (via proxy) | INSIDE ligne 1 permit hit — [P-02] |
-| A4 | ASA | `ping 172.16.0.10` / `.20` | 5/5 | DMZ `permit icmp any host .1` hit — ordre OK — [P-03], [P-06] |
-| A5 | PROXY | `ping 8.8.8.8` | 4/4 | DMZ `permit icmp host .20` hit — [P-04] |
-| A6 | PC1 | `ping 8.8.8.8` puis `show xlate` | `ICMP PAT … flags i` dynamique + statique `flags s` | l'entrée dynamique est la preuve NAT — [P-05] |
+| A1 | PC1 | `ping 8.8.8.8` | réponse 4/4 (TTL=251) | OUTSIDE-IN `echo-reply` hitcnt monte — survit à l'ACL — [P-01](#p-01), [P-06](#p-06) |
+| A2 | PC1 | `http://172.16.0.20` | page (via proxy) | INSIDE ligne 1 permit hit — [P-02](#p-02) |
+| A4 | ASA | `ping 172.16.0.10` / `.20` | 5/5 | DMZ `permit icmp any host .1` hit — ordre OK — [P-03](#p-03), [P-06](#p-06) |
+| A5 | PROXY | `ping 8.8.8.8` | 4/4 | DMZ `permit icmp host .20` hit — [P-04](#p-04) |
+| A6 | PC1 | `ping 8.8.8.8` puis `show xlate` | `ICMP PAT … flags i` dynamique + statique `flags s` | l'entrée dynamique est la preuve NAT — [P-05](#p-05) |
 
-> **A3 reclassé — bloqué par conception, pas un échec.** PC1 → `http://172.16.0.10` (WEB-PUBLIC direct) timeout : la réponse est jetée par DMZ-RESTRICT `deny host .10`. Cohérent avec le proxy forcé — les hôtes internes atteignent le web via `.20` (A2), jamais le serveur DMZ. A3 prouve une seconde fois que `deny host .10` fonctionne. [P-13]
+> **A3 reclassé — bloqué par conception, pas un échec.** PC1 → `http://172.16.0.10` (WEB-PUBLIC direct) timeout : la réponse est jetée par DMZ-RESTRICT `deny host .10`. Cohérent avec le proxy forcé — les hôtes internes atteignent le web via `.20` (A2), jamais le serveur DMZ. A3 prouve une seconde fois que `deny host .10` fonctionne. [P-13](#p-13)
 
 **Groupe B — flux qui doivent échouer (prouvés par compteur)**
 
 | # | Depuis | Action | Règle qui doit incrémenter | Preuve |
 |---|---|---|---|---|
-| B1 | PC1 | `http://8.8.8.8` | INSIDE `deny … eq www` | hitcnt 24 — [P-06] ; visuel [P-07] |
-| B2 | PC1 | `https://8.8.8.8` | INSIDE `deny … eq 443` | hitcnt 12 — [P-08] ; visuel [P-07] |
-| B3 | PC-EXTERIEUR | `telnet 203.0.113.2` | OUTSIDE-IN `deny … eq 23` | hitcnt 12 — [P-08] ; visuel [P-09] |
-| B4 | PC-EXTERIEUR | `ping 203.0.113.2` | OUTSIDE-IN `deny icmp echo` | hitcnt 9 — [P-06] ; visuel [P-09] |
-| B5 | WEB-PUBLIC | `ping 8.8.8.8` | DMZ `deny ip host .10` | hitcnt 80 — [P-06], [P-10] |
+| B1 | PC1 | `http://8.8.8.8` | INSIDE `deny … eq www` | hitcnt 24 — [P-06](#p-06) ; visuel [P-07](#p-07) |
+| B2 | PC1 | `https://8.8.8.8` | INSIDE `deny … eq 443` | hitcnt 12 — [P-08](#p-08) ; visuel [P-07](#p-07) |
+| B3 | PC-EXTERIEUR | `telnet 203.0.113.2` | OUTSIDE-IN `deny … eq 23` | hitcnt 12 — [P-08](#p-08) ; visuel [P-09](#p-09) |
+| B4 | PC-EXTERIEUR | `ping 203.0.113.2` | OUTSIDE-IN `deny icmp echo` | hitcnt 9 — [P-06](#p-06) ; visuel [P-09](#p-09) |
+| B5 | WEB-PUBLIC | `ping 8.8.8.8` | DMZ `deny ip host .10` | hitcnt 80 — [P-06](#p-06), [P-10](#p-10) |
 
 **Groupe C — durcissement**
 
 | # | Où | Commande | Attendu | Preuve |
 |---|---|---|---|---|
-| C1 | Switch Access | `show port-security address` | 2 MAC sticky, `maximum 2`, `Secure-up` | V10 `Fa0/3` / V20 `Fa0/4` — [P-11] |
-| C2 | CORE-SW | `show monitor session 1` | dest `Gi1/0/5` ; source absente (limite PT) | [P-12] |
+| C1 | Switch Access | `show port-security address` | 2 MAC sticky, `maximum 2`, `Secure-up` | V10 `Fa0/3` / V20 `Fa0/4` — [P-11](#p-11) |
+| C2 | CORE-SW | `show monitor session 1` | dest `Gi1/0/5` ; source absente (limite PT) | [P-12](#p-12) |
 
 ---
 
@@ -461,46 +461,46 @@ show ip route ospf             ! DIST/Core : O*E2 0.0.0.0/0 = défaut originé
 
 > Une capture **canonique** par affirmation ; les huit `show access-list` quasi-identiques ramenés aux deux captures de compteurs ci-dessous. Les groupes A/B/C citent le `[P-##]` pertinent. Embeds Obsidian.
 
-**[P-01] · A1 campus → Internet** — PC1 `ping 8.8.8.8` = 4/4, `TTL=251`
+**<a id="p-01"></a> [P-01] · A1 campus → Internet** — PC1 `ping 8.8.8.8` = 4/4, `TTL=251`
 ![Capture P3-12](../assets/captures/P3/Capture_P3_12.png)
 
-**[P-02] · A2 sortie proxy forcé** — PC1 `http://172.16.0.20` = page servie
+**<a id="p-02"></a> [P-02] · A2 sortie proxy forcé** — PC1 `http://172.16.0.20` = page servie
 ![Capture P3-11](../assets/captures/P3/Capture_P3_11.png)
 
-**[P-03] · A4 ASA → DMZ** — ASA `ping 172.16.0.10` + `.20` = 5/5 chacun
+**<a id="p-03"></a> [P-03] · A4 ASA → DMZ** — ASA `ping 172.16.0.10` + `.20` = 5/5 chacun
 ![Capture P3-07](../assets/captures/P3/Capture_P3_07.png)
 
-**[P-04] · A5 sortie proxy** — PROXY-SERVER `ping 8.8.8.8` = 4/4
+**<a id="p-04"></a> [P-04] · A5 sortie proxy** — PROXY-SERVER `ping 8.8.8.8` = 4/4
 ![Capture P3-09](../assets/captures/P3/Capture_P3_09.png)
 
-**[P-05] · A6 preuve NAT (la durable)** — ASA `show xlate` : dynamique `ICMP PAT inside:192.168.10.50 → outside:203.0.113.2 flags i` + statique `dmz:172.16.0.10 → 203.0.113.2 flags s`
+**<a id="p-05"></a> [P-05] · A6 preuve NAT (la durable)** — ASA `show xlate` : dynamique `ICMP PAT inside:192.168.10.50 → outside:203.0.113.2 flags i` + statique `dmz:172.16.0.10 → 203.0.113.2 flags s`
 ![Capture P3-14](../assets/captures/P3/Capture_P3_14.png)
 
-**[P-06] · compteurs maîtres** — ASA `show access-list` : OUTSIDE-IN `echo-reply`=16 / ligne 7 `www`=5 / `echo`=9 ; INSIDE `deny www`=24 / `permit ip`=8 ; DMZ `deny host .10`=80 / `permit icmp .1`=10
+**<a id="p-06"></a> [P-06] · compteurs maîtres** — ASA `show access-list` : OUTSIDE-IN `echo-reply`=16 / ligne 7 `www`=5 / `echo`=9 ; INSIDE `deny www`=24 / `permit ip`=8 ; DMZ `deny host .10`=80 / `permit icmp .1`=10
 ![Capture P3-06](../assets/captures/P3/Capture_P3_06.png)
 
-**[P-07] · B1+B2 web direct bloqué (visuel)** — PC1 `http://8.8.8.8:80 / :443` = Request Timeout (forcé au proxy)
+**<a id="p-07"></a> [P-07] · B1+B2 web direct bloqué (visuel)** — PC1 `http://8.8.8.8:80 / :443` = Request Timeout (forcé au proxy)
 ![Capture P3-10](../assets/captures/P3/Capture_P3_10.png)
 
-**[P-08] · B2+B3 compteurs** — ASA `show access-list` : INSIDE `deny 443`=12 ; OUTSIDE-IN `deny telnet`=12
+**<a id="p-08"></a> [P-08] · B2+B3 compteurs** — ASA `show access-list` : INSIDE `deny 443`=12 ; OUTSIDE-IN `deny telnet`=12
 ![Capture P3-03](../assets/captures/P3/Capture_P3_03.png)
 
-**[P-09] · B3+B4 tentatives externes (visuel)** — PC-EXTERIEUR `ping 203.0.113.2` = 100 % loss + `telnet 203.0.113.2` = Connection timed out
+**<a id="p-09"></a> [P-09] · B3+B4 tentatives externes (visuel)** — PC-EXTERIEUR `ping 203.0.113.2` = 100 % loss + `telnet 203.0.113.2` = Connection timed out
 ![Capture P3-04](../assets/captures/P3/Capture_P3_04.png)
 
-**[P-10] · B5 blocage reverse-shell** — WEB-PUBLIC `ping 8.8.8.8` = 100 % loss (ne peut pas initier de sortie)
+**<a id="p-10"></a> [P-10] · B5 blocage reverse-shell** — WEB-PUBLIC `ping 8.8.8.8` = 100 % loss (ne peut pas initier de sortie)
 ![Capture P3-08](../assets/captures/P3/Capture_P3_08.png)
 
-**[P-11] · C1 port-security** — ACC-SW1 `show port-security address` : 2× `SecureSticky` (V10 `Fa0/3`, V20 `Fa0/4`), `maximum 2`, `Secure-up`, `Restrict`
+**<a id="p-11"></a> [P-11] · C1 port-security** — ACC-SW1 `show port-security address` : 2× `SecureSticky` (V10 `Fa0/3`, V20 `Fa0/4`), `maximum 2`, `Secure-up`, `Restrict`
 ![Capture P3-02](../assets/captures/P3/Capture_P3_02.png)
 
-**[P-12] · C2 SPAN / IDS** — CORE-SW `show monitor session 1` : destination `Gi1/0/5` ; source silencieusement absente (dette #23)
+**<a id="p-12"></a> [P-12] · C2 SPAN / IDS** — CORE-SW `show monitor session 1` : destination `Gi1/0/5` ; source silencieusement absente (dette #23)
 ![Capture P3-01](../assets/captures/P3/Capture_P3_01.png)
 
-**[P-13] · A3 bloqué-par-conception** — PC1 `http://172.16.0.10` = Request Timeout : réponse jetée par DMZ-RESTRICT `deny host .10` (pas une faute)
+**<a id="p-13"></a> [P-13] · A3 bloqué-par-conception** — PC1 `http://172.16.0.10` = Request Timeout : réponse jetée par DMZ-RESTRICT `deny host .10` (pas une faute)
 ![Capture P3-13](../assets/captures/P3/Capture_P3_13.png)
 
-**[P-14] · dette #22 — rendu HTTP entrant** — PC-EXTERIEUR `http://203.0.113.2` = Request Timeout ; le SYN atteint le serveur (OUTSIDE-IN ligne 7 hitcnt, [P-06]), rendu bloqué par PT. Fonctionne sur un ASA physique
+**<a id="p-14"></a> [P-14] · dette #22 — rendu HTTP entrant** — PC-EXTERIEUR `http://203.0.113.2` = Request Timeout ; le SYN atteint le serveur (OUTSIDE-IN ligne 7 hitcnt, [P-06]), rendu bloqué par PT. Fonctionne sur un ASA physique
 ![Capture P3-05](../assets/captures/P3/Capture_P3_05.png)
 
 ---

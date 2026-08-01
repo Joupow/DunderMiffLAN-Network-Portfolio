@@ -68,23 +68,23 @@ Tout le campus P1/P2 est **inchangé** — P3 boule le périmètre sur le HQ-Rou
 
 ## Matrice de validation (locale)
 
-> Chaque `✅` cite un `[P-##]` de l'**[Annexe — Captures de preuve du WORKFLOW P3](./WORKFLOW.md)**. Un flux **bloqué** est prouvé par le **compteur de la ligne deny**, jamais par un timeout.
+> Chaque `✅` cite un `[P-##]` de l'**[Annexe — Captures de preuve du WORKFLOW P3](./WORKFLOW.md#annexe--captures-de-preuve)**. Un flux **bloqué** est prouvé par le **compteur de la ligne deny**, jamais par un timeout.
 
 | ✅ Prouvé (par résultat ou compteur) | ⚠️ Configuré / limité par PT |
 |---|---|
-| Campus → Internet : PC1 `ping 8.8.8.8`, compteur OUTSIDE-IN `echo-reply` monte — [P-01], [P-06] | Rendu HTTP entrant vers WEB-PUBLIC : SYN prouvé (OUTSIDE-IN ligne 7 hitcnt), rendu bloqué par PT — dette #22 — [P-14] |
-| Route par défaut originée (`O*E2 0.0.0.0/0` sur DIST/Core) — prouvée par le flux A1, pas de capture dédiée — [P-01] | Miroir source SPAN : dest prouvée, source ignorée par PT — dette #23 — [P-12] |
-| NAT dynamique + statique : `show xlate` = `ICMP PAT … flags i` + `172.16.0.10 ↔ 203.0.113.2 flags s` — [P-05] | HTTPS via proxy : pas de HTTP CONNECT en PT — dette #25 |
-| A2 PC1 → proxy `.20` = page servie — [P-02] · A5 PROXY → `8.8.8.8` = 4/4 — [P-04] | |
-| A4 ASA → DMZ `ping .10`/`.20` = 5/5 (ordre DMZ OK) — [P-03], [P-06] | |
-| **B1** PC1 HTTP direct bloqué — INSIDE `deny eq www` hitcnt 24 — [P-06], [P-07] | |
-| **B2** PC1 HTTPS direct bloqué — INSIDE `deny eq 443` hitcnt 12 — [P-07], [P-08] | |
-| **B3** telnet externe → ASA bloqué — OUTSIDE-IN `deny eq 23` hitcnt 12 — [P-08], [P-09] | |
-| **B4** ping externe → ASA bloqué — OUTSIDE-IN `deny icmp echo` hitcnt 9 — [P-06], [P-09] | |
-| **B5** WEB-PUBLIC → Internet bloqué — DMZ `deny ip host .10` hitcnt 80 — [P-06], [P-10] | |
-| Port-security : 2 MAC `SecureSticky` (V10 `Fa0/3`, V20 `Fa0/4`), `Secure-up` — [P-11] · SPAN dest `Gi1/0/5` — [P-12] | |
+| Campus → Internet : PC1 `ping 8.8.8.8`, compteur OUTSIDE-IN `echo-reply` monte — [P-01](./WORKFLOW.md#p-01), [P-06](./WORKFLOW.md#p-06) | Rendu HTTP entrant vers WEB-PUBLIC : SYN prouvé (OUTSIDE-IN ligne 7 hitcnt), rendu bloqué par PT — dette #22 — [P-14](./WORKFLOW.md#p-14) |
+| Route par défaut originée (`O*E2 0.0.0.0/0` sur DIST/Core) — prouvée par le flux A1, pas de capture dédiée — [P-01](./WORKFLOW.md#p-01) | Miroir source SPAN : dest prouvée, source ignorée par PT — dette #23 — [P-12](./WORKFLOW.md#p-12) |
+| NAT dynamique + statique : `show xlate` = `ICMP PAT … flags i` + `172.16.0.10 ↔ 203.0.113.2 flags s` — [P-05](./WORKFLOW.md#p-05) | HTTPS via proxy : pas de HTTP CONNECT en PT — dette #25 |
+| A2 PC1 → proxy `.20` = page servie — [P-02](./WORKFLOW.md#p-02) · A5 PROXY → `8.8.8.8` = 4/4 — [P-04](./WORKFLOW.md#p-04) | |
+| A4 ASA → DMZ `ping .10`/`.20` = 5/5 (ordre DMZ OK) — [P-03](./WORKFLOW.md#p-03), [P-06](./WORKFLOW.md#p-06) | |
+| **B1** PC1 HTTP direct bloqué — INSIDE `deny eq www` hitcnt 24 — [P-06](./WORKFLOW.md#p-06), [P-07](./WORKFLOW.md#p-07) | |
+| **B2** PC1 HTTPS direct bloqué — INSIDE `deny eq 443` hitcnt 12 — [P-07](./WORKFLOW.md#p-07), [P-08](./WORKFLOW.md#p-08) | |
+| **B3** telnet externe → ASA bloqué — OUTSIDE-IN `deny eq 23` hitcnt 12 — [P-08](./WORKFLOW.md#p-08), [P-09](./WORKFLOW.md#p-09) | |
+| **B4** ping externe → ASA bloqué — OUTSIDE-IN `deny icmp echo` hitcnt 9 — [P-06](./WORKFLOW.md#p-06), [P-09](./WORKFLOW.md#p-09) | |
+| **B5** WEB-PUBLIC → Internet bloqué — DMZ `deny ip host .10` hitcnt 80 — [P-06](./WORKFLOW.md#p-06), [P-10](./WORKFLOW.md#p-10) | |
+| Port-security : 2 MAC `SecureSticky` (V10 `Fa0/3`, V20 `Fa0/4`), `Secure-up` — [P-11](./WORKFLOW.md#p-11) · SPAN dest `Gi1/0/5` — [P-12](./WORKFLOW.md#p-12) | |
 
-> **A3 (PC1 → WEB-PUBLIC direct) est bloqué par conception** — [P-13] : la réponse est jetée par DMZ-RESTRICT `deny host .10`. Cohérent avec le proxy forcé ; compté comme comportement voulu, pas comme un test échoué.
+> **A3 (PC1 → WEB-PUBLIC direct) est bloqué par conception** — [P-13](./WORKFLOW.md#p-13) : la réponse est jetée par DMZ-RESTRICT `deny host .10`. Cohérent avec le proxy forcé ; compté comme comportement voulu, pas comme un test échoué.
 > Un `Request timed out` sur le premier paquet d'un flux frais (puis 0 %) est ARP + build de xlate, **pas** une faute.
 
 ---
