@@ -14,9 +14,21 @@ Le projet couvre l'ensemble du cycle de vie d'une implémentation réseau :
 
 Ce laboratoire a été construit de manière autodidacte pour mettre en pratique les compétences couvertes par la **CompTIA Network+**, tout en explorant des notions plus avancées. 
 
-Ce projet n'a pas vocation à représenter une architecture de production clé en main. Il s'agit avant tout d'un **portfolio technique,** dont l'objectif est de démontrer une capacité à concevoir, implémenter, valider, documenter et faire évoluer une infrastructure réseau de manière méthodique. 
+Ce projet n'a pas vocation à représenter une architecture de production clé en main. Il s'agit avant tout d'un **portfolio technique junior,** les erreurs de conception font partie du processus d'apprentissage et sont traitées comme des opportunités d'analyse et d'amélioration.
 
-Les erreurs de conception font partie du processus d'apprentissage et sont traitées comme des opportunités d'analyse et d'amélioration.
+---
+
+## Périmètre du projet
+
+| Partie               | Sujet                   | Résultat principal                                                                                        |
+| -------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------- |
+| [P1](./P1/README.md) | Fondations LAN du siège | VLANs, trunks 802.1Q, VLAN de management, **Rapid PVST+ avec roots sur la Distribution**                  |
+| [P2](./P2/README.md) | Routage & redondance    | **HSRP sur la Distribution**, OSPF point-à-point, DHCP centralisé + relais unique, Core en transit L3 pur |
+| [P3](./P3/README.md) | DMZ & pare-feu          | ASA trois zones, NAT/PAT, 3 ACL, IDS/SPAN, `default-information originate` + verrou résumé/Null0          |
+| [P4](./P4/README.md) | Datacenter              | Spine-Leaf routée, **2 Border Leafs sur le Core (ECMP N-S)**, tiers app + stockage, VIP de load balancer  |
+| [P5](./P5/README.md) | VoIP                    | CME co-localisé avec l'Active/root du VLAN 30, DHCP Option 150, SCCP, TFTP, frontière QoS                 |
+| [P6](./P6/README.md) | Wi-Fi                   | WLC + APs lightweight (CAPWAP), SSID WPA2 Corp/Guest, **HSRPv2 VLAN 300 sur DIST-SW1**                    |
+
 
 ---
 
@@ -33,26 +45,14 @@ Les erreurs de conception font partie du processus d'apprentissage et sont trait
 | Dépannage | Collision de Router-ID, chaîne de boot VoIP, confinement de boucle à l'ASA, limites du simulateur WLC |
 | Documentation | Chaque partie : notes de conception, CLI annotée, workflow, matrice de validation honnête, registre de dette |
 
----
-
-## Périmètre du projet
-
-| Partie               | Sujet                   | Résultat principal                                                                                        |
-| -------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------- |
-| [P1](./P1/README.md) | Fondations LAN du siège | VLANs, trunks 802.1Q, VLAN de management, **Rapid PVST+ avec roots sur la Distribution**                  |
-| [P2](./P2/README.md) | Routage & redondance    | **HSRP sur la Distribution**, OSPF point-à-point, DHCP centralisé + relais unique, Core en transit L3 pur |
-| [P3](./P3/README.md) | DMZ & pare-feu          | ASA trois zones, NAT/PAT, 3 ACL, IDS/SPAN, `default-information originate` + verrou résumé/Null0          |
-| [P4](./P4/README.md) | Datacenter              | Spine-Leaf routée, **2 Border Leafs sur le Core (ECMP N-S)**, tiers app + stockage, VIP de load balancer  |
-| [P5](./P5/README.md) | VoIP                    | CME co-localisé avec l'Active/root du VLAN 30, DHCP Option 150, SCCP, TFTP, frontière QoS                 |
-| [P6](./P6/README.md) | Wi-Fi                   | WLC + APs lightweight (CAPWAP), SSID WPA2 Corp/Guest, **HSRPv2 VLAN 300 sur DIST-SW1**                    |
 
 ---
 ## Topologie du projet
 
 ![Topologie Global](./assets/topologies/topology-global.svg)
 
-→ Vue consolidée (architecture, décisions transverses, écarts de production) : [`TECHNICAL_OVERVIEW.md`](./TECHNICAL_OVERVIEW.md). 
-→  Schémas de topologie dans chaque partie.
+- → Vue consolidée (architecture, décisions transverses, écarts de production) : [`TECHNICAL_OVERVIEW.md`](./TECHNICAL_OVERVIEW.md)
+- →  Schémas de topologie dans chaque partie.
 
 ---
 ## Principes transverses
@@ -89,11 +89,12 @@ TheBigOffice - Packet Tracer Portfolio /
 │ 
 ├── assets/
 │   ├── topologies/           ← topology_pX.svg + topology_global.svg
+│   ├── network-overview/     ← Captures topologie dans Packet Tracer : N0_pX.png
 │   ├── captures/  P1/ … P6/  ← captures de preuve : Capture_PX_NN.png 
 │   └── packet-tracer/        ← fichiers .pkt du lab
 └── 
 
-# P1 LAN 3 niveaux · P2 HSRP/OSPF/DHCP · P3 ASA/DMZ/NAT · P4 Spine-Leaf · P5 VoIP/CME · P6 Wi-Fi/WLC
+P1 LAN 3 niveaux · P2 HSRP/OSPF/DHCP · P3 ASA/DMZ/NAT · P4 Spine-Leaf · P5 VoIP/CME · P6 Wi-Fi/WLC
 
 ```
 
@@ -152,4 +153,4 @@ Au-delà de la théorie CompTIA Network+, ce projet a imposé une pratique de te
 
 Le débogage a produit l'apprentissage le plus réel : boucles de routage, conflits d'adressage, asymétries TFTP et collisions de Router-ID ne s'apprennent pas dans un cours ; ils se comprennent en les résolvant. 
 
-Le pari de l'apprentissage par la pratique a payé, et il dépasse la simple préparation à la certification que j'ai obtenu avec succès. 
+Le pari de l'apprentissage par la pratique a payé, et il dépasse la simple préparation à la certification obtenue à ce jour avec succès. 
