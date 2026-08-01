@@ -61,19 +61,19 @@ Chaque switch d'accès est **dual-homed** (`Fa0/1` → DIST-SW1, `Fa0/2` → DIS
 
 ## Matrice de validation (locale)
 
-> Chaque `✅` cite un `[P-##]` de l'**[Annexe — Captures de preuve du WORKFLOW P1](./WORKFLOW.md)**.
+> Chaque `✅` cite un `[P-##]` de l'**[Annexe — Captures de preuve du WORKFLOW P1](./WORKFLOW.md#annexe--captures-de-preuve)**.
 
 | ✅ Prouvé (par résultat, appel ou état) | ⚠️ Configuré / limité par PT |
 |---|---|
-| Topologie as-built + uplinks Core `connected trunk` — [P-00], [P-01] | Joignabilité management de **chaque** ACC (seuls PC→`.99.1` et DIST-SW2 montrés individuellement) |
-| VLANs présents sur tous les switches — [P-02] | **Timing de failover sous-seconde** — mode rapid-pvst prouvé ([P-10]) donc *attendu*, mais le ping de mesure directe reste à tirer |
-| Trunks natif 999, listes allowed complètes — [P-03] | |
-| Bordure access : `Fa0/3`=10, `Fa0/4`=20, inutilisés 998/disabled — [P-04] | |
-| Root STP : DIST1 `{10,30,999}`, DIST2 `{20,99}` — [P-08], [P-09] | |
-| **Mode Rapid PVST+ sur les 7 switches** — [P-10] | |
-| Ping inter-VLAN PC1(V10) → `192.168.20.10` + intra-VLAN cross-switch → `192.168.10.12` — [P-05] | |
-| Ping management → `192.168.99.1` · SVI 99 de DIST-SW2 up/up sur `.99.12` — [P-06], [P-07] | |
-| **Mécanisme de failover** : ACC-SW1 `Fa0/1` (`Root FWD`) coupé → `Fa0/2` (`Altn BLK`) promu, ping rétabli — [P-11]→[P-14] | |
+| Topologie as-built + uplinks Core `connected trunk` — [P-00](./WORKFLOW.md#p-00), [P-01](./WORKFLOW.md#p-01) | Joignabilité management de **chaque** ACC (seuls PC→`.99.1` et DIST-SW2 montrés individuellement) |
+| VLANs présents sur tous les switches — [P-02](./WORKFLOW.md#p-02) | **Timing de failover sous-seconde** — mode rapid-pvst prouvé ([P-10](./WORKFLOW.md#p-10)) donc *attendu*, mais le ping de mesure directe reste à tirer |
+| Trunks natif 999, listes allowed complètes — [P-03](./WORKFLOW.md#p-03) | |
+| Bordure access : `Fa0/3`=10, `Fa0/4`=20, inutilisés 998/disabled — [P-04](./WORKFLOW.md#p-04) | |
+| Root STP : DIST1 `{10,30,999}`, DIST2 `{20,99}` — [P-08](./WORKFLOW.md#p-08), [P-09](./WORKFLOW.md#p-09) | |
+| **Mode Rapid PVST+ sur les 7 switches** — [P-10](./WORKFLOW.md#p-10) | |
+| Ping inter-VLAN PC1(V10) → `192.168.20.10` + intra-VLAN cross-switch → `192.168.10.12` — [P-05](./WORKFLOW.md#p-05) | |
+| Ping management → `192.168.99.1` · SVI 99 de DIST-SW2 up/up sur `.99.12` — [P-06](./WORKFLOW.md#p-06), [P-07](./WORKFLOW.md#p-07) | |
+| **Mécanisme de failover** : ACC-SW1 `Fa0/1` (`Root FWD`) coupé → `Fa0/2` (`Altn BLK`) promu, ping rétabli — [P-11](./WORKFLOW.md#p-11)→[P-14](./WORKFLOW.md#p-14) | |
 
 > Le timeout sur le tout premier paquet d'un ping inter-VLAN (25 % de perte, puis 0 %) est de la résolution ARP + convergence STP, **pas** une faute.
 
