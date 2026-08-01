@@ -1,8 +1,8 @@
 <svg viewBox="0 0 920 660" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Helvetica, Arial, sans-serif">
-  <rect x="0" y="0" width="920" height="660" rx="12" fill="#ffffff"/>
-
-  <text x="460" y="38" text-anchor="middle" font-size="23" font-weight="700" fill="#1a2b4a">Réseau d'entreprise TheBigOffice</text>
-  <text x="460" y="60" text-anchor="middle" font-size="13" fill="#6b7280">Architecture globale · 5 blocs fonctionnels · ~24 équipements Cisco · CompTIA Network+</text>
+  <rect x="0" y="0" width="920" height="660" fill="#ffffff"/>
+  <rect x="0" y="0" width="920" height="46" fill="#1a2332"/>
+  <text x="26" y="30" font-size="18" font-weight="700" fill="#ffffff">TheBigOffice — Vue d'ensemble du réseau</text>
+  <text x="26" y="63" font-size="12" fill="#6b7280">Architecture globale · 5 blocs fonctionnels · ~24 équipements Cisco · CompTIA Network+</text>
 
   <!-- ===== INTERNET ===== -->
   <ellipse cx="460" cy="102" rx="72" ry="26" fill="#f1f5f9" stroke="#cbd5e1"/>

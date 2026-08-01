@@ -1,80 +1,113 @@
-<svg viewBox="0 0 1180 720" xmlns="http://www.w3.org/2000/svg">
-<rect x="0" y="0" width="1180" height="720" fill="#ffffff"/>
-<rect x="0" y="0" width="1180" height="58" fill="#1a2332"/>
-<text x="26" y="30" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="19" font-weight="700">Part 6 — Enterprise Wireless: WLC, CAPWAP, SSID/VLAN, HSRPv2 VLAN 300 (v2)</text>
-<text x="26" y="48" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5">Hybrid arch: control plane proven by WLC (4 APs Online) · client data plane proven by autonomous AP · VLAN 300 Active = DIST-SW1 (canonical)</text>
-<text x="1154" y="34" text-anchor="end" fill="#64748b" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11">TheBigOffice · as-built v2</text>
+<svg viewBox="0 0 1180 740" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="1180" height="740" fill="#ffffff"/>
+<rect x="0" y="0" width="1180" height="46" fill="#1a2332"/>
+<text x="26" y="30" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="18" font-weight="700">P6 — Intention de design</text>
+
+<!-- DIST1 -->
 <rect x="200" y="90" width="230" height="64" rx="8" fill="#0f766e" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="315.0" y="120.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">DIST-SW1 3560</text>
-<text x="315.0" y="136.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">SVI 300 · HSRPv2 Active</text>
-<text x="315.0" y="149.0" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">root STP 300 · DHCP VLAN300 .10-.50</text>
+<text x="315" y="120" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">DIST-SW1 3560</text>
+<text x="315" y="136" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">SVI 300 · HSRPv2 actif</text>
+<text x="315" y="149" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">racine STP 300 · DHCP VLAN300 .10-.50</text>
+
+<!-- DIST2 -->
 <rect x="720" y="90" width="230" height="64" rx="8" fill="#0f766e" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="835.0" y="120.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">DIST-SW2 3560</text>
-<text x="835.0" y="136.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">SVI 300 · HSRPv2 Standby</text>
-<text x="835.0" y="149.0" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">VIP 192.168.100.1</text>
+<text x="835" y="120" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">DIST-SW2 3560</text>
+<text x="835" y="136" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">SVI 300 · HSRPv2 standby</text>
+<text x="835" y="149" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">VIP 192.168.100.1</text>
+
 <line x1="430" y1="122" x2="720" y2="122" stroke="#0f766e" stroke-width="1.6" stroke-dasharray="7 5"/>
-<rect x="496.0" y="106.0" width="158.0" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
-<text x="575.0" y="117.0" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">VIP .100.1 · WLC DHCP OFF</text>
+<rect x="484" y="106" width="182" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
+<text x="575" y="117" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">VIP .100.1 · DHCP WLC désactivé</text>
+
+<!-- WLC generic -->
 <rect x="150" y="230" width="230" height="60" rx="8" fill="#7c3aed" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="265.0" y="258.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">WLC .200 (Generic)</text>
-<text x="265.0" y="274.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">DIST-SW1 Fa0/5 · access 300</text>
-<text x="265.0" y="287.0" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">WLAN 301 Corp / 310 Guest · WPA2/AES</text>
+<text x="265" y="258" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">WLC .200 (Generic)</text>
+<text x="265" y="274" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">DIST-SW1 Fa0/5 · access 300</text>
+<text x="265" y="287" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">WLAN 301 Corp / 310 Guest · WPA2/AES</text>
 <line x1="280" y1="154" x2="265" y2="230" stroke="#7c3aed" stroke-width="2.2"/>
-<rect x="202.5" y="176.0" width="140.0" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
-<text x="272.5" y="187.0" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">Fa0/5 (no trunk in PT)</text>
+<rect x="202" y="176" width="140" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
+<text x="272" y="187" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">Fa0/5 (pas de trunk en PT)</text>
+
+<!-- WLC 3504 ref -->
 <rect x="430" y="230" width="180" height="52" rx="8" fill="#94a3b8" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="520.0" y="254.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">WLC 3504 (ref)</text>
-<text x="520.0" y="270.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">192.168.100.201</text>
-<text x="520.0" y="283.0" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">NOT cabled (double reg.)</text>
+<text x="520" y="254" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">WLC 3504 (réf.)</text>
+<text x="520" y="270" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">192.168.100.201</text>
+<text x="520" y="283" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">non câblé (double enreg.)</text>
 <line x1="360" y1="270" x2="430" y2="256" stroke="#94a3b8" stroke-width="1.3" stroke-dasharray="7 5"/>
+
+<!-- Access + LAPs -->
 <rect x="120" y="370" width="170" height="46" rx="8" fill="#2563eb" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="205.0" y="391.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">ACC-SW1</text>
-<text x="205.0" y="407.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">Fa0/7 = LAP</text>
+<text x="205" y="391" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">ACC-SW1</text>
+<text x="205" y="407" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">Fa0/7 = LAP</text>
 <rect x="145" y="470" width="120" height="44" rx="8" fill="#7c3aed" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="205.0" y="490.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="700">LAP-1 3702i</text>
-<text x="205.0" y="506.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">CAPWAP</text>
+<text x="205" y="490" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="700">LAP-1 3702i</text>
+<text x="205" y="506" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">CAPWAP</text>
 <line x1="205" y1="416" x2="205" y2="470" stroke="#7c3aed" stroke-width="1.4"/>
 <rect x="340" y="370" width="170" height="46" rx="8" fill="#2563eb" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="425.0" y="391.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">ACC-SW2</text>
-<text x="425.0" y="407.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">Fa0/7 = LAP</text>
+<text x="425" y="391" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">ACC-SW2</text>
+<text x="425" y="407" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">Fa0/7 = LAP</text>
 <rect x="365" y="470" width="120" height="44" rx="8" fill="#7c3aed" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="425.0" y="490.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="700">LAP-2 3702i</text>
-<text x="425.0" y="506.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">CAPWAP</text>
+<text x="425" y="490" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="700">LAP-2 3702i</text>
+<text x="425" y="506" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">CAPWAP</text>
 <line x1="425" y1="416" x2="425" y2="470" stroke="#7c3aed" stroke-width="1.4"/>
 <rect x="560" y="370" width="170" height="46" rx="8" fill="#2563eb" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="645.0" y="391.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">ACC-SW3</text>
-<text x="645.0" y="407.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">Fa0/7 = LAP</text>
+<text x="645" y="391" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">ACC-SW3</text>
+<text x="645" y="407" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">Fa0/7 = LAP</text>
 <rect x="585" y="470" width="120" height="44" rx="8" fill="#7c3aed" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="645.0" y="490.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="700">LAP-3 3702i</text>
-<text x="645.0" y="506.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">CAPWAP</text>
+<text x="645" y="490" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="700">LAP-3 3702i</text>
+<text x="645" y="506" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">CAPWAP</text>
 <line x1="645" y1="416" x2="645" y2="470" stroke="#7c3aed" stroke-width="1.4"/>
 <rect x="780" y="370" width="170" height="46" rx="8" fill="#2563eb" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="865.0" y="391.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">ACC-SW4</text>
-<text x="865.0" y="407.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">Fa0/7 = LAP</text>
+<text x="865" y="391" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">ACC-SW4</text>
+<text x="865" y="407" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">Fa0/7 = LAP</text>
 <rect x="805" y="470" width="120" height="44" rx="8" fill="#7c3aed" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="865.0" y="490.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="700">LAP-4 3702i</text>
-<text x="865.0" y="506.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">CAPWAP</text>
+<text x="865" y="490" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="700">LAP-4 3702i</text>
+<text x="865" y="506" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">CAPWAP</text>
 <line x1="865" y1="416" x2="865" y2="470" stroke="#7c3aed" stroke-width="1.4"/>
 <line x1="265" y1="290" x2="205" y2="370" stroke="#7c3aed" stroke-width="1.3"/>
+
+<!-- CAPWAP banner -->
 <rect x="120" y="535" width="720" height="26" rx="5" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.1"/>
-<text x="130" y="552" text-anchor="start" fill="#7c3aed" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="700">CAPWAP ×4 (control plane) → 4 APs Online at WLC .200  —  proven</text>
+<text x="130" y="552" fill="#7c3aed" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="700">CAPWAP ×4 (plan de contrôle) → 4 AP Online au WLC .200  —  prouvé</text>
+
+<!-- Autonomous AP + laptop -->
 <rect x="900" y="370" width="230" height="58" rx="8" fill="#7c3aed" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="1015.0" y="397.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">AP autonome (ACC-SW1 Fa0/6)</text>
-<text x="1015.0" y="413.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">SSID TheBigOffice-Corp-Auto</text>
-<text x="1015.0" y="426.0" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">2.4GHz ch6 · WPA2-PSK · portfast+bpduguard</text>
+<text x="1015" y="397" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">AP autonome (ACC-SW1 Fa0/6)</text>
+<text x="1015" y="413" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">SSID TheBigOffice-Corp-Auto</text>
+<text x="1015" y="426" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">2.4GHz ch6 · WPA2-PSK · portfast+bpduguard</text>
 <rect x="940" y="480" width="150" height="50" rx="8" fill="#475569" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="1015.0" y="503.0" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">Laptop</text>
-<text x="1015.0" y="519.0" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">DHCP .14</text>
-<text x="1015.0" y="532.0" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">ping .10.52 TTL 127</text>
+<text x="1015" y="503" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">Laptop</text>
+<text x="1015" y="519" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">DHCP .14</text>
+<text x="1015" y="532" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">ping .10.52 TTL 127</text>
 <line x1="1015" y1="428" x2="1015" y2="480" stroke="#7c3aed" stroke-width="1.4"/>
-<rect x="978.0" y="438.0" width="74.0" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
-<text x="1015.0" y="449.0" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">Wi-Fi assoc</text>
+<rect x="978" y="438" width="74" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
+<text x="1015" y="449" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">assoc Wi-Fi</text>
 <line x1="290" y1="393" x2="900" y2="393" stroke="#7c3aed" stroke-width="1.4" stroke-dasharray="7 5"/>
-<rect x="477.0" y="377.0" width="236.0" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
-<text x="595.0" y="388.0" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">Fa0/6 (only working client data plane)</text>
-<rect x="120" y="590" width="700" height="83" rx="7" fill="#fffbeb" stroke="#7c3aed" stroke-width="1.2"/>
-<text x="132" y="608" text-anchor="start" fill="#7c3aed" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">Honest PT limitations</text>
-<text x="132" y="626" text-anchor="start" fill="#78350f" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="400">PT 9.0 does NOT simulate centralized CAPWAP data plane → hybrid architecture (control via WLC, client data via autonomous AP).</text>
-<text x="132" y="641" text-anchor="start" fill="#78350f" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="400">Guest isolation (VLAN 310) configured, not proven in data plane (no captive portal in PT).</text>
-<text x="132" y="656" text-anchor="start" fill="#78350f" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10" font-weight="400">5 GHz ch36 target abandoned → AP-PT exposes only a 2.4 GHz channel field (honest downgrade, logged in matrix).</text>
+<rect x="455" y="377" width="280" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
+<text x="595" y="388" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">Fa0/6 (seul plan de données client fonctionnel)</text>
+
+<!-- Intention de design panel -->
+<rect x="120" y="572" width="720" height="160" rx="8" fill="#f1f5f9" stroke="#15803d" stroke-width="1.3"/>
+<text x="134" y="593" fill="#15803d" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12" font-weight="700">Intention de design — Wi-Fi d'entreprise : WLC, CAPWAP, SSID/VLAN, HSRPv2</text>
+<text x="134" y="613" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• Architecture hybride assumée : contrôle prouvé par le WLC (4 AP Online) · données client par un AP autonome</text>
+<text x="134" y="629" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• VLAN 300 (gestion Wi-Fi) : HSRPv2 actif = DIST-SW1 (canonique) · standby = DIST-SW2 · VIP 192.168.100.1</text>
+<text x="134" y="645" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• SSID 301 Corp / 310 Guest · WPA2/AES · DHCP VLAN 300 sur DIST-SW1 (.10-.50), DHCP WLC désactivé</text>
+<text x="134" y="661" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• Limite PT assumée : PT 9.0 ne simule pas le plan de données CAPWAP → d'où l'AP autonome pour le trafic client</text>
+<text x="134" y="677" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• Isolation Guest (VLAN 310) configurée mais non prouvée en plan de données (pas de captive portal en PT)</text>
+<text x="134" y="693" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• 5 GHz ch36 abandonné → l'AP PT n'expose qu'un champ 2.4 GHz (downgrade honnête, tracé dans la matrice)</text>
+<text x="134" y="715" fill="#64748b" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9" font-style="italic">Adressage détaillé → TECHNICAL_OVERVIEW.md · câblage réel → capture as-built (WORKFLOW.md)</text>
+
+<!-- Legend -->
+<rect x="860" y="572" width="270" height="160" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+<text x="874" y="593" fill="#1a2332" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12" font-weight="700">Légende</text>
+<rect x="874" y="606" width="13" height="13" rx="3" fill="#0f766e"/>
+<text x="895" y="616" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">Distribution (HSRPv2 VLAN 300)</text>
+<rect x="874" y="628" width="13" height="13" rx="3" fill="#7c3aed"/>
+<text x="895" y="638" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">Wi-Fi (WLC / LAP / AP auto.)</text>
+<rect x="874" y="650" width="13" height="13" rx="3" fill="#2563eb"/>
+<text x="895" y="660" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">Accès (2960)</text>
+<rect x="874" y="672" width="13" height="13" rx="3" fill="#94a3b8"/>
+<text x="895" y="682" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">WLC 3504 réf. (non câblé)</text>
+<rect x="874" y="694" width="13" height="13" rx="3" fill="#475569"/>
+<text x="895" y="704" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">Client (laptop)</text>
 </svg>
