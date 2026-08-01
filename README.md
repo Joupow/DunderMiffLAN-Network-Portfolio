@@ -1,13 +1,22 @@
 # Réseau d'entreprise TheBigOffice
 ## Portfolio réseau junior — Cisco Packet Tracer / CompTIA Network+
 
-Ce dépôt documente, en autodidacte, une architecture réseau d'entreprise complète : conception, configuration, validation, dépannage et gestion des limites, y compris les endroits où un choix initial était perfectible et comment il a été identifié puis corrigé.
+Ce dépôt présente **TheBigOffice**, un laboratoire réseau simulant une infrastructure d'entreprise sous Cisco Packet Tracer.
 
-L'objectif : construire de zéro un lab pratique couvrant l'ensemble du programme **CompTIA Network+** (et quelques sujets au-delà), sans s'arrêter à la théorie mais en ancrant chaque concept dans une implémentation qui fonctionne, jusqu'au débogage. 
+Le projet couvre l'ensemble du cycle de vie d'une implémentation réseau :
 
-C'est un **lab d'apprentissage structuré, pas une architecture de référence de production**, conçu pour démontrer des compétences d'ingénierie réseau fondamentales : concevoir, configurer, dépanner et documenter un réseau d'entreprise cohérent. 
+- Conception de l'architecture réseau 
+- Segmentation et l'organisation logique du réseau 
+- Configuration des équipements 
+- Validation du fonctionnement 
+- Diagnostic et la résolution d'incidents 
+- Analyse des limites de conception et l'amélioration de l'architecture
 
-> **Ce projet est un rebuild.** La v1 était mon premier home lab autodidacte — trop d'erreurs techniques au regard de l'ambition, beaucoup de dépannage. Cette v2 vise l'efficacité : plus vite, plus propre, plus droit au but. Elle garde des imperfections, mais elle est presque reproductible telle quelle. La capacité à identifier et corriger ses propres erreurs est elle-même un livrable.
+Ce laboratoire a été construit de manière autodidacte pour mettre en pratique les compétences couvertes par la **CompTIA Network+**, tout en explorant des notions plus avancées. 
+
+Ce projet n'a pas vocation à représenter une architecture de production clé en main. Il s'agit avant tout d'un **portfolio technique,** dont l'objectif est de démontrer une capacité à concevoir, implémenter, valider, documenter et faire évoluer une infrastructure réseau de manière méthodique. 
+
+Les erreurs de conception font partie du processus d'apprentissage et sont traitées comme des opportunités d'analyse et d'amélioration.
 
 ---
 
@@ -28,26 +37,24 @@ C'est un **lab d'apprentissage structuré, pas une architecture de référence d
 
 ## Périmètre du projet
 
-| Partie | Sujet | Résultat principal |
-|---|---|---|
-| [P1](./P1/README.md) | Fondations LAN du siège | VLANs, trunks 802.1Q, VLAN de management, **Rapid PVST+ avec roots sur la Distribution** |
-| [P2](./P2/README.md) | Routage & redondance | **HSRP sur la Distribution**, OSPF point-à-point, DHCP centralisé + relais unique, Core en transit L3 pur |
-| [P3](./P3/README.md) | DMZ & pare-feu | ASA trois zones, NAT/PAT, 3 ACL, IDS/SPAN, `default-information originate` + verrou résumé/Null0 |
-| [P4](./P4/README.md) | Datacenter | Spine-Leaf routée, **2 Border Leafs sur le Core (ECMP N-S)**, tiers app + stockage, VIP de load balancer |
-| [P5](./P5/README.md) | VoIP | CME co-localisé avec l'Active/root du VLAN 30, DHCP Option 150, SCCP, TFTP, frontière QoS |
-| [P6](./P6/README.md) | Wi-Fi | WLC + APs lightweight (CAPWAP), SSID WPA2 Corp/Guest, **HSRPv2 VLAN 300 sur DIST-SW1** |
+| Partie               | Sujet                   | Résultat principal                                                                                        |
+| -------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------- |
+| [P1](./P1/README.md) | Fondations LAN du siège | VLANs, trunks 802.1Q, VLAN de management, **Rapid PVST+ avec roots sur la Distribution**                  |
+| [P2](./P2/README.md) | Routage & redondance    | **HSRP sur la Distribution**, OSPF point-à-point, DHCP centralisé + relais unique, Core en transit L3 pur |
+| [P3](./P3/README.md) | DMZ & pare-feu          | ASA trois zones, NAT/PAT, 3 ACL, IDS/SPAN, `default-information originate` + verrou résumé/Null0          |
+| [P4](./P4/README.md) | Datacenter              | Spine-Leaf routée, **2 Border Leafs sur le Core (ECMP N-S)**, tiers app + stockage, VIP de load balancer  |
+| [P5](./P5/README.md) | VoIP                    | CME co-localisé avec l'Active/root du VLAN 30, DHCP Option 150, SCCP, TFTP, frontière QoS                 |
+| [P6](./P6/README.md) | Wi-Fi                   | WLC + APs lightweight (CAPWAP), SSID WPA2 Corp/Guest, **HSRPv2 VLAN 300 sur DIST-SW1**                    |
 
 ---
 ## Topologie du projet
 
 ![Topologie Global](./assets/topologies/topology-global.svg)
 
---> Vue consolidée (architecture, décisions transverses, écarts de production) → [`TECHNICAL_OVERVIEW.md`](./TECHNICAL_OVERVIEW.md). 
-> 
-> Schémas de topologie dans chaque partie.
+→ Vue consolidée (architecture, décisions transverses, écarts de production) : [`TECHNICAL_OVERVIEW.md`](./TECHNICAL_OVERVIEW.md). 
+→  Schémas de topologie dans chaque partie.
 
 ---
-
 ## Principes transverses
 
 Quelques règles de conception qui traversent tout le dépôt :
@@ -93,17 +100,16 @@ TheBigOffice - Packet Tracer Portfolio /
 Pour chaque partie : le **README** cadre (objectif, périmètre, compétences, matrice de validation) ; le **WORKFLOW** reproduit (CLI annotée, validation par étape, registre de dette, annexe de captures).
 
 ---
-
 ## Usage de l'IA dans ce projet
 
 L'assistance par IA a été utilisée comme **outil d'apprentissage et de revue**, pas comme une autorité ni comme un substitut à la compréhension du réseau. 
 
 Je m'en suis surtout servi pour :
 
-- clarifier la syntaxe Cisco et les concepts réseau pendant la construction du lab ;
-- challenger des choix de conception et faire remonter des incohérences avant qu'elles ne deviennent des bugs ;
-- relire des extraits de configuration à la recherche d'erreurs courantes (`no shutdown` oublié, mauvais type de réseau OSPF, documentation contradictoire) ;
-- structurer mes prompts et itérer pour obtenir des réponses précises et vérifiables plutôt que des explications vagues.
+- Clarifier la syntaxe Cisco et les concepts réseau pendant la construction du lab ;
+- Challenger des choix de conception et faire remonter des incohérences avant qu'elles ne deviennent des bugs ;
+- Relire des extraits de configuration à la recherche d'erreurs courantes (`no shutdown` oublié, mauvais type de réseau OSPF, documentation contradictoire) ;
+- Structurer mes prompts et itérer pour obtenir des réponses précises et vérifiables plutôt que des explications vagues.
 
 L'essentiel était la **supervision**. Les sorties de l'IA n'étaient pas tenues pour automatiquement correctes : plusieurs points ont demandé une revue et une correction humaines. le risque de boucle lié au résumé de routes à l'ASA, l'ordre de la chaîne de boot VoIP, ou les limites du WLC dans Packet Tracer. 
 
@@ -112,13 +118,30 @@ Ce projet démontre donc aussi une compétence qui compte dans le travail techni
 ---
 ## Plan initial
 
-Le plan initial incluait davantage de sujets pour couvrir la majorité des objectifs de la CompTIA Network+ comme : IaC, IPv6, monitoring, PKI/RADIUS, notions de cloud, simulation d'attaques. Le projet s'arrête à la Partie 6 parce que **Packet Tracer devient le facteur limitant**.
+Le plan initial incluait 11 parties avec d'avantages de sujets pour couvrir la majorité des objectifs de la CompTIA Network+ comme :  IPv6, monitoring, PKI/RADIUS, notions de cloud, simulation d'attaques. Le projet s'arrête à la Partie 6 parce que **Packet Tracer devient le facteur limitant**.
 
 **L'observation.** À mesure que le réseau grandit, le ratio s'inverse : chaque nouvelle partie demande plus de temps à contourner les limites du simulateur (data plane CAPWAP, VXLAN, iSCSI, SNAT, NAT par port…) qu'à produire de la configuration représentative. 
 
 Packet Tracer est un excellent outil d'**apprentissage** pour comprendre la logique réseau, mais il reste un **simulateur** : il modélise le comportement des protocoles sans exécuter un vrai IOS. Au-delà d'un certain niveau de complexité, le travail se réduit à documenter ce que l'outil *ne peut pas* faire.
 
-**La décision.** Continuer les sujets restants sur **GNS3 / Cisco CML**, qui émulent de vraies images IOS et permettent de tester réellement ce que Packet Tracer ne peut que représenter. L'objectif : passer du simulateur à l'émulateur, un standard plus exigeant quand le sujet l'impose, et au passage, monter en compétence sur des outils professionnels.
+**La décision.** Continuer les sujets restants sur **GNS3 / Cisco CML** ou autre logiciel de virtualisation, qui émulent de vraies images IOS et permettent de tester réellement ce que Packet Tracer ne peut que représenter. 
+
+L'objectif : passer du simulateur à l'émulateur, un standard plus exigeant quand le sujet l'impose, et au passage, monter en compétence sur des outils professionnels.
+
+---
+## À propos de cette build
+
+Ce dépôt présente la **version 2** du projet.
+
+La première version constituait mon premier laboratoire réseau d'entreprise. Toujours construite de manière autodidacte. Elle m'a permis de mettre en pratique de nombreux concepts, mais elle a également révélé plusieurs limites de conception. 
+
+Une part importante du travail a consisté à diagnostiquer des comportements inattendus, comprendre leurs causes et corriger les erreurs de configuration.
+
+Plutôt que d'appliquer des correctifs successifs, j'ai choisi de reconstruire entièrement le projet. 
+
+Cette seconde version reprend les objectifs de la première avec une architecture plus cohérente, une méthodologie plus rigoureuse et une documentation plus structurée.
+
+Ce **rebuild** est le résultat des enseignements tirés de la première itération. Il ne cherche pas à masquer les erreurs initiales, mais à démontrer la capacité à les identifier, les comprendre et les transformer en une conception plus robuste et plus reproductible.
 
 ---
 ## 🏁 Conclusion
