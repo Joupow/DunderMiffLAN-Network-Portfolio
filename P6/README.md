@@ -74,7 +74,7 @@ Tout le campus P1–P5 est **inchangé** — P6 n'ajoute que les VLANs 300/301/3
 
 | ✅ Prouvé (par état, appel ou trafic)                                                                                                               | ⚠️ Configuré / limité par PT                                              |
 | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
-| **Enregistrement CAPWAP : 4 LAP `Online`**, MACs `.10-.13` = baux DHCP — [P-18](./WORKFLOW.md#p-18), [P-04](./WORKFLOW.md#p-06)                    | Data plane client **via WLC** (301/310) : droppé en PT (L5)               |
+| **Enregistrement CAPWAP : 4 LAP `Online`**, MACs `.10-.13` = baux DHCP — [P-18](./WORKFLOW.md#p-18), [P-04](./WORKFLOW.md#p-04)                    | Data plane client **via WLC** (301/310) : droppé en PT (L5)               |
 | **Data plane client : laptop → `.100.1` (4/4) puis → `.10.52` (TTL 127)** via AP autonome — [P-20](./WORKFLOW.md#p-20), [P-21](./WORKFLOW.md#p-21) | DHCP Wi-Fi centralisé auto : APIPA en PT (L6) — contourné par AP autonome |
 | Diffusion SSID Corp + Guest — [P-18](./WORKFLOW.md#p-18), [P-18b](./WORKFLOW.md#p-18b)                                                             | Isolation Guest : non testée en data plane (captive portal ❌)             |
 | HSRPv2 VLAN 300 : Active `.100.1` + Standby stabilisé — [P-12](./WORKFLOW.md#p-12), [P-13](./WORKFLOW.md#p-13)                                     | WPA3 / 6 GHz / band steering : non simulables                             |
