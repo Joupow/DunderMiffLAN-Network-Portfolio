@@ -1,6 +1,7 @@
-# Partie 2 : Routage, redondance & services
+# Partie 2 : Routage & redondance
 
-**Bloc :** Siège TheBigOffice · **Outil :** Cisco Packet Tracer 9.0 · **Certification :** CompTIA Network+
+ **Concepts clés** : Routage, HSRP, DHCP, OSFP P2P  ·  **Certification :** CompTIA Network+ · **Outil :** Cisco Packet Tracer 9.0
+ 
 
 - Plan d'adressage complet → [`IPAM.md`](../IPAM.md)
 - Progression étape par étape →[`WORKFLOW P2`](./WORKFLOW.md).
@@ -8,11 +9,16 @@
 ---
 ## Objectif
 
-- Migrer le routage inter-VLAN *temporaire* du Core (P1) sur la **Distribution en passerelles HSRP redondantes**
-- Introduire des uplinks routés `/30` avec **OSPF** comme IGP du campus
-- Et centraliser l'adressage hôte avec une **autorité DHCP unique + relais**. 
+Transformer le LAN statique de P1 en un réseau routé, redondant et auto-adressé, autour de quatre chantiers :
 
-Cela clôt les deux dettes critiques ouvertes en P1 (SVIs sur le Core, SPOF inter-VLAN).
+- Migration des passerelles inter-VLAN du Core vers la Distribution en **HSRP dual-active** (VIP `.1`, physiques `.2`/`.3`)
+- Uplinks Core↔Distribution convertis en **liens routés `/30`**, avec **OSPF** en point-à-point comme IGP du campus
+- Adressage hôte centralisé : **autorité DHCP unique** sur le HQ-Router + relais `ip helper-address`
+- **Durcissement L2** des ports d'accès et **équilibrage STP PVST+** aligné sur les rôles HSRP
+
+Cela solde les dettes critiques laissées ouvertes par P1 : SVIs sur le Core, SPOF inter-VLAN, passerelles sans redondance. 
+
+Tout ce qui suit, DMZ, datacenter, voix, Wi-Fi s'appuie sur ce socle routé et redondant.
 
 **Contrainte structurante :** 
 

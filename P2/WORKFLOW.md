@@ -1,4 +1,3 @@
-
 # Partie 2 : Workflow 
 
  **Concepts clés** : Routage, HSRP, DHCP, OSFP P2P  ·  **Certification :** CompTIA Network+ · **Outil :** Cisco Packet Tracer 9.0
@@ -19,7 +18,7 @@ Implantation et configurations réalisées :
 ---
 ## Topologie As-Built
 
-Schéma PT : `/30` en 10.0.2/3, labels HSRP par VLAN, MGMT `.2`/`.3`, « ALL PCs – DHCP Lease »
+Schéma PT : passage L3/HA - OSPF, HSRP par VLAN, STP root réparti, DHCP
 
 ![Networ-overview-P2](../assets/network-overview/NO_P2.png)
 
