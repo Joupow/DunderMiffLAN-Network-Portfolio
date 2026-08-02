@@ -17,7 +17,7 @@ Implantation et configurations réalisées :
 ---
 ## Topologie As-Built
 
-Schéma PT : 3 niveaux, accès dual-homed
+Schéma PT : base L2, 3 niveaux, accès dual-homed, adressage statique
 
 ![Networ-overview-P1](../assets/network-overview/NO_P1.png)
 

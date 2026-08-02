@@ -8,8 +8,9 @@
 ---
 ## Objectif
 
-Construire la fondation du LAN d'entreprise sur le modèle hiérarchique Cisco à trois niveaux : 
+Construire la fondation du LAN d'entreprise sur le modèle hiérarchique Cisco à trois niveaux comprenant : 
 
+- Core, distributions et access
 - Segmentation VLAN
 - Plan de management dédié,
 - Stabilisation STP
