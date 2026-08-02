@@ -1,27 +1,31 @@
-# Partie 3 — Workflow : Périmètre ASA, DMZ, NAT/PAT & filtrage
+# Partie 3 : Workflow :
 
-**Bloc :** Périmètre TheBigOffice · **Outil :** Cisco Packet Tracer (ASA 9.6) · **Certification :** CompTIA Network+
+**Concepts clés** : ASA, DMZ, NAT/PAT & filtrage · **Certification :** CompTIA Network+  · **Outil :** Cisco Packet Tracer 9.0
 
-> **Partie 3 · pare-feu ASA & DMZ**
-> 
-> 3 zones : outside `203.0.113.2` (SL 0) / dmz `172.16.0.1` (SL 50) / inside `192.168.200.1` (SL 100) · route par défaut originée dans OSPF · résumés internes verrouillés par Null0 · NAT/PAT + publication statique · ACL OUTSIDE-IN / INSIDE-FORCED-PROXY / DMZ-RESTRICT · WEB-PUBLIC `.10`, PROXY `.20` · IDS passif (SPAN) · port-security sticky.
-> 
-> Plan d'adressage complet → [`IPAM.md`](../IPAM.md).
+Implantation et configurations réalisées :  
 
-**Statut :** ✅ Validé — edge ASA 3 zones, **le campus atteint Internet** (origination du défaut prouvée), NAT/PAT fonctionnel, **3 ACL aux philosophies opposées prouvées par compteur de hits**, proxy forcé + prévention reverse-shell, IDS passif (SPAN), port-security (clôt P2 #8) · 5 incidents corrigés · 0 déviation · 4 limitations PT (mécanisme prouvé pour chacune)
+- Edge ASA 3 zones : 
+	- outside `203.0.113.2` (SL 0) 
+	- dmz `172.16.0.1` (SL 50) 
+	- inside `192.168.200.1` (SL 100)
+- Route par défaut originée dans OSPF 
+- Résumés internes verrouillés par Null0 · NAT/PAT + publication statique
+- ACL OUTSIDE-IN / INSIDE-FORCED-PROXY / DMZ-RESTRICT
+- WEB-PUBLIC `.10`, PROXY `.20` 
+- IDS passif (SPAN)
+- Port-security sticky.
 
+5 incidents corrigés · 0 déviation · 4 limitations PT (mécanisme prouvé pour chacune)
+
+Plan d'adressage complet → [`IPAM.md`](../IPAM.md).
 
 ---
+## Topologie As-Built
 
-## Objectif
+Schéma PT : périmètre & sécurité - ASA, DMZ, peering ISP, IDS
 
-Construire la frontière entre le réseau interne et Internet : pare-feu ASA à trois zones, DMZ hébergeant les services exposés + un proxy, politique de sortie qui force le web interne par le proxy, confinement reverse-shell sur le serveur publié, sonde IDS passive. Le but n'est **pas** « faire passer du trafic » (c'était P2) — c'est de définir **ce qui a le droit de traverser, et dans quel sens**, et de prouver chaque règle par un **compteur**, pas par une capture.
+![Networ-overview-P3](../assets/network-overview/NO_P3.png)
 
-**Contrainte structurante — l'ordre de build.** Routage et NAT sont vérifiés sur un ASA **sans ACL** (les security-levels autorisent déjà inside→outside) *avant* toute ACL. Déboguer un problème de routage à travers trois ACL à la fois est le gouffre de temps classique. Les trois ACL portent trois philosophies opposées : le `permit ip any any` final est **obligatoire sur inside** et **interdit sur DMZ**.
-
-**Décision de continuité (héritée de P2).** À la fin de P2, le campus n'atteignait Internet par personne. P3 l'introduit via le lien HQ-Router → ASA inside. Une route par défaut statique **ne suffit pas** : elle doit être poussée dans OSPF par `default-information originate` — même classe de piège « chemin de retour » que l'OFFER DHCP de P2.
-
-![Topologie P3](../assets/topologies/topology_p3.svg)
 
 ---
 
@@ -43,7 +47,7 @@ Tout le campus P1/P2 est **inchangé** — P3 ne fait que bouler le périmètre 
 
 ## Étapes de configuration
 
-Le pare-feu se construit de l'intérieur vers l'extérieur : joignabilité, puis traduction, puis filtrage. L'étape 3 (origination du défaut) est le vrai déblocage — à faire avant les routes de l'ASA, sinon l'ASA a un next-hop qu'aucun hôte n'atteint.
+Le pare-feu se construit de l'intérieur vers l'extérieur : joignabilité, puis traduction, puis filtrage. L'étape 3 (origination du défaut) est le vrai déblocage, à faire avant les routes de l'ASA, sinon l'ASA a un next-hop qu'aucun hôte n'atteint.
 
 ```
 [1]  Équipements + câblage : ASA, ISP-Router, DMZ-SW, WEB-PUBLIC, PROXY, PC-EXTERIEUR, IDS-Sensor
@@ -462,45 +466,59 @@ show ip route ospf             ! DIST/Core : O*E2 0.0.0.0/0 = défaut originé
 > Une capture **canonique** par affirmation ; les huit `show access-list` quasi-identiques ramenés aux deux captures de compteurs ci-dessous. Les groupes A/B/C citent le `[P-##]` pertinent. Embeds Obsidian.
 
 **<a id="p-01"></a> [P-01] · A1 campus → Internet** — PC1 `ping 8.8.8.8` = 4/4, `TTL=251`
+
 ![Capture P3-12](../assets/captures/P3/Capture_P3_12.png)
 
 **<a id="p-02"></a> [P-02] · A2 sortie proxy forcé** — PC1 `http://172.16.0.20` = page servie
+
 ![Capture P3-11](../assets/captures/P3/Capture_P3_11.png)
 
 **<a id="p-03"></a> [P-03] · A4 ASA → DMZ** — ASA `ping 172.16.0.10` + `.20` = 5/5 chacun
+
 ![Capture P3-07](../assets/captures/P3/Capture_P3_07.png)
 
 **<a id="p-04"></a> [P-04] · A5 sortie proxy** — PROXY-SERVER `ping 8.8.8.8` = 4/4
+
 ![Capture P3-09](../assets/captures/P3/Capture_P3_09.png)
 
 **<a id="p-05"></a> [P-05] · A6 preuve NAT (la durable)** — ASA `show xlate` : dynamique `ICMP PAT inside:192.168.10.50 → outside:203.0.113.2 flags i` + statique `dmz:172.16.0.10 → 203.0.113.2 flags s`
+
 ![Capture P3-14](../assets/captures/P3/Capture_P3_14.png)
 
 **<a id="p-06"></a> [P-06] · compteurs maîtres** — ASA `show access-list` : OUTSIDE-IN `echo-reply`=16 / ligne 7 `www`=5 / `echo`=9 ; INSIDE `deny www`=24 / `permit ip`=8 ; DMZ `deny host .10`=80 / `permit icmp .1`=10
+
 ![Capture P3-06](../assets/captures/P3/Capture_P3_06.png)
 
 **<a id="p-07"></a> [P-07] · B1+B2 web direct bloqué (visuel)** — PC1 `http://8.8.8.8:80 / :443` = Request Timeout (forcé au proxy)
+
 ![Capture P3-10](../assets/captures/P3/Capture_P3_10.png)
 
 **<a id="p-08"></a> [P-08] · B2+B3 compteurs** — ASA `show access-list` : INSIDE `deny 443`=12 ; OUTSIDE-IN `deny telnet`=12
+
 ![Capture P3-03](../assets/captures/P3/Capture_P3_03.png)
 
 **<a id="p-09"></a> [P-09] · B3+B4 tentatives externes (visuel)** — PC-EXTERIEUR `ping 203.0.113.2` = 100 % loss + `telnet 203.0.113.2` = Connection timed out
+
 ![Capture P3-04](../assets/captures/P3/Capture_P3_04.png)
 
 **<a id="p-10"></a> [P-10] · B5 blocage reverse-shell** — WEB-PUBLIC `ping 8.8.8.8` = 100 % loss (ne peut pas initier de sortie)
+
 ![Capture P3-08](../assets/captures/P3/Capture_P3_08.png)
 
 **<a id="p-11"></a> [P-11] · C1 port-security** — ACC-SW1 `show port-security address` : 2× `SecureSticky` (V10 `Fa0/3`, V20 `Fa0/4`), `maximum 2`, `Secure-up`, `Restrict`
+
 ![Capture P3-02](../assets/captures/P3/Capture_P3_02.png)
 
 **<a id="p-12"></a> [P-12] · C2 SPAN / IDS** — CORE-SW `show monitor session 1` : destination `Gi1/0/5` ; source silencieusement absente (dette #23)
+
 ![Capture P3-01](../assets/captures/P3/Capture_P3_01.png)
 
 **<a id="p-13"></a> [P-13] · A3 bloqué-par-conception** — PC1 `http://172.16.0.10` = Request Timeout : réponse jetée par DMZ-RESTRICT `deny host .10` (pas une faute)
+
 ![Capture P3-13](../assets/captures/P3/Capture_P3_13.png)
 
 **<a id="p-14"></a> [P-14] · dette #22 — rendu HTTP entrant** — PC-EXTERIEUR `http://203.0.113.2` = Request Timeout ; le SYN atteint le serveur (OUTSIDE-IN ligne 7 hitcnt, [P-06]), rendu bloqué par PT. Fonctionne sur un ASA physique
+
 ![Capture P3-05](../assets/captures/P3/Capture_P3_05.png)
 
 ---
