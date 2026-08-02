@@ -1,8 +1,6 @@
 # Partie 4 : Datacenter 
 
-**Outil :** Cisco Packet Tracer (Catalyst 3650) 
-**Concepts clés** : Spine-Leaf, Border Leafs, tiers serveurs & load balancer 
-**Certification :** CompTIA Network+
+ **Concepts clés** : Spine-Leaf, Border Leafs, tiers serveurs & load balancer  · **Certification :** CompTIA Network+  · **Outil :** Cisco Packet Tracer 9.0
 
 - Plan d'adressage complet → [`IPAM.md`](../IPAM.md)
 - Progression étape par étape → [`WORKFLOW P4`](./WORKFLOW.md)
@@ -21,7 +19,10 @@ Construire le datacenter comme une fabric Spine-Leaf **routée**, boulée sur le
 - Les deux Border Leafs terminent sur le **Core** (`10.0.12.0/30`, `10.0.13.0/30`), pas un sur le Core et un sur le HQ-Router comme j'avais pu produire dans mon premier build. 
 - Les deux chemins N-S sont de longueur identique → le Core apprend les sous-réseaux DC via BL1 **et** BL2 en **ECMP**, et le HQ-Router reste un pur edge campus.
 
-**Décision de continuité (héritée de P3).** Le campus atteint déjà Internet. Le DC a seulement besoin qu'OSPF porte `172.16.2.0/24` + `172.16.3.0/24` jusqu'à l'edge, plus un objet PAT dédié. La route ASA + NAT se fait **en dernier**, une fois la fabric prouvée.
+**Décision de continuité (héritée de P3) : ** 
+
+- Le campus atteint déjà Internet. 
+- Le DC a seulement besoin qu'OSPF porte `172.16.2.0/24` + `172.16.3.0/24` jusqu'à l'edge, plus un objet PAT dédié. La route ASA + NAT se fait **en dernier**, une fois la fabric prouvée.
 
 ---
 ## Topologie logique
@@ -33,7 +34,7 @@ Construire le datacenter comme une fabric Spine-Leaf **routée**, boulée sur le
 
 | Domaine                | Concept                                         | Statut                                       |
 | ---------------------- | ----------------------------------------------- | -------------------------------------------- |
-| 🏗️ Architecture       | Fabric Spine-Leaf (leaf-spine)                  | ✅ 2×2 + 2 border leafs                       |
+| 🗺️ Topologie          | Fabric Spine-Leaf (leaf-spine)                  | ✅ 2×2 + 2 border leafs                       |
 | 🏗️ Architecture       | Trafic Est-Ouest vs Nord-Sud                    | ✅ E-O `Leaf→Spine→Leaf`, N-S via Border Leaf |
 | 🏗️ Architecture       | Application trois tiers (présentation/app/data) | ✅ DMZ / VLAN 210 / VLAN 220                  |
 | 🧭 Routage             | Accès routé (pas de VLAN étiré dans la fabric)  | ✅ chaque port fabric `no switchport` + `/30` |
@@ -49,17 +50,10 @@ Construire le datacenter comme une fabric Spine-Leaf **routée**, boulée sur le
 
 ## Test & validation ✅
 
-Cette section recense ce qui a été testé et validé par résultat ou par compteur
+Cette section recense ce qui a été testé et validé : 
 
-> - Fabric Spine-Leaf routée 2×2, 
-> - **2 Border Leafs sur le Core** (symétrie N-S, HQ-Router hors du chemin DC) 
-> - Tiers applicatif + data joignables, 
-> - **E-O et N-S prouvés par résultat**, 
-> - **Sortie Internet prouvée par compteur NAT**
-> - Isolation DMZ→APP prouvée par compteur d'ACL 
-> - Ports inutilisés en VLAN 998 
-
-Chaque preuves cite un `[P-##]` de l'[Annexe — Captures de preuve du WORKFLOW P4](./WORKFLOW.md#annexe--captures-de-preuve). Chaque flux (sortie, isolation) est prouvé par un **compteur**, pas par un timeout.
+- Chaque preuves cite un `[P-##]` de l'[Annexe — Captures de preuve du WORKFLOW P4](./WORKFLOW.md#annexe--captures-de-preuve). 
+- Chaque flux (sortie, isolation) est prouvé par un **compteur**, pas par un timeout.
 
 | 🧭 **Routage / underlay**                  | Résultat / compteur                                                      | Preuve                              |
 | ------------------------------------------ | ------------------------------------------------------------------------ | ----------------------------------- |

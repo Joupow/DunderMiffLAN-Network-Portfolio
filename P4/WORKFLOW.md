@@ -1,22 +1,24 @@
-# Partie 4 — Workflow : Datacenter Spine-Leaf
+# Partie 4 : Workflow - Datacenter 
 
-**Bloc :** Datacenter TheBigOffice · **Outil :** Cisco Packet Tracer (Catalyst 3650) · **Certification :** CompTIA Network+
+ **Concepts clés** : Spine-Leaf, Border Leafs, tiers serveurs & load balancer  ·  **Certification :** CompTIA Network+ · **Outil :** Cisco Packet Tracer 9.0
 
-> Résumé en quelques mots : 
-> 
-> - 2 Spines / 2 Leafs compute / 2 Border Leafs 
-> - Fabric `/30` `point-to-point` (pas de DR/BDR)
-> - Border Leafs → **Core** sur `Gi1/0/3` & `Gi1/0/4` (ECMP N-S, `10.0.12/13.0`) 
-> - VLAN 210 applicatif `172.16.2.0/24` / VLAN 220 data `172.16.3.0/24`
-> - APP-WEB1/2 derrière VIP LB `.10`
-> - SAN block store · sortie Internet via l'ASA (P3) + objet PAT `DC-NET`.
-> 
-> 5 incidents corrigés · 0 déviation · 3 limitations PT (LB, SAN, Jumbo MTU)
-> 
-> Plan d'adressage complet → [`IPAM.md`](../IPAM.md)
+Implantation et configurations réalisées :  
+
+- 2 Spines / 2 Leafs compute / 2 Border Leafs 
+- Fabric `/30` `point-to-point` (pas de DR/BDR)
+- Border Leafs → **Core** sur `Gi1/0/3` & `Gi1/0/4` (ECMP N-S, `10.0.12/13.0`) 
+- VLAN 210 applicatif `172.16.2.0/24` / VLAN 220 data `172.16.3.0/24`
+- APP-WEB1/2 derrière VIP LB `.10`
+- SAN block store · sortie Internet via l'ASA (P3) + objet PAT `DC-NET`.
+
+5 incidents corrigés · 0 déviation · 3 limitations PT (LB, SAN, Jumbo MTU)
+
+→ Plan d'adressage complet → [`IPAM.md`](../IPAM.md)
 
 ---
 ## Topologie As-Built
+
+Schéma PT : cœur datacenter - fabric spine-leaf, fermes serveurs
 
 ![Networ-overview-P4](../assets/network-overview/NO_P4.png)
 
@@ -51,7 +53,15 @@ La fabric se construit de l'intérieur : routage fabric (Spines → Leafs → Bo
 [7] Edge (ASA, P3)        : route inside 172.16.2/3.0 + objet PAT DC-NET   <- sortie
 ```
 
-**Câblage as-built** (subnets `/30` → [`IPAM.md §2`](../IPAM.md)) : Spine1 `Gi1/0/1–4` → Leaf1 / Leaf2 / BL1 / BL2 ; Spine2 `Gi1/0/1–4` → Leaf1 / Leaf2 / BL1 / BL2 ; BL1 `Gi1/0/3` ↔ **CORE `Gi1/0/3`** ; BL2 `Gi1/0/3` ↔ **CORE `Gi1/0/4`** ; Leaf1 `Gi1/0/5–7` → APP-WEB1/2 + LB (VLAN 210) ; Leaf2 `Gi1/0/5` → SAN (VLAN 220). Core `Gi1/0/1/2/5/24` intouchés.
+**Câblage as-built** (subnets `/30` → [`IPAM.md §2`](../IPAM.md)) : 
+
+- Spine1 `Gi1/0/1–4` → Leaf1 / Leaf2 / BL1 / BL2 ; 
+- Spine2 `Gi1/0/1–4` → Leaf1 / Leaf2 / BL1 / BL2 ; 
+- BL1 `Gi1/0/3` ↔ **CORE `Gi1/0/3`** ; 
+- BL2 `Gi1/0/3` ↔ **CORE `Gi1/0/4`** ; 
+- Leaf1 `Gi1/0/5–7` → APP-WEB1/2 + LB (VLAN 210) ; 
+- Leaf2 `Gi1/0/5` → SAN (VLAN 220). 
+- Core `Gi1/0/1/2/5/24` intouchés.
 
 ---
 
