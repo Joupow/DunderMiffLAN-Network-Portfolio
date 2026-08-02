@@ -1,23 +1,26 @@
 # Partie 1 — Workflow : Fondations LAN du siège
 
-**Bloc :** Siège TheBigOffice · **Outil :** Cisco Packet Tracer 9.0 · **Certification :** CompTIA Network+
-**Statut :** 
+**Concepts clés** : Modèle hiérarchique 3 niveaux · VLANs · 802.1Q · STP · routage inter-VLAN · SVI · **Certification :** CompTIA Network+  · **Outil** : Cisco Packet Tracer 9.0
 
-> **Partie 1 · LAN 3 niveaux**
-> 
-> Modèle hiérarchique Cisco · VLANs · 802.1Q · STP (root pré-aligné sur le futur Active HSRP) · routage inter-VLAN temporaire (SVI sur le Core)
+Implantation et configurations réalisées :  
 
-✅ Validé — fondation L2 prouvée de bout en bout, **failover inclus** · 2 incidents de build attrapés et corrigés (mismatch de VLAN natif, BPDU Guard sur un uplink) · points de durcissement différés vers P2–P6
+ - VLANs `10` RH · `20` IT · `30` VOIP · `99` MGMT · `998` quarantaine · `999` natif trou noir  
+ - Passerelles `.1` **temporaires sur SVI du Core**
+ - Mgmt VLAN 99 (`.99.11/.12` DIST, `.13–.16` ACC) 
+ - Uplinks access `Fa0/1–2`
+ - Root STP sur la Distribution.
+
+2 incidents de build corrigés · 0 déviation · 0 limitation PT (1 contrainte matérielle : uplinks access 100M)
+
+→ Plan d'adressage complet → [`IPAM.md`](../IPAM.md)
 
 ---
+## Topologie As-Built
 
-## Objectif
+Schéma PT : 3 niveaux, accès dual-homed
 
-Construire la fondation du LAN d'entreprise : modèle hiérarchique Cisco à trois niveaux, segmentation VLAN, plan de management dédié, stabilisation STP, routage inter-VLAN *temporaire* sur le Core. Tout ce qui suit (HSRP, OSPF, DMZ, datacenter, voix, Wi-Fi) dépend de la propreté de cette base.
+![Networ-overview-P1](../assets/network-overview/NO_P1.png)
 
-**Contrainte structurante.** Le root STP est positionné dès cette partie sur la **Distribution**, réparti selon le plan HSRP de P2 — DIST-SW1 root `{10,30}`, DIST-SW2 root `{20,99}`. But : que root L2 et passerelle L3 finissent sur le même switch par VLAN à partir de P2. C'est le principe *« le service suit l'Active »*, posé ici pour être hérité par toutes les parties suivantes.
-
-**Adressage.** Plan complet en **source unique : [`IPAM.md`](../IPAM.md)**. Rappel P1 : les passerelles `.1` vivent temporairement sur les **SVI du Core** (elles deviennent des VIP HSRP sur la Distribution en P2) ; le management est en VLAN 99.
 
 ---
 
@@ -506,56 +509,77 @@ write memory
 > ⚠️ **Captures à re-tirer après retrait du VLAN 300 dans le `.pkt` :** [P-02] (`show vlan brief` sans 300), [P-08] (root DIST-SW1 = 10/30/999), [P-09] (root DIST-SW2 = 20/99). Le mode rapid-pvst ([P-10]) n'est pas affecté.
 
 **<a id="p-00"></a> [P-00] · Topologie as-built** — 3 niveaux, accès dual-homed
+
 ![Capture P1-08](../assets/captures/P1/Capture_P1_08.png)
 
 **<a id="p-01"></a> [P-01] · CORE `show interfaces status`** — Gi1/0/1-2 `connected trunk`
+
 ![Capture P1-10](../assets/captures/P1/Capture_P1_10.png)
 
 **<a id="p-02"></a> [P-02] · Base de données VLAN** — CORE canonique `show vlan brief`
+
 ![Capture P1-12](../assets/captures/P1/Capture_P1_12.png)
+
 > Jumeaux par switch : DIST-SW1 `Capture_P1_25` · DIST-SW2 `Capture_P1_24` · ACC-SW1 `Capture_P1_23` · ACC-SW2 `Capture_P1_22` · ACC-SW3 `Capture_P1_21` · ACC-SW4 `Capture_P1_20`.
 
 **<a id="p-03"></a> [P-03] · Trunks (clôt l'incident #1)** — DIST-SW1 + DIST-SW2 `show interfaces trunk`, `Fa0/1-4` en trunk, natif 999
+
 ![Capture P1-13](../assets/captures/P1/Capture_P1_13.png)
+
 ![Capture P1-14](../assets/captures/P1/Capture_P1_14.png)
 
 **<a id="p-04"></a> [P-04] · Bordure access + durcissement** — ACC-SW4 `show interfaces status` (`Fa0/3`=10, `Fa0/4`=20, inutilisés disabled/998)
+
 ![Capture P1-11](../assets/captures/P1/Capture_P1_11.png)
+
 > Jumeaux : ACC-SW3 `Capture_P1_17` · ACC-SW2 `Capture_P1_18` · ACC-SW1 `Capture_P1_19`.
 
 **<a id="p-05"></a> [P-05] · Inter- & intra-VLAN** — PC1 `ping .20.10` (routé) + `.10.12` (cross-switch)
+
 ![Capture P1-07](../assets/captures/P1/Capture_P1_07.png)
 
 **<a id="p-06"></a> [P-06] · SVI de management** — DIST-SW2 `show ip interface brief`, Vlan99 `192.168.99.12` up/up
+
 ![Capture P1-05](../assets/captures/P1/Capture_P1_05.png)
 
 **<a id="p-07"></a> [P-07] · Joignabilité management** — PC1 `ping 192.168.99.1`
+
 ![Capture P1-06](../assets/captures/P1/Capture_P1_06.png)
 
 **<a id="p-08"></a> [P-08] · Root STP DIST-SW1 (rapid-pvst)** — `show spanning-tree summary` : `rapid-pvst mode`, Root pour RH (10) + VOIP (30) + NATIVE_BLACKHOLE (999)
+
 ![Capture P1-17](../assets/captures/P1/Capture_P1_17.png)
 
 **<a id="p-09"></a> [P-09] · Root STP DIST-SW2 (rapid-pvst)** — `show spanning-tree summary` : `rapid-pvst mode`, Root pour IT (20) + MGMT (99)
+
 ![Capture P1-15](../assets/captures/P1/Capture_P1_15.png)
 
 **<a id="p-10"></a> [P-10] · Rapid PVST+ sur chaque switch** — `show spanning-tree summary` = `Switch is in rapid-pvst mode`, CORE canonique
+
 ![Capture P1-16](../assets/captures/P1/Capture_P1_16.png)
+
 > Preuve tous-switches (7/7) : ACC-SW1 `Capture_P1_29` · ACC-SW2 `Capture_P1_37` · ACC-SW3 `Capture_P1_31` · ACC-SW4 `Capture_P1_32` · DIST-SW1 `Capture_P1_36` (root 10/30/999) · DIST-SW2 `Capture_P1_34` (root 20/99).
 
 **<a id="p-11"></a> [P-11] · Failover — avant** — ACC-SW1 STP v10 : `Fa0/1` `Root FWD`, `Fa0/2` `Altn BLK`
+
 ![Capture P1-04](../assets/captures/P1/Capture_P1_04.png)
 
 **<a id="p-12"></a> [P-12] · Failover — action** — ACC-SW1 `interface Fa0/1` → `shutdown`
+
 ![Capture P1-03](../assets/captures/P1/Capture_P1_03.png)
 
 **<a id="p-13"></a> [P-13] · Failover — pendant** — PC1 `ping .10.1` : reprise après perte. ⚠️ Ping de mesure du timing sous rapid-pvst encore à re-tirer.
+
 ![Capture P1-02](../assets/captures/P1/Capture_P1_02.png)
 
 **<a id="p-14"></a> [P-14] · Failover — après** — ACC-SW1 STP v10 : `Fa0/2` promu `Root FWD` (coût 23 via DIST-SW2)
+
 ![Capture P1-01](../assets/captures/P1/Capture_P1_01.png)
 
-**<a id="p-ts1"></a> [P-TS1] · Incident #1 · Mismatch natif (AVANT correction)** — DIST-SW2 `%CDP-4-NATIVE_VLAN_MISMATCH` `Fa0/3-4`
+**<a id="p-ts1"></a> [P-TS1] · Incident #1 · Mismatch natif (AVANT correction)** — DIST-SW2 `%CDP-4-NATIVE_VLAN_MISMATCH` `Fa0/3-4
+`
 ![Capture P1-09](../assets/captures/P1/Capture_P1_09.png)
+
 > Compagnons périmés (état *avant* correction, dépannage uniquement — jamais en validation) : DIST-SW2 `Capture_P1_14` · DIST-SW1 `Capture_P1_15` (`Fa0/1-4 connected 1`).
 
 ---
