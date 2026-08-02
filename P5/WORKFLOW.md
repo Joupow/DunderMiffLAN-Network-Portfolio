@@ -1,27 +1,23 @@
-# Partie 5 — Workflow : Téléphonie IP (CME · DHCP Option 150 · QoS)
+# Partie 5 — Workflow :
 
-**Bloc :** TheBigOffice · Services voix · **Outil :** Cisco Packet Tracer (CME 2811, DIST 3560-24PS, postes 7960) · **Certification :** CompTIA Network+
-**Statut :** ✅ Validé — voix VLAN 30 opérationnelle, **CME co-localisé avec l'HSRP Active + root STP** (décision A1), **DHCP + Option 150 servis par une autorité unique** (le CME), **appel inter-poste 1001↔1002 `Connected`**, **QoS trust conditionnel lié au CDP**, **résumé ASA `/20` confirmé sûr** · 3 incidents corrigés · 6 dettes documentées (D1–D6, limites PT + réf. prod)
+ **Concepts clés** : VOIP; CME, DHCP Option 150, QoS voix · **Certification :** CompTIA Network+  · **Outil :** Cisco Packet Tracer 9.0
 
-> **TheBigOffice — Partie 5 · Téléphonie IP**
-> CME sur **DIST-SW1** (Active + root VLAN 30) · `Fa0/0 = 192.168.30.254` · DHCP `VOIP_PHONES` baux `.50-.99` + `option 150 → .254` · `telephony-service` `ip source-address .254 port 2000` · `ephone-dn 1001/1002` liés par `button 1:1` / `1:2` · postes 7960 sur ACC `Fa0/5` en data 10 + voice 30 · QoS `trust dscp` + `trust device cisco-phone`.
-> Plan d'adressage complet → [`IPAM.md`](../IPAM.md).
+Implantation et configurations réalisées :  
 
-> **Continuité matérielle (confirmée en session) :** DIST-SW = **Catalyst 3560-24PS** (`Fa0/x` + `Gi0/x`) · CME = **Cisco 2811** (`Fa0/0-1` intégrés) · postes = **Cisco 7960**. Le datacenter P4 (3650) n'est pas touché ici.
+- CME sur **DIST-SW1** (Active + root VLAN 30) 
+- `Fa0/0 = 192.168.30.254` · DHCP `VOIP_PHONES` baux `.50-.99` + `option 150 → .254` 
+- `telephony-service` `ip source-address .254 port 2000` 
+- `ephone-dn 1001/1002` liés par `button 1:1` / `1:2` 
+- Postes 7960 sur ACC `Fa0/5` en data 10 + voice 30 · QoS `trust dscp` + `trust device cisco-phone`.
+
+Plan d'adressage complet → [`IPAM.md`](../IPAM.md).
 
 ---
+## Topologie As-Built
 
-## Objectif
+Schéma PT : téléphonie - CME, VLAN voix, IP phones
 
-Déployer la téléphonie IP sur le **VLAN 30 (voix)** créé en P1, avec **Cisco CallManager Express (CME)**, en couvrant le cycle de vie complet d'un poste : provisioning DHCP, téléchargement de config (TFTP/Option 150), enregistrement SCCP, priorisation QoS — et en **prouvant chaque maillon par une commande d'état ou un appel réel**, pas par un écran.
-
-Le fil directeur est une **chaîne** : DHCP → TFTP → SCCP → registration. Un seul maillon manquant casse tout, et le symptôme apparaît souvent **trois étapes après** la cause.
-
-**Contrainte structurante.** Le CME vit sur **DIST-SW1**, déjà **HSRP Active** et **root STP** du VLAN 30. Le service suit son Active. Depuis que P4 a passé le Core en full-L3, **le VLAN 30 n'existe plus sur le Core** : la voix est entièrement ancrée sur la Distribution, ce qui rend ce placement non négociable. Second axe : **une seule autorité DHCP par domaine** — HQ-Router pour VLAN 10/20, **CME pour VLAN 30**. La preuve n'est pas que le CME distribue des baux, c'est qu'**aucun autre serveur** ne répond sur le VLAN 30.
-
-**Décision de continuité (héritée de P3).** La boucle ASA est déjà tuée en P3 (résumé `10.0.0.0/20` + `Null0 AD 254`). Le Step 0 est une **vérification, jamais une reconfiguration** — reconfigurer ici défait le travail propre de P3.
-
-![Topologie P5](../assets/topologies/topology_p5.svg)
+![Networ-overview-P5](../assets/network-overview/NO_P5.png)
 
 ---
 
@@ -369,65 +365,85 @@ La chaîne complète, de l'héritage P3 à l'appel — chaque maillon prouvé pa
 **Validation**
 
 **<a id="p-01"></a> [P-01] · Appel émis** — Phone 1001 `To: 1002 / Ring Out`
+
 ![Capture P5-07](../assets/captures/P5/Capture_P5_07.png)
 
 **<a id="p-02"></a> [P-02] · Appel reçu (SCCP)** — Phone 1002 `From: 1001 / ringing`
+
 ![Capture P5-06](../assets/captures/P5/Capture_P5_06.png)
 
 **<a id="p-03"></a> [P-03] · Média établi** — Phone 1002 `Connected`
+
 ![Capture P5-05](../assets/captures/P5/Capture_P5_05.png)
 
 **<a id="p-04"></a> [P-04] · Enregistrement SCCP** — CME `show ephone` : `REGISTERED in SCCP`, IP `.50`/`.51`, `button 1: dn 1/2 … IDLE`
+
 ![Capture P5-04](../assets/captures/P5/Capture_P5_04.png)
 
 **<a id="p-05"></a> [P-05] · button→DN (corrige I-2) + telephony-service** — CME `show run | section ephone` : `ip source-address .254`, `max 10`, `ephone 1/2` avec `button 1:1`/`1:2`, `type 7960`
+
 ![Capture P5-27](../assets/captures/P5/Capture_P5_27.png)
 
 **<a id="p-06"></a> [P-06] · DHCP baux** — CME `show ip dhcp binding` : `.50`/`.51` `Automatic`
+
 ![Capture P5-18](../assets/captures/P5/Capture_P5_18.png)
 
 **<a id="p-06b"></a> [P-06b] · DHCP pool** — CME `show ip dhcp pool` : `VOIP_PHONES`
+
 ![Capture P5-19](../assets/captures/P5/Capture_P5_19.png)
 
 **<a id="p-07"></a> [P-07] · Absence de 2e serveur DHCP** — HQ-Router `show run | section dhcp` : `VLAN10`/`VLAN20` seulement
+
 ![Capture P5-03](../assets/captures/P5/Capture_P5_03.png)
 
 **<a id="p-08"></a> [P-08] · Placement du service** — DIST-SW1 `show standby brief` : `Vl30 30 110 P Active`
+
 ![Capture P5-01](../assets/captures/P5/Capture_P5_01.png)
 
 **<a id="p-09"></a> [P-09] · Audit résumé clos** — ASA `show route` : `S 10.0.0.0 255.255.240.0`, aucun `/8`/`/16`
+
 ![Capture P5-02](../assets/captures/P5/Capture_P5_02.png)
 
 **<a id="p-10"></a> [P-10] · Voice VLAN (ACC-SW1)** — `show interfaces Fa0/5 switchport` : `Access 10 / Voice 30`
+
 ![Capture P5-21](../assets/captures/P5/Capture_P5_21.png)
 
 **<a id="p-10b"></a> [P-10b] · VLAN brief + preuve D6** — ACC-SW1 `show vlan brief` : `Fa0/5` en 10 et 30
+
 ![Capture P5-15](../assets/captures/P5/Capture_P5_15.png)
 
 **<a id="p-10c"></a> [P-10c] · Symétrie 2e poste (ACC-SW2)** — `show interfaces Fa0/5 switchport` : `Access 10 / Voice 30`
+
 ![Capture P5-20](../assets/captures/P5/Capture_P5_20.png)
 
 **<a id="p-11"></a> [P-11] · QoS trust conditionnel** — ACC-SW1 `show mls qos interface Fa0/5` : `trust device: cisco-phone`
+
 ![Capture P5-14](../assets/captures/P5/Capture_P5_14.png)
 
 **<a id="p-12a"></a> [P-12a] · Liaison CME (interface)** — CME `show ip interface brief` : `Fa0/0 .254 up/up`
+
 ![Capture P5-25](../assets/captures/P5/Capture_P5_25.png)
 
 **<a id="p-12b"></a> [P-12b] · Liaison CME (ping)** — CME `ping 192.168.30.1` = 5/5
+
 ![Capture P5-23](../assets/captures/P5/Capture_P5_23.png)
 
 **<a id="p-12c"></a> [P-12c] · Liaison CME (ARP)** — CME `show arp` : `.1` et `.254` résolus
+
 ![Capture P5-22](../assets/captures/P5/Capture_P5_22.png)
 
 **Incidents (état *avant* correction — jamais en validation)**
 
 **<a id="p-13"></a> [P-13] · I-2 symptôme (SCCP)** — CME `show ephone` : `UNREGISTERED`, `IP:0.0.0.0`, `button 1: dn CH1 DOWN`
+
 ![Capture P5-11](../assets/captures/P5/Capture_P5_11.png)
 
 **<a id="p-14"></a> [P-14] · I-2 symptôme (LCD)** — Phone bloqué sur `Configuring CM List`
+
 ![Capture P5-13](../assets/captures/P5/Capture_P5_13.png)
 
 **<a id="p-15"></a> [P-15] · I-2 cause** — CME `show run | section ephone` **sans** ligne `button`
+
 ![Capture P5-10](../assets/captures/P5/Capture_P5_10.png)
 
 > **Écartées au triage :** `Captures_P5_26` (doublon de 27), `_17` (doublon de 10), `_24` (ping 4/5 dégradé), `_16` (redondant avec 21), `_12` (telephony-service tronqué), `_8`/`_9` (postes au repos).
