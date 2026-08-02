@@ -1,23 +1,23 @@
-# Partie 6 — Workflow : Wi-Fi d'entreprise (WLC, CAPWAP, HSRPv2 VLAN 300)
+# Partie 6 — Workflow : Wi-Fi d'entreprise 
 
-**Bloc :** TheBigOffice · Services Wi-Fi · **Outil :** Cisco Packet Tracer 9.0 (Generic WLC, 4× LAP 3702i-class, 1× AP autonome, WLC 3504 = réf.) · **Certification :** CompTIA Network+
-**Statut :** ✅ Validé — **4 APs `Online` en CAPWAP**, **HSRPv2 VLAN 300 opérationnel** (DIST-SW1 Active + root, DIST-SW2 Standby stabilisé), **DHCP VLAN 300 mono-autorité** (DIST-SW1, WLC DHCP off), **data plane client prouvé de bout en bout par l'AP autonome** (Wi-Fi → filaire VLAN 10, TTL 127), **VLAN 30 (voix P5) non régressé** · 3 incidents corrigés · 5 déviations actées · 14 limitations PT documentées
+ **Concepts clés** : WLC, CAPWAP, SSID/VLAN, HSRPv2 VLAN 300  · **Certification :** CompTIA Network+  · **Outil :** Cisco Packet Tracer 9.0
 
-> **TheBigOffice — Partie 6 · Wi-Fi**
-> Generic WLC `192.168.100.200` sur **DIST-SW1 `Fa0/5`** (access VLAN 300) · VIP HSRPv2 `192.168.100.1` · pool DHCP `VLAN300` baux `.10-.50` · 4× LAP sur **ACC-SW1→4 `Fa0/7`** (access 300 + PortFast + BPDU Guard) · AP autonome sur **ACC-SW1 `Fa0/6`** (SSID `TheBigOffice-Corp-Auto`, 2.4 GHz ch.6, WPA2-PSK) · WLANs `TheBigOffice-Corp` (301) + `-Guest` (310), WPA2-PSK/AES, **Local switching**.
-> Plan d'adressage complet → [`IPAM.md`](../IPAM.md).
+Implantation et configurations réalisées :  
+
+- Generic WLC `192.168.100.200` sur **DIST-SW1 `Fa0/5`** (access VLAN 300) · VIP HSRPv2 `192.168.100.1` 
+- Pool DHCP `VLAN300` baux `.10-.50` 
+- 4× LAP sur **ACC-SW1→4 `Fa0/7`** (access 300 + PortFast + BPDU Guard) 
+- AP autonome sur **ACC-SW1 `Fa0/6`** (SSID `TheBigOffice-Corp-Auto`, 2.4 GHz ch.6, WPA2-PSK) · WLANs `TheBigOffice-Corp` (301) + `-Guest` (310), WPA2-PSK/AES, **Local switching**.
+
+→ Plan d'adressage complet → [`IPAM.md
 
 ---
 
-## Objectif
+## Topologie As-Built
 
-Poser une couche Wi-Fi d'entreprise sur la fondation filaire P1–P5 : architecture à contrôleur (WLC + APs lightweight), segmentation SSID/VLAN, WPA2, et passerelle redondée par **HSRPv2 sur le VLAN 300** — en **prouvant chaque maillon par un état ou un trafic réel**. C'est cette partie qui introduit le VLAN 300 sur le réseau.
+Schéma PT : sans-fil - WLC + LWAP, VLAN 300
 
-**Contrainte structurante.** Packet Tracer 9.0 **ne simule pas le data plane CAPWAP centralisé**. Le WLC enregistre bien les APs (control plane prouvé), mais ne sait pas ré-injecter le trafic client par son port access. D'où une **architecture hybride assumée** : le contrôle est prouvé par le WLC (4 APs `Online`), le data plane client par un **AP autonome** (pont direct, sans contrôleur dans le chemin). C'est le seul moyen honnête de démontrer les deux plans dans l'outil.
-
-**Décision de continuité (héritée de P5).** DIST-SW1 est déjà HSRP Active + root STP des VLANs 10/30 ; le VLAN 300 suit cette logique. **On ne touche jamais au VLAN 30** : rejouer un side-fix qui basculerait son root vers DIST-SW2 casserait la co-localisation CME/Active de la décision A1. Vérifié après coup.
-
-![Topologie P6](../assets/topologies/topology_p6.svg)
+![Networ-overview-P6](../assets/network-overview/NO_P6.png)
 
 ---
 
@@ -434,64 +434,83 @@ show ip route                      ping 192.168.100.200            ping 192.168.
 > Une capture **canonique** par affirmation ; doublons et états « avant correction » écartés (ces derniers vivent en §Dépannage). Fichiers `Captures_P6_##.png`.
 
 **<a id="p-01"></a> [P-01] · Câblage AP + non-régression voix (ACC-SW1)** — `show vlan brief` : VLAN 300 = `Fa0/6` (AP autonome) + `Fa0/7` (LAP-0) ; `Fa0/5` = poste voix (prouve I-1)
+
 ![Capture P6-10](../assets/captures/P6/Capture_P6_10.png)
 
 **<a id="p-01b"></a> [P-01b] · Symétrie ACC-SW2 (idem SW3/SW4)** — `show vlan brief` : VLAN 300 = `Fa0/7` (LAP-1) ; `Fa0/5` en 10/30
+
 ![Capture P6-09](../assets/captures/P6/Capture_P6_09.png)
 
 **<a id="p-02"></a> [P-02] · VLANs Wi-Fi (DIST-SW1)** — `show vlan brief` : 300/301/310 actifs, `Fa0/5` = WLC, `Fa0/10` = CME
+
 ![Capture P6-11](../assets/captures/P6/Capture_P6_11.png)
 
 **<a id="p-03"></a> [P-03] · VLANs Wi-Fi (DIST-SW2)** — `show vlan brief` : 300/301/310 actifs, aucun port access
+
 ![Capture P6-30](../assets/captures/P6/Capture_P6_30.png)
 
 **<a id="p-06"></a> [P-04] · DHCP mono-autorité VLAN 300** — DIST-SW1 `show ip dhcp binding` : `.10-.13` (LAP) + `.14` (laptop), tous `Automatic`
+
 ![Capture P6-12](../assets/captures/P6/Capture_P6_12.png)
 
 **<a id="p-07"></a> [P-07] · Trunk DIST-SW1 (liste complète)** — `show interfaces trunk` : `Gi0/2` = `10,20,30,99,300-301,310,999` ; `Fa0/1-4` = `…300,999`
+
 ![Capture P6-24](../assets/captures/P6/Capture_P6_24.png)
 
 **<a id="p-08"></a> [P-08] · Trunk DIST-SW2** — `show interfaces trunk` : symétrie inter-Distribution
+
 ![Capture P6-25](../assets/captures/P6/Capture_P6_25.png)
 
 **<a id="p-09"></a> [P-09] · Trunk ACC-SW1 + PVST+ load-balancing** — `show interfaces trunk` : `Fa0/1` forwarde 10/30, `Fa0/2` forwarde 20/99/300. ACC-SW3/SW4 : `Captures_P6_22.png` / `Captures_P6_21.png`
+
 ![Capture P6-23](../assets/captures/P6/Capture_P6_23.png)
 
 **<a id="p-12"></a> [P-12] · HSRPv2 Active + VLAN 30 non régressé** — DIST-SW1 `show standby brief` : `Vl300 … 110 P Active` **et** `Vl30 … 110 P Active` (décision A1 tenue)
+
 ![Capture P6-19](../assets/captures/P6/Capture_P6_19.png)
 
 **<a id="p-13"></a> [P-13] · HSRPv2 Standby stabilisé** — DIST-SW2 `show standby brief` : `Vl300 … 100 Standby … .100.1` (résout I-3)
+
 ![Capture P6-04](../assets/captures/P6/Capture_P6_04.png)
 
 **<a id="p-15"></a> [P-15] · Root STP VLAN 300 (exécuté)** — DIST-SW1 `show spanning-tree vlan 300` : `This bridge is the root`, protocole `rstp`
+
 ![Capture P6-18](../assets/captures/P6/Capture_P6_18.png)
 
 **<a id="p-16"></a> [P-16] · WLC management** — GUI : IPv4 `192.168.100.200`, GW `.1`, DNS laissé vide (accepté — DV5)
+
 ![Capture P6-17](../assets/captures/P6/Capture_P6_17.png)
 
 **<a id="p-17"></a> [P-17] · WLC joignable** — DIST-SW1 `ping 192.168.100.200` = 5/5
+
 ![Capture P6-16](../assets/captures/P6/Capture_P6_16.png)
 
 **<a id="p-18"></a> [P-18] · CAPWAP + SSID** — WLC default-group : **4 LAP `Online`** (`.10-.13`), WLANs `TheBigOffice-Corp` (301) + `-Guest` (310)
+
 ![Capture P6-15](../assets/captures/P6/Capture_P6_15.png)
 
 **<a id="p-18b"></a> [P-18b] · Diffusion SSID côté client** — Linksys `Connect` : `TheBigOffice-Corp` visible, WPA2-PSK. ⚠️ Prouve que les **LAP diffusent** (control plane), **pas** l'association au data plane (voir [P-19]/[P-20])
+
 ![Capture P6-05](../assets/captures/P6/Capture_P6_05.png)
 
 **<a id="p-19"></a> [P-19] · AP autonome (radio, corrigé I-2)** — Config Port 1 : SSID `TheBigOffice-Corp-Auto`, **2.4 GHz canal 6**, WPA2-PSK/AES
+
 ![Capture P6-01](../assets/captures/P6/Capture_P6_01.png)
 
 **<a id="p-20"></a> [P-20] · Client → VIP VLAN 300** — Laptop `ping 192.168.100.1` = 4/4 (**prouve par élimination** le chemin AP autonome)
+
 ![Capture P6-14](../assets/captures/P6/Capture_P6_14.png)
 
 **<a id="p-21"></a> [P-21] · Client → filaire inter-VLAN** — Laptop `ping 192.168.10.52` = 4/4, **TTL 127** (un saut L3, routage 300 → 10)
+
 ![Capture P6-13](../assets/captures/P6/Capture_P6_13.png)
 
 **<a id="p-14"></a> [P-14] · Topologie as-built** — WLC ↔ DIST-SW1 `Fa0/5`, LAP ↔ ACC `Fa0/7`, AP autonome ↔ ACC-SW1 `Fa0/6`, Laptop ↔ AP autonome
+
 ![Capture P6-02](../assets/captures/P6/Capture_P6_02.png)
 
 > **Corroborant recommandé (non bloquant) :** `Link Information` du laptop sur canal 6. Non fourni — [P-20]/[P-21] établissent déjà le chemin par élimination.
 
 ---
 
-⬅️ [Partie 5 — Téléphonie IP](../P5/README.md) · ⬆️ [Vue d'ensemble du projet](../README.md) · *(fin de la série Packet Tracer — suite sur GNS3 : IPv6 avancé, monitoring, PKI/RADIUS)*
+⬅️ [Partie 5 — Téléphonie IP](../P5/README.md) · ⬆️ [Vue d'ensemble du projet](../README.md) 
