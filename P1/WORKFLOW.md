@@ -23,7 +23,7 @@
 - [Étape 5 : SVIs + routage inter-VLAN](#étape-5--svis--routage-inter-vlan-core)
 - [Étape 6 : VLAN de management 99](#étape-6--vlan-de-management-99)
 - [Étape 7 : STP - Rapid PVST+](#étape-7--stp--rapid-pvst-root-sur-la-distribution)
-- [Étape 8 : Root sur la Distribution](#Root-sur-la-Distribution)
+- [Étape 8 : Root sur la Distribution](#étape-8-root-sur-la-distribution)
 
 **3. Preuves & clôtures**
 
@@ -413,7 +413,7 @@ write memory
 ```
 
 ---
-### <a id="Root-sur-la-Distribution"></a>Étape 8 — Root sur la Distribution
+### <a id="étape-8-root-sur-la-distribution"></a>Étape 8 — Root sur la Distribution
 
 > ⚠️ **Le Core n'est PAS root, intentionnellement.** 
 > 
