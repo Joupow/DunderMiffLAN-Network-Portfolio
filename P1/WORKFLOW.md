@@ -1,4 +1,4 @@
-# Partie 1 — Workflow : Fondations LAN du siège
+# Partie 1 : Workflow
 
 **Concepts clés** : Modèle hiérarchique 3 niveaux · VLANs · 802.1Q · STP · routage inter-VLAN · SVI · **Certification :** CompTIA Network+  · **Outil** : Cisco Packet Tracer 9.0
 
@@ -15,7 +15,33 @@ Implantation et configurations réalisées :
 → Plan d'adressage complet → [`IPAM.md`](../IPAM.md)
 
 ---
-## Topologie As-Built
+## Sommaire
+
+**1. Cadrage**
+- [Topologie As-Built](#Topologie-As-Built)
+- [Niveaux & équipements](#niveaux--équipements)
+- [Étapes de configuration (vue d'ensemble)](#étapes-de-configuration-vue-densemble)
+
+**2. Exécution**
+- [Étape 1 — Déploiement physique](#étape-1--déploiement-physique)
+- [Étape 2 — VLANs de base](#étape-2--vlans-de-base)
+- [Étape 3 — Trunks 802.1Q](#étape-3--trunks-8021q)
+- [Étape 4 — Ports d'accès + durcissement](#étape-4--ports-daccès--durcissement-de-bordure)
+- [Étape 4b — Config IP des PC](#étape-4b--config-ip-des-pc-gui)
+- [Étape 5 — SVIs + routage inter-VLAN](#étape-5--svis--routage-inter-vlan-core)
+- [Étape 6 — VLAN de management 99](#étape-6--vlan-de-management-99)
+- [Étape 7 — STP : Rapid PVST+](#étape-7--stp--rapid-pvst-root-sur-la-distribution)
+
+**3. Preuves & clôtures**
+- [Validation de bout en bout (gate)](#validation-de-bout-en-bout-gate-final)
+- [Dépannage (incidents de session)](#dépannage-incidents-de-session)
+- [Registre d'erreurs & dette technique](#registre-derreurs--dette-technique-état-final)
+- [Annexe — Captures de preuve](#annexe--captures-de-preuve)
+
+---
+# 1. Cadrage
+
+## **<a id="Topologie-As-Built"></a>Topologie As-Built**
 
 Schéma PT : base L2, 3 niveaux, accès dual-homed, adressage statique
 
@@ -54,7 +80,7 @@ L'ordre n'est pas arbitraire : chaque étape dépend de la précédente. Créer 
 Légende : `Core` = 3650 · `DIST` = 3560 (×2) · `ACC` = 2960 (×4).
 
 ---
-
+# 2. Exécution
 ### Étape 1 — Déploiement physique
 
 **Intention :** construire la topologie et le câblage dans Packet Tracer. Pas de CLI.
@@ -437,20 +463,21 @@ show spanning-tree summary | include mode   ! rapid-pvst mode sur chaque boîtie
 > 📷 **[P-08](#p-08)** DIST-SW1 root `{10,30,999}` (rapid-pvst) · **[P-09](#p-09)** DIST-SW2 root `{20,99}` (rapid-pvst) · **[P-10](#p-10)** les 7 switches en `rapid-pvst mode`.
 
 ---
+# 3. Preuves et clôtures
 
-## Validation de bout en bout (gate final)
+## Validation de bout en bout 
 
-| Couche | Commande clé | Attendu | Preuve |
-|---|---|---|---|
-| VLANs | `show vlan brief` | 10/20/30/99/998/999 actifs sur les 7 switches | [P-02](#p-02) |
-| Trunks | `show interfaces trunk` | DIST `Fa0/1-4` + Gig en trunk, natif 999, liste allowed complète | [P-03](#p-03) |
-| Uplinks Core | `show interfaces status` | Gi1/0/1-2 `connected trunk` | [P-01](#p-01) |
-| Bordure access | `show interfaces status` | `Fa0/3`=10, `Fa0/4`=20, inutilisés disabled/998 | [P-04](#p-04) |
-| Inter/intra-VLAN | PC1 `ping .20.10` + `.10.12` | réponse (1er paquet ARP toléré) | [P-05](#p-05) |
-| Management | DIST-SW2 `show ip int brief` + PC `ping .99.1` | Vlan99 `.99.12` up/up ; passerelle répond | [P-06](#p-06), [P-07](#p-07) |
-| Root STP | `show spanning-tree summary` | DIST1 root `{10,30,999}`, DIST2 root `{20,99}` | [P-08](#p-08), [P-09](#p-09) |
-| Mode STP | `show spanning-tree summary` | `rapid-pvst mode` sur les 7 | [P-10](#p-10) |
-| **Failover (mécanisme)** | couper l'uplink `Root FWD` d'un ACC, re-ping la passerelle | uplink bloqué (`Altn BLK`→`Root FWD`) promu, trafic repris ; `no shutdown` restaure | [P-11](#p-11)→[P-14](#p-14) |
+| Domaine         | Vérification     | Commande clé                                               | Attendu                                                                             | Preuve                       |
+| --------------- | ---------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------- | ---------------------------- |
+| 🗺️ Topologie   | Uplinks Core     | `show interfaces status`                                   | Gi1/0/1-2 `connected trunk`                                                         | [P-01](#p-01)                |
+| 🔌 Commutation  | VLANs            | `show vlan brief`                                          | 10/20/30/99/998/999 actifs sur les 7 switches                                       | [P-02](#p-02)                |
+| 🔌 Commutation  | Trunks           | `show interfaces trunk`                                    | DIST `Fa0/1-4` + Gig en trunk, natif 999, liste allowed complète                    | [P-03](#p-03)                |
+| 🔌 Commutation  | Bordure access   | `show interfaces status`                                   | `Fa0/3`=10, `Fa0/4`=20, inutilisés disabled/998                                     | [P-04](#p-04)                |
+| 🌳 STP          | Root STP         | `show spanning-tree summary`                               | DIST1 root `{10,30,999}`, DIST2 root `{20,99}`                                      | [P-08](#p-08), [P-09](#p-09) |
+| 🌳 STP          | Mode STP         | `show spanning-tree summary`                               | `rapid-pvst mode` sur les 7                                                         | [P-10](#p-10)                |
+| 📦 Connectivité | Inter/intra-VLAN | PC1 `ping .20.10` + `.10.12`                               | réponse (1er paquet ARP toléré)                                                     | [P-05](#p-05)                |
+| 📦 Connectivité | Management       | DIST-SW2 `show ip int brief` + PC `ping .99.1`             | Vlan99 `.99.12` up/up ; passerelle répond                                           | [P-06](#p-06), [P-07](#p-07) |
+| 🔁 Haute dispo  | **Failover**     | couper l'uplink `Root FWD` d'un ACC, re-ping la passerelle | uplink bloqué (`Altn BLK`→`Root FWD`) promu, trafic repris ; `no shutdown` restaure | [P-11](#p-11)→[P-14](#p-14)  |
 
 > ℹ️ Un unique `Request timed out` sur le **premier** paquet d'un nouveau flux (puis 0 %) est de la résolution ARP + convergence STP — pas une faute. Une perte persistante sur un flux établi est un vrai symptôme.
 > ⚠️ **Timing du failover :** rapid-pvst confirmé ([P-10](#p-10)) → reconvergence sous-seconde attendue ; le ping de **mesure directe** sous rapid-pvst reste à capturer.
@@ -479,7 +506,7 @@ write memory
 
 ---
 
-## 5. Registre d'erreurs & dette technique (état final) — SOURCE UNIQUE
+## Registre d'erreurs & dette technique
 
 > État final de chaque point (clos / porté / différé). Le dépannage de session est ci-dessus. Registre non dupliqué ailleurs — les autres docs renvoient ici.
 
@@ -501,7 +528,7 @@ write memory
 
 ---
 
-## Annexe — Captures de preuve
+## Annexe : Captures de preuve
 
 > Une capture **canonique** par affirmation ; jumeaux périmés/dupliqués notés, non embarqués. Les validations d'étape et le gate citent le `[P-##]` pertinent. Embeds Obsidian (résolution par nom de fichier).
 
