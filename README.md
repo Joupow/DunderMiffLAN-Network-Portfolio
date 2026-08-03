@@ -12,14 +12,14 @@ Ce dépôt présente **TheBigOffice**, un laboratoire réseau simulant une infra
 
 La documentation du laboratoire est structurée autour de ressources globales et de documents spécifiques à chaque partie : 
 
-- 📘 **Technical Overview** → documentation globale présentant l'architecture complète, les choix de conception, les technologies utilisées et la vision d'ensemble du projet.
-- 🗺️ **IPAM** → référentiel global regroupant le plan d'adressage, les VLANs, les sous-réseaux et l'organisation logique de l'infrastructure.
+- 🏷️ [IPAM](../IPAM.md)
+- 📘 [TECHNICAL_OVERVIEW](./TECHNICAL_OVERVIEW.md) 
 
 Chaque partie du laboratoire dispose ensuite de son propre espace documentaire contenant : 
 
-- 📄 **README** → présentation de la partie, objectifs et domaines couverts de la CompTIA Network+ 
-- 🪜 **WORKFLOW** → déroulement étape par étape de l'implémentation et des configurations réalisées. 
-- 🧪 **Fichier Cisco Packet Tracer (.pkt)** → topologie, configurations et validation de la partie concernée.
+- 📄 **README**
+- 🪜 **WORKFLOW** 
+- 🧪 **Fichier Cisco Packet Tracer (.pkt)**
 
 Cette organisation permet de suivre l'ensemble du cycle de vie d'une implémentation réseau :
 
@@ -62,7 +62,7 @@ Ce projet n'a pas vocation à représenter une architecture de production clé e
 
 ![Topologie Global](./assets/topologies/topology-global.svg)
 
-- → Vue consolidée (architecture, décisions transverses, écarts de production) : [`TECHNICAL_OVERVIEW.md`](./TECHNICAL_OVERVIEW.md)
+- → Vue consolidée (architecture, décisions transverses, écarts de production) : [TECHNICAL_OVERVIEW.md](./TECHNICAL_OVERVIEW.md)
 - →  Schémas de topologie dans chaque partie.
 
 ## Principes transverses
