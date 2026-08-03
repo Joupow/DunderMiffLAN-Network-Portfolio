@@ -1,9 +1,11 @@
 # Partie 2 : Routage & redondance
 
- **Concepts clés** : Routage, HSRP, DHCP, OSFP P2P  ·  **Certification :** CompTIA Network+ · **Outil :** Cisco Packet Tracer 9.0
+ **Concepts clés** : Routage, HSRP, DHCP, OSFP P2P
  
-- Plan d'adressage complet → [`IPAM.md`](../IPAM.md)
-- Progression étape par étape →[`WORKFLOW P2`](./WORKFLOW.md).
+- 💻**Outil** : Cisco Packet Tracer 9.0
+- 🏷️ Plan d'adressage complet → [IPAM.m](../IPAM.md)
+- 📝 Progression étape par étape → [WORKFLOW P2](./WORKFLOW.md)
+- 🎓 **Certification :** CompTIA Network+ 
 
 ## Objectif
 

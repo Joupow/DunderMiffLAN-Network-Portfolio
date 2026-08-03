@@ -1,8 +1,6 @@
 # Partie 2 : Workflow 
 
- **Concepts clés** : Routage, HSRP, DHCP, OSFP P2P  ·  **Certification :** CompTIA Network+ · **Outil :** Cisco Packet Tracer 9.0
-
-Composants déployés et configurés : 
+🛠️ Composants déployés et configurés : 
 
 - Uplinks routés `/30` (`10.0.1–3.0`)
 - HSRP réparti : DIST-SW1 Active `{10,30}`, DIST-SW2 Active `{20,99}`
@@ -33,7 +31,7 @@ Composants déployés et configurés :
 - [Registre d'erreurs & dette technique](#registre-derreurs--dette-technique)
 - [Annexe : Captures de preuve](#annexe--captures-de-preuve)
 
-→  Plan d'adressage complet → [`IPAM.md`](../IPAM.md).
+→ 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
 
 # 1. Cadrage
 
