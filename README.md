@@ -1,7 +1,9 @@
 # TheBigOffice - Packet Tracer 
-## Portfolio réseau junior / CompTIA Network+
+## 📓 Portfolio pratique pour la CompTIA Network+
 
-Ce dépôt présente **TheBigOffice**, un laboratoire réseau simulant une infrastructure d'entreprise sous Cisco Packet Tracer en 6 parties.
+Ce dépôt présente **TheBigOffice**, un laboratoire réseau construit de manière autodidacte pour mettre en pratique les compétences couvertes par la **CompTIA Network+**, tout en explorant des notions plus avancées. 
+
+Ce laboratoire réseau simule une infrastructure d'entreprise sous Cisco Packet Tracer en 6 parties.
 
 - [🏗️ Partie 1 : Fondations LAN 3 niveaux](./P1/) 
 - [🧭 Partie 2 : Routage & redondance](./P2/) 
@@ -9,8 +11,6 @@ Ce dépôt présente **TheBigOffice**, un laboratoire réseau simulant une infra
 - [🖥️ Partie 4 : Datacenter](./P4/)
 - [📞  Partie 5 : VoIP](./P5/) 
 - [📶 Partie 6 : WiFi](./P6/)
-
-Ce laboratoire a été construit de manière autodidacte pour mettre en pratique les compétences couvertes par la **CompTIA Network+**, tout en explorant des notions plus avancées. 
 
 Ce projet n'a pas vocation à représenter une architecture de production clé en main. Il s'agit avant tout d'un **portfolio technique junior,** les erreurs de conception font partie du processus d'apprentissage et sont traitées comme des opportunités d'analyse et d'amélioration.
 
