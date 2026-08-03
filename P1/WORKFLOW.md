@@ -4,7 +4,7 @@
 
 - 💻**Outil** : Cisco Packet Tracer 9.0
 - 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
-- 📄 Présentation du projet → [README P1](./README.md)
+- 📄 Présentation de la partie 1 → [README P1](./README.md)
 - 🎓 **Certification :** CompTIA Network+ 
 ## Sommaire
 
