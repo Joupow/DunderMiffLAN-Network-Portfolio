@@ -10,14 +10,25 @@ Ce dépôt présente **TheBigOffice**, un laboratoire réseau simulant une infra
 - [📞  Partie 5 : VoIP](./P5/) 
 - [📶 Partie 6 : WiFI](./P6/)
 
-Le projet couvre l'ensemble du cycle de vie d'une implémentation réseau :
+La documentation du laboratoire est structurée autour de ressources globales et de documents spécifiques à chaque partie : 
 
-- Conception de l'architecture réseau 
-- Segmentation et l'organisation logique du réseau 
-- Configuration des équipements 
-- Validation du fonctionnement 
-- Diagnostic et la résolution d'incidents 
-- Analyse des limites de conception et l'amélioration de l'architecture
+- 📘 **Technical Overview** → documentation globale présentant l'architecture complète, les choix de conception, les technologies utilisées et la vision d'ensemble du projet.
+- 🗺️ **IPAM** → référentiel global regroupant le plan d'adressage, les VLANs, les sous-réseaux et l'organisation logique de l'infrastructure.
+
+Chaque partie du laboratoire dispose ensuite de son propre espace documentaire contenant : 
+
+- 📄 **README** → présentation de la partie, objectifs et domaines couverts de la CompTIA Network+ 
+- 🪜 **WORKFLOW** → déroulement étape par étape de l'implémentation et des configurations réalisées. 
+- 🧪 **Fichier Cisco Packet Tracer (.pkt)** → topologie, configurations et validation de la partie concernée.
+
+Cette organisation permet de suivre l'ensemble du cycle de vie d'une implémentation réseau :
+
+- 🏛️ Conception de l'architecture réseau 
+- 🧩 Segmentation et organisation logique du réseau
+- ⚙️ Configuration des équipements 
+- ✅ Validation du fonctionnement
+- 🔎 Diagnostic et résolution d'incidents
+- 📈 Analyse des limites de conception et amélioration de l'architecture
 
 Ce laboratoire a été construit de manière autodidacte pour mettre en pratique les compétences couvertes par la **CompTIA Network+**, tout en explorant des notions plus avancées. 
 
@@ -82,14 +93,14 @@ TheBigOffice - Packet Tracer Portfolio /
 │
 ├── P1/ … P6/               ← Une partie par dossier
 │   ├── README.md           ← Cadre : objectif, périmètre, compétences, matrice de validation   
-│   └── WORKFLOW.md         ← reproduit : CLI annotée, validation par étape, 
+│   ├── WORKFLOW.md         ← reproduit : CLI annotée, validation par étape, 
+│   └── TBO-Part_X.pkt/     ← fichiers .pkt du lab
 │ 
 ├── assets/
 │   ├── topologies/           ← topology_pX.svg + topology_global.svg
 │   ├── network-overview/     ← Captures topologie dans Packet Tracer : N0_pX.png
-│   ├── captures/  P1/ … P6/  ← captures de preuve : Capture_PX_NN.png 
-│   └── packet-tracer/        ← fichiers .pkt du lab
-└── 
+│   └── captures/  P1/ … P6/  ← captures de preuve : Capture_PX_NN.png 
+└──
 
 P1 LAN 3 niveaux · P2 HSRP/OSPF/DHCP · P3 ASA/DMZ/NAT · P4 Spine-Leaf · P5 VoIP/CME · P6 Wi-Fi/WLC
 
