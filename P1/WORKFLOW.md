@@ -31,8 +31,6 @@
 - [Registre d'erreurs & dette technique](#registre-derreurs--dette-technique-état-final)
 - [Annexe : Captures de preuve](#annexe--captures-de-preuve)
 
-→ 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
-
 # 1. Cadrage
 
 ## **<a id="Topologie-As-Built"></a>Topologie As-Built**
