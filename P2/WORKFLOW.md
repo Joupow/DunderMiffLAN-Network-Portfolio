@@ -1,13 +1,11 @@
 # Partie 2 : Workflow 
 
-🛠️ Composants déployés et configurés : 
-
-- Uplinks routés `/30` (`10.0.1–3.0`)
-- HSRP réparti : DIST-SW1 Active `{10,30}`, DIST-SW2 Active `{20,99}`
-- SVI réels `.2`/`.3`, VIP `.1` 
-- OSPF P2P aire 0 (RID `2.2.2.2`/`3.3.3.3`/`4.4.4.4`/`10.255.255.1`)
-- DHCP sur HQ-Router `10.0.1.2`
-- Core = transit L3 pur.
+ **Concepts clés** : Routage, HSRP, DHCP, OSFP P2P
+ 
+- 💻**Outil** : Cisco Packet Tracer 9.0
+- 🏷️ Plan d'adressage complet → [IPAM.m](../IPAM.md)
+- 📄 Présentation de la partie 2 → [README P2](./README.md)
+- 🎓 **Certification :** CompTIA Network+ 
 ## Sommaire
 
 **1. Cadrage**
@@ -30,8 +28,6 @@
 - [Dépannage (incidents de session)](#dépannage-incidents-de-session)
 - [Registre d'erreurs & dette technique](#registre-derreurs--dette-technique)
 - [Annexe : Captures de preuve](#annexe--captures-de-preuve)
-
-→ 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
 
 # 1. Cadrage
 
@@ -63,6 +59,7 @@ Lever les VIP pendant que le Core détient encore `.1` sur un trunk connecté pr
 
 Router les uplinks du Core d'abord fait tomber ses SVIs data en `down/down` d'eux-mêmes, ce qui laisse la Distribution prendre `.1` proprement.
 
+---
 ### <a id="étape-1--placement--câblage-du-hq-router"></a>Étape 1 — Placement & câblage du HQ-Router
 
 **Intention :** introduire le routeur qui porte le DHCP (et, en P3, le lien ASA-inside). Pas de CLI.
@@ -73,6 +70,7 @@ Router les uplinks du Core d'abord fait tomber ses SVIs data en `down/down` d'eu
 
 **Validation** (sur le Core) : `show interfaces status | include 1/0/24` → `notconnect` jusqu'à ce que l'interface routeur soit montée à l'étape 3.
 
+---
 ### <a id="étape-2--core--uplinks-routés--retrait-des-svis"></a>Étape 2 — CORE : uplinks routés + retrait des SVIs
 
 **Intention :** transformer le Core en transit L3 pur et lui retirer son rôle de passerelle inter-VLAN. `default interface` efface la config trunk résiduelle de P1 avant que la config L3 n'arrive.
@@ -119,6 +117,7 @@ write memory
 
 > 📷 **[P-01](#p-01)** CORE `show ip interface brief` — uplinks routés up.
 
+---
 ### <a id="étape-3--distribution--ip-routing--uplink-routé--svis--hsrp"></a>Étape 3 — DISTRIBUTION : ip routing + uplink routé + SVIs + HSRP
 
 **Intention :** la Distribution devient la passerelle redondante. `ip routing` d'abord, sinon les SVIs ne routent pas. `Gi0/1` (uplink Core) → routé ; **`Gi0/2` (inter-Distribution) reste un trunk L2.**
@@ -179,6 +178,7 @@ write memory
 
 > 📷 **[P-09](#p-09)** HSRP DIST-SW1 (Active V10/V30, Pri 110 P) · **[P-10](#p-10)** HSRP DIST-SW2 miroir (Active V20/V99).
 
+---
 ### <a id="étape-4--ospf-point-à-point-mono-aire-0"></a>Étape 4 — OSPF point-à-point (mono-aire 0)
 
 **Intention :** une aire, tous les liens point-à-point (pas d'élection DR/BDR), RID codé en dur, SVIs annoncés mais passifs.
@@ -254,6 +254,7 @@ show ip route ospf           ! Core : ECMP vers les VLANs via les deux /30 ; HQ 
 
 > 📷 **[P-02](#p-02)** OSPF neighbor Core (3 voisins `FULL`) · **[P-03](#p-03)** ECMP Core vers VLANs · **[P-04](#p-04)/[P-05](#p-05)** DIST-SW1 adjacence + routes · **[P-06](#p-06)** DIST-SW2 · **[P-07](#p-07)/[P-08](#p-08)** HQ-Router propagation + adjacence.
 
+---
 ### <a id="étape-5--dhcp-centralisé-sur-le-hq-router"></a>Étape 5 — DHCP centralisé sur le HQ-Router
 
 **Intention :** une autorité DHCP pour les VLANs utilisateur. VLAN 30 = CME (P5) ; VLAN 99 = statique.
@@ -281,6 +282,7 @@ end
 write memory
 ```
 
+---
 ### <a id="étape-6--relais-dhcp--chemin-unique"></a>Étape 6 — Relais DHCP : chemin unique
 
 **Intention :** le helper vit sur le SVI de l'**Active** du VLAN, et sur lui seul.
@@ -453,10 +455,6 @@ clear ip ospf process        write memory
 **<a id="p-21"></a> [P-21] · Inter-VLAN routé** — PC campus `ping .10.51` (0 %) + `ping .20.51` (TTL=127, un saut)
 
 ![Capture P2-19](../assets/captures/P2/Capture_P2_19.png)
-
-**<a id="p-22"></a> [P-22] · Topologie as-built** — schéma PT : `/30` en 10.0.2/3, labels HSRP par VLAN, MGMT `.2`/`.3`, « ALL PCs – DHCP Lease »
-
-![Capture P2-25](../assets/captures/P2/Capture_P2_25.png)
 
 ---
 
