@@ -6,15 +6,6 @@
 - 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
 - 📄 Présentation du projet → [README P1](./README.md)
 - 🎓 **Certification :** CompTIA Network+ 
-
-🛠️ Composants déployés et configurés : 
-
- - VLANs `10` RH · `20` IT · `30` VOIP · `99` MGMT · `998` quarantaine · `999` natif trou noir  
- - Passerelles `.1` **temporaires sur SVI du Core**
- - Mgmt VLAN 99 (`.99.11/.12` DIST, `.13–.16` ACC) 
- - Uplinks access `Fa0/1–2`
- - Root STP sur la Distribution.
-
 ## Sommaire
 
 **1. Cadrage**
