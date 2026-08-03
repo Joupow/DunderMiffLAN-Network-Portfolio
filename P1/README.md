@@ -4,8 +4,6 @@
 
 - Plan d'adressage complet → [`IPAM.md`](../IPAM.md)
 - Progression étape par étape →[`WORKFLOW P1`](./WORKFLOW.md).
-
----
 ## Objectif
 
 Construire la fondation du LAN d'entreprise sur le modèle hiérarchique Cisco à trois niveaux comprenant : 
@@ -17,8 +15,6 @@ Construire la fondation du LAN d'entreprise sur le modèle hiérarchique Cisco �
 - Routage inter-VLAN *temporaire* sur le Core.
 
 Tout ce qui suit : HSRP, OSPF, DMZ, datacenter, voix, Wi-Fi, dépend de la propreté de cette base.
-
----
 ## Contrainte structurante
 
 - Le root STP est positionné dès cette partie sur la **Distribution**, aligné sur le plan HSRP de P2 (DIST-SW1 root `{10,30}`, DIST-SW2 root `{20,99}`). 
@@ -27,13 +23,9 @@ Tout ce qui suit : HSRP, OSPF, DMZ, datacenter, voix, Wi-Fi, dépend de la propr
 **Pourquoi une base temporaire sur le core ?** 
 
 Une passerelle `.1` redondante sur deux switches de Distribution est **impossible sans FHRP** (même IP sur deux boîtiers = conflit). Livrer d'abord une base mono-boîtier qui fonctionne, puis la durcir avec HSRP + `/30` routé + OSPF en P2, de manière délibéré.
-
----
 ## Topologie logique
 
 ![Topologie P1](../assets/topologies/topology_p1.svg)
-
----
 
 ## Couverture CompTIA Network+
 
@@ -49,7 +41,6 @@ Une passerelle `.1` redondante sur deux switches de Distribution est **impossibl
 
 Chaque point est prouvé par un **résultat, un appel ou un état** — jamais par un timeout. Validation de bout en bout, captures et incidents de build : **WORKFLOW — validation**.
 
----
 ## Bilan pédagogique 
 
 Une base propre n'est pas une étape « facile » qu'on expédie : c'est la dette de toutes les parties suivantes. Ici, on pose les fondations avant les murs porteurs : la base L2 doit être stable avant d'empiler la redondance.
