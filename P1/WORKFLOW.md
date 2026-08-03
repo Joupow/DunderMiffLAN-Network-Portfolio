@@ -1,5 +1,12 @@
 # Partie 1 : Workflow
 
+**Concepts clés** : Modèle hiérarchique Cisco 3 niveaux · VLANs · 802.1Q · STP · routage inter-VLAN · SVI 
+
+- 💻**Outil** : Cisco Packet Tracer 9.0
+- 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
+- 📄 Présentation du projet → [README P1](./README.md)
+- 🎓 **Certification :** CompTIA Network+ 
+
 🛠️ Composants déployés et configurés : 
 
  - VLANs `10` RH · `20` IT · `30` VOIP · `99` MGMT · `998` quarantaine · `999` natif trou noir  
