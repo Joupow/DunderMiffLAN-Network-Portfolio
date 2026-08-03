@@ -22,7 +22,8 @@
 - [Étape 4b : Config IP des PC](#étape-4b--config-ip-des-pc-gui)
 - [Étape 5 : SVIs + routage inter-VLAN](#étape-5--svis--routage-inter-vlan-core)
 - [Étape 6 : VLAN de management 99](#étape-6--vlan-de-management-99)
-- [Étape 7 : STP : Rapid PVST+](#étape-7--stp--rapid-pvst-root-sur-la-distribution)
+- [Étape 7 : STP - Rapid PVST+](#étape-7--stp--rapid-pvst-root-sur-la-distribution)
+- [Étape 8 : Root sur la Distribution](#Root-sur-la-Distribution)
 
 **3. Preuves & clôtures**
 
@@ -391,7 +392,7 @@ Puis depuis un PC du VLAN 10 : `ping 192.168.99.1` — la passerelle de manageme
 > 📷 **[P-06](#p-06)** DIST-SW2 `show ip interface brief` (Vlan99 `192.168.99.12` up/up) · **[P-07](#p-07)** PC1 ping `192.168.99.1`.
 
 ---
-### <a id="étape-7--stp--rapid-pvst-root-sur-la-distribution"></a>Étape 7 — STP : Rapid PVST+, root sur la Distribution
+### <a id="étape-7--stp--rapid-pvst-root-sur-la-distribution"></a>Étape 7 — STP : Rapid PVST+
 
 **Intention :** faire tourner **Rapid PVST+** (RSTP par VLAN) sur tout le domaine L2, puis poser le Root Bridge sur la Distribution, aligné sur le split Active de P2.
 
@@ -410,6 +411,9 @@ spanning-tree mode rapid-pvst
 end
 write memory
 ```
+
+---
+### <a id="Root-sur-la-Distribution"></a>Étape 8 — Root sur la Distribution
 
 > ⚠️ **Le Core n'est PAS root, intentionnellement.** 
 > 
