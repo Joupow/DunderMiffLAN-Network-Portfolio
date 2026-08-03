@@ -51,4 +51,4 @@ L'apprentissage central reste le principe de séquençage : positionner le root 
 
 ---
 
-⬆️ **Suivant : [Partie 2 — Routage, redondance & services](../P2/README.md)** — migration des SVIs sur la Distribution, HSRP, OSPF point-à-point, DHCP centralisé + relais. · [Vue d'ensemble du projet](../README.md)
+⬆️ - Progression étape par étape →[Workflow P1](./WORKFLOW.md) **Suivant : [Partie 2 — Routage, redondance & services](../P2/README.md)** — migration des SVIs sur la Distribution, HSRP, OSPF point-à-point, DHCP centralisé + relais. · [Vue d'ensemble du projet](../README.md)
