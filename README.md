@@ -10,7 +10,7 @@ Ce dépôt présente **TheBigOffice**, un laboratoire réseau simulant une infra
 - [📞  Partie 5 : VoIP](./P5/) 
 - [📶 Partie 6 : WiFI](./P6/)
 
-La documentation du laboratoire est structurée autour de ressources globales et de documents spécifiques à chaque partie : 
+La documentation du laboratoire est structurée autour de ressources globales :
 
 - 🏷️ [IPAM](../IPAM.md)
 - 📘 [TECHNICAL_OVERVIEW](./TECHNICAL_OVERVIEW.md) 
