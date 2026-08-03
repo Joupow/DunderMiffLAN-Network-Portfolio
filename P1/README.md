@@ -1,9 +1,11 @@
 # Partie 1 : Fondations LAN 3 niveaux
 
-**Concepts clés** : Modèle hiérarchique Cisco 3 niveaux · VLANs · 802.1Q · STP · routage inter-VLAN · SVI · **Certification :** CompTIA Network+  · **Outil** : Cisco Packet Tracer 9.0
+**Concepts clés** : Modèle hiérarchique Cisco 3 niveaux · VLANs · 802.1Q · STP · routage inter-VLAN · SVI · 
 
-- Plan d'adressage complet → [`IPAM.md`](../IPAM.md)
-- Progression étape par étape →[`WORKFLOW P1`](./WORKFLOW.md).
+- 🎓 **Certification :** CompTIA Network+ 
+- 💻**Outil** : Cisco Packet Tracer 9.0
+- 🏷️ Plan d'adressage complet → [IPAM.m](../IPAM.md)
+- 📝 Progression étape par étape →[WORKFLOW P1](./WORKFLOW.md).
 ## Objectif
 
 Construire la fondation du LAN d'entreprise sur le modèle hiérarchique Cisco à trois niveaux comprenant : 
