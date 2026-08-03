@@ -1,5 +1,5 @@
-# TheBigOffice - Packet Tracer 
-## 📓 Portfolio pratique pour la CompTIA Network+
+# TheBigOffice - Packet Tracer - Portfolio
+## 📓 Home lab pratique pour la CompTIA Network+
 
 Ce dépôt présente **TheBigOffice**, un laboratoire réseau construit de manière autodidacte pour mettre en pratique les compétences couvertes par la **CompTIA Network+**, tout en explorant des notions plus avancées. 
 
