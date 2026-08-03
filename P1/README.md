@@ -1,4 +1,4 @@
-# Partie 1 : Fondations LAN du siège
+# Partie 1 : Fondations LAN 3 niveaux
 
 **Concepts clés** : Modèle hiérarchique Cisco 3 niveaux · VLANs · 802.1Q · STP · routage inter-VLAN · SVI · **Certification :** CompTIA Network+  · **Outil** : Cisco Packet Tracer 9.0
 
