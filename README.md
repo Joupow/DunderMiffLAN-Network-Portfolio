@@ -12,7 +12,7 @@ Ce laboratoire réseau simule une infrastructure d'entreprise sous Cisco Packet 
 - [📞  Partie 5 : VoIP](./P5/) 
 - [📶 Partie 6 : WiFi](./P6/)
 
-Ce projet n'a pas vocation à représenter une architecture de production clé en main. Il s'agit avant tout d'un **portfolio technique junior,** les erreurs de conception font partie du processus d'apprentissage et sont traitées comme des opportunités d'analyse et d'amélioration.
+Le projet n'a pas vocation à représenter une architecture de production clé en main. Il s'agit avant tout d'un **portfolio technique junior,** les erreurs de conception font partie du processus d'apprentissage et sont traitées comme des opportunités d'analyse et d'amélioration.
 
 La documentation du laboratoire est structurée autour de ressources globales :
 
@@ -101,12 +101,7 @@ TheBigOffice - Packet Tracer Portfolio /
 │   ├── network-overview/     ← Captures topologie dans Packet Tracer : N0_pX.png
 │   └── captures/  P1/ … P6/  ← captures de preuve : Capture_PX_NN.png 
 └──
-
-P1 LAN 3 niveaux · P2 HSRP/OSPF/DHCP · P3 ASA/DMZ/NAT · P4 Spine-Leaf · P5 VoIP/CME · P6 Wi-Fi/WLC
-
 ```
-
-Pour chaque partie : le **README** cadre (objectif, périmètre, compétences, matrice de validation) ; le **WORKFLOW** reproduit (CLI annotée, validation par étape, registre de dette, annexe de captures).
 
 ## Usage de l'IA dans ce projet
 
