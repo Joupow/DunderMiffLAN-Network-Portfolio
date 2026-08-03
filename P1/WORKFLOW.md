@@ -1,6 +1,6 @@
 # Partie 1 : Workflow
 
-Composants déployés et configurés : 
+🛠️ Composants déployés et configurés : 
 
  - VLANs `10` RH · `20` IT · `30` VOIP · `99` MGMT · `998` quarantaine · `999` natif trou noir  
  - Passerelles `.1` **temporaires sur SVI du Core**
@@ -33,7 +33,7 @@ Composants déployés et configurés :
 - [Registre d'erreurs & dette technique](#registre-derreurs--dette-technique-état-final)
 - [Annexe : Captures de preuve](#annexe--captures-de-preuve)
 
-→ Plan d'adressage complet → [`IPAM.md`](../IPAM.md)
+→ 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
 
 # 1. Cadrage
 
