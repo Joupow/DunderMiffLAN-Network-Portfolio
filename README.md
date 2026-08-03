@@ -62,9 +62,6 @@ Cette organisation permet de suivre l'ensemble du cycle de vie d'une implémenta
 
 ![Topologie Global](./assets/topologies/topology-global.svg)
 
-- → Vue consolidée (architecture, décisions transverses, écarts de production) : [TECHNICAL_OVERVIEW.md](./TECHNICAL_OVERVIEW.md)
-- →  Schémas de topologie dans chaque partie.
-
 ## Principes transverses
 
 Quelques règles de conception qui traversent tout le dépôt :
