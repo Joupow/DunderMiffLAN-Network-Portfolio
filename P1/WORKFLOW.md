@@ -52,6 +52,7 @@ Schéma PT : base L2, 3 niveaux, accès dual-homed, adressage statique
 
 L'ordre n'est pas arbitraire : chaque étape dépend de la précédente. Créer un trunk avant que les VLANs existent localement, ou un SVI avant `ip routing`, produit des échecs silencieux diagnostiqués trop tard.
 
+---
 ### <a id="étape-1--déploiement-physique"></a>Étape 1 : Déploiement physique
 
 **Intention :** construire la topologie et le câblage dans Packet Tracer. Pas de CLI.
@@ -81,7 +82,7 @@ show interfaces status
 
 > 📷 **[P-01](#p-01)** CORE `show interfaces status` (Gi1/0/1-2 trunk).
 
-
+---
 ### <a id="étape-2--vlans-de-base"></a>Étape 2 — VLANs de base
 
 **Intention :** déclarer tous les VLANs sur chaque switch. Un VLAN autorisé sur un trunk mais absent de la base locale ne transporte **rien**.
@@ -117,6 +118,7 @@ show vlan brief
 
 > 📷 **[P-02](#p-02)** `show vlan brief` — CORE canonique (jumeaux par switch pour les 7).
 
+---
 ### <a id="étape-3--trunks-8021q"></a>Étape 3 — Trunks 802.1Q
 
 **Intention :** activer les liens inter-switch avec le VLAN natif trou noir et le VLAN 1 exclu. Sur PT 9.0, la liste `allowed vlan` se retape en entier (pas de `add`).
@@ -201,6 +203,7 @@ show interfaces trunk
 
 > 📷 **[P-03](#p-03)** `show interfaces trunk` — DIST-SW1 + DIST-SW2, `Fa0/1-4` en trunk, natif 999.
 
+---
 ### <a id="étape-4--ports-daccès--durcissement-de-bordure"></a>Étape 4 — Ports d'accès + durcissement de bordure
 
 **Intention :** affecter les ports PC à leur VLAN, activer le Voice VLAN démonstratif, isoler les ports inutilisés, durcir les ports vers postes.
@@ -253,6 +256,7 @@ show spanning-tree interface fastEthernet 0/3 portfast   ! -> enabled
 
 > 📷 **[P-04](#p-04)** ACC `show interfaces status` — `Fa0/3`=10, `Fa0/4`=20, inutilisés disabled/998.
 
+---
 ### <a id="étape-4b--config-ip-des-pc-gui"></a>Étape 4b — Config IP des PC (GUI)
 
 **Intention :** donner à chaque PC une IP statique, un masque `/24` et une passerelle par défaut cohérents avec son VLAN. 
@@ -267,6 +271,7 @@ Règle d'allocation P1 : PC **impairs** (1/3/5/7) → **VLAN 10**, IP `192.168.1
 ipconfig
 ```
 
+---
 ### <a id="étape-5--svis--routage-inter-vlan-core"></a>Étape 5 — SVIs + routage inter-VLAN (Core)
 
 **Intention :** activer les passerelles inter-VLAN temporaires sur le Core.
@@ -310,7 +315,7 @@ show ip route            ! 4 routes connectées 'C' : 10/20/30/99
 
 > 📷 **[P-05](#p-05)** PC1 ping inter-VLAN `.20.10` + intra-VLAN cross-switch `.10.12`.
 
-
+---
 ### <a id="étape-6--vlan-de-management-99"></a>Étape 6 — VLAN de management 99
 
 **Intention :** rendre chaque switch joignable pour l'administration depuis n'importe quel VLAN.
@@ -385,6 +390,7 @@ Puis depuis un PC du VLAN 10 : `ping 192.168.99.1` — la passerelle de manageme
 
 > 📷 **[P-06](#p-06)** DIST-SW2 `show ip interface brief` (Vlan99 `192.168.99.12` up/up) · **[P-07](#p-07)** PC1 ping `192.168.99.1`.
 
+---
 ### <a id="étape-7--stp--rapid-pvst-root-sur-la-distribution"></a>Étape 7 — STP : Rapid PVST+, root sur la Distribution
 
 **Intention :** faire tourner **Rapid PVST+** (RSTP par VLAN) sur tout le domaine L2, puis poser le Root Bridge sur la Distribution, aligné sur le split Active de P2.
