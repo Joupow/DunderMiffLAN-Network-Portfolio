@@ -3,7 +3,7 @@
 **Concepts clés** : Modèle hiérarchique Cisco 3 niveaux · VLANs · 802.1Q · STP · routage inter-VLAN · SVI 
 
 - 💻**Outil** : Cisco Packet Tracer 9.0
-- 🏷️ Plan d'adressage complet → [IPAM.m](../IPAM.md)
+- 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
 - 📝 Progression étape par étape → [WORKFLOW P1](./WORKFLOW.md)
 - 🎓 **Certification :** CompTIA Network+ 
 ## Objectif
