@@ -3,12 +3,12 @@
 
 Ce dépôt présente **TheBigOffice**, un laboratoire réseau simulant une infrastructure d'entreprise sous Cisco Packet Tracer en 6 parties.
 
-- [🏗️ Partie 1 : Fondations LAN 3 niveaux](./P1/README.md) 
-- [🧭 Partie 2 : Routage & redondance](./P2/README.md) 
-- [🛡️ Partie 3 : DMZ & Pare-feu](./P3/README.md) 
-- [🖥️ Partie 4 : Datacenter](./P4/README.md)
-- [📞  Partie 5 : VoIP](./P5/README.md) 
-- [📶 Partie 6 : WiFI](./P6/README.md)
+- [🏗️ Partie 1 : Fondations LAN 3 niveaux](./P1/) 
+- [🧭 Partie 2 : Routage & redondance](./P2/) 
+- [🛡️ Partie 3 : DMZ & Pare-feu](./P3/) 
+- [🖥️ Partie 4 : Datacenter](./P4/)
+- [📞  Partie 5 : VoIP](./P5/) 
+- [📶 Partie 6 : WiFI](./P6/)
 
 Le projet couvre l'ensemble du cycle de vie d'une implémentation réseau :
 
