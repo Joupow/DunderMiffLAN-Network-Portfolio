@@ -6,8 +6,6 @@
 - 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
 - 📝 Progression étape par étape → [WORKFLOW P3](./WORKFLOW.md)
 - 🎓 **Certification :** CompTIA Network+
-
----
 ## Objectif
 
 Construire la frontière entre le réseau interne et Internet : 
@@ -18,15 +16,11 @@ Construire la frontière entre le réseau interne et Internet :
 
 Le but n'est **pas** « faire passer du trafic » (c'était P2) — c'est de définir **ce qui a le droit de traverser, et dans quel sens**, et de prouver chaque règle par un **compteur**, pas par une capture.
 
-
----
 ## Contrainte structurante : l'ordre de build. 
 
 - Routage et NAT sont vérifiés sur un ASA **sans ACL** (les security-levels autorisent déjà inside→outside) *avant* toute ACL. 
 - Déboguer un problème de routage à travers trois ACL à la fois est le gouffre de temps classique. 
 - Les trois ACL portent trois philosophies opposées : le `permit ip any any` final est **obligatoire sur inside** et **interdit sur DMZ**.
-
----
 
 ## Décision de continuité (héritée de P2)  
 
@@ -34,14 +28,10 @@ Le but n'est **pas** « faire passer du trafic » (c'était P2) — c'est de dé
 - P3 l'introduit via le lien HQ-Router → ASA inside. 
 - Une route par défaut statique **ne suffit pas** : elle doit être poussée dans OSPF par `default-information originate`, même classe de piège « chemin de retour » que l'OFFER DHCP de P2.
 
----
 ## Topologie logique
 
 
 ![Topologie P3](../assets/topologies/topology_p3.svg)
-
-
----
 
 ## Couverture CompTIA Network+
 
@@ -52,7 +42,6 @@ Le but n'est **pas** « faire passer du trafic » (c'était P2) — c'est de dé
 | 🌐 Services  | NAT/PAT · DNS TCP/53 · inspection ICMP stateful                                                                                                               | ✅ PAT ×2 + statique 1:1           |
 | 🧭 Routage   | Route par défaut OSPF · LPM vs AD · résumé + verrou trou noir                                                                                                 | ✅ résumés /20 + /16 · Null0       |
 
----
 
 ## Conclusion
 

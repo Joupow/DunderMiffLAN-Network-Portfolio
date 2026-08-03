@@ -4,7 +4,7 @@
 
 - 💻**Outil** : Cisco Packet Tracer 9.0
 - 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
-- 📄 Progression étape par étape → [WORKFLOW P3](./WORKFLOW.md)
+- 📄 📄 Présentation de la partie 3 → [README P3](./README.md)
 - 🎓 **Certification :** CompTIA Network+
 ## Sommaire
 
