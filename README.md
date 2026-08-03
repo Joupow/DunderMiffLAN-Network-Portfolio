@@ -1,7 +1,9 @@
 # Réseau d'entreprise TheBigOffice
 ## Portfolio réseau junior — Cisco Packet Tracer / CompTIA Network+
 
-Ce dépôt présente **TheBigOffice**, un laboratoire réseau simulant une infrastructure d'entreprise sous Cisco Packet Tracer.
+<center>Ce dépôt présente **TheBigOffice**, un laboratoire réseau simulant une infrastructure d'entreprise sous Cisco Packet Tracer en 6 parties. </center>
+
+<center>[Partie 1 : Fondations LAN 3 niveaux](./P1/README.md) [Partie 2 : Routage & redondance](./P2/README.md) [Partie 3 : DMZ & Pare-feu](./P3/README.md) [Partie 4 : Datacenter](./P4/README.md) [Partie 5 : VoIP](./P5/README.md) [Partie 6 : WiFI](./P6/README.md)</center>
 
 Le projet couvre l'ensemble du cycle de vie d'une implémentation réseau :
 
@@ -16,9 +18,8 @@ Ce laboratoire a été construit de manière autodidacte pour mettre en pratique
 
 Ce projet n'a pas vocation à représenter une architecture de production clé en main. Il s'agit avant tout d'un **portfolio technique junior,** les erreurs de conception font partie du processus d'apprentissage et sont traitées comme des opportunités d'analyse et d'amélioration.
 
----
-
 ## Périmètre du projet
+---
 
 | Partie               | Sujet                   | Résultat principal                                                                                        |
 | -------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------- |
@@ -29,10 +30,8 @@ Ce projet n'a pas vocation à représenter une architecture de production clé e
 | [P5](./P5/README.md) | VoIP                    | CME co-localisé avec l'Active/root du VLAN 30, DHCP Option 150, SCCP, TFTP, frontière QoS                 |
 | [P6](./P6/README.md) | Wi-Fi                   | WLC + APs lightweight (CAPWAP), SSID WPA2 Corp/Guest, **HSRPv2 VLAN 300 sur DIST-SW1**                    |
 
-
----
-
 ## Ce que ce portfolio démontre
+---
 
 | Domaine de compétence | Preuve dans le projet |
 |---|---|
@@ -44,18 +43,17 @@ Ce projet n'a pas vocation à représenter une architecture de production clé e
 | Services | Autorité DHCP par domaine + relais, NAT, VoIP/CME (Option 150, SCCP), TFTP, Wi-Fi à base de WLC |
 | Dépannage | Collision de Router-ID, chaîne de boot VoIP, confinement de boucle à l'ASA, limites du simulateur WLC |
 | Documentation | Chaque partie : notes de conception, CLI annotée, workflow, matrice de validation honnête, registre de dette |
-
-
----
 ## Topologie du projet
+---
+
 
 ![Topologie Global](./assets/topologies/topology-global.svg)
 
 - → Vue consolidée (architecture, décisions transverses, écarts de production) : [`TECHNICAL_OVERVIEW.md`](./TECHNICAL_OVERVIEW.md)
 - →  Schémas de topologie dans chaque partie.
 
----
 ## Principes transverses
+---
 
 Quelques règles de conception qui traversent tout le dépôt :
 
@@ -69,9 +67,8 @@ Quelques règles de conception qui traversent tout le dépôt :
 
 - **Nommer les limites du simulateur, ne jamais les cacher.** Le data plane CAPWAP n'étant pas simulé, contrôle et données sont prouvés séparément — limite documentée, pas défaut caché.
 
----
-
 ## Carte du dépôt
+---
 
 
 ```
@@ -100,8 +97,8 @@ P1 LAN 3 niveaux · P2 HSRP/OSPF/DHCP · P3 ASA/DMZ/NAT · P4 Spine-Leaf · P5 V
 
 Pour chaque partie : le **README** cadre (objectif, périmètre, compétences, matrice de validation) ; le **WORKFLOW** reproduit (CLI annotée, validation par étape, registre de dette, annexe de captures).
 
----
 ## Usage de l'IA dans ce projet
+---
 
 L'assistance par IA a été utilisée comme **outil d'apprentissage et de revue**, pas comme une autorité ni comme un substitut à la compréhension du réseau. 
 
@@ -116,36 +113,24 @@ L'essentiel était la **supervision**. Les sorties de l'IA n'étaient pas tenues
 
 Ce projet démontre donc aussi une compétence qui compte dans le travail technique réel : **piloter un assistant IA par un prompting clair et itératif, tout en gardant la responsabilité d'ingénierie, la vérification et le jugement final du côté humain.**
 
----
 ## Plan initial
+---
 
-Le plan initial incluait 11 parties avec d'avantages de sujets pour couvrir la majorité des objectifs de la CompTIA Network+ comme :  IPv6, monitoring, PKI/RADIUS, notions de cloud, simulation d'attaques. Le projet s'arrête à la Partie 6 parce que **Packet Tracer devient le facteur limitant**.
+Le plan initial incluait 11 parties avec d'avantages de sujets pour couvrir la majorité des objectifs de la CompTIA Network+ comme :  IPv6, monitoring, PKI/RADIUS, notions de cloud, simulation d'attaques. 
 
-**L'observation.** À mesure que le réseau grandit, le ratio s'inverse : chaque nouvelle partie demande plus de temps à contourner les limites du simulateur (data plane CAPWAP, VXLAN, iSCSI, SNAT, NAT par port…) qu'à produire de la configuration représentative. 
+Le projet s'arrête à la Partie 6 parce que **Packet Tracer devient le facteur limitant**. 
+
+**L'observation :** À mesure que le réseau grandit, le ratio s'inverse : chaque nouvelle partie demande plus de temps à contourner les limites du simulateur (data plane CAPWAP, VXLAN, iSCSI, SNAT, NAT par port…) qu'à produire de la configuration représentative. 
 
 Packet Tracer est un excellent outil d'**apprentissage** pour comprendre la logique réseau, mais il reste un **simulateur** : il modélise le comportement des protocoles sans exécuter un vrai IOS. Au-delà d'un certain niveau de complexité, le travail se réduit à documenter ce que l'outil *ne peut pas* faire.
 
-**La décision.** Continuer les sujets restants sur **GNS3 / Cisco CML** ou autre logiciel de virtualisation, qui émulent de vraies images IOS et permettent de tester réellement ce que Packet Tracer ne peut que représenter. 
+**La décision:** Continuer les sujets restants sur **GNS3 / Cisco CML** ou un autre logiciel de virtualisation, qui émulent de vraies images IOS et permettent de tester réellement ce que Packet Tracer ne peut que représenter. 
 
 L'objectif : passer du simulateur à l'émulateur, un standard plus exigeant quand le sujet l'impose, et au passage, monter en compétence sur des outils professionnels.
 
----
-## À propos de cette build
-
-Ce dépôt présente la **version 2** du projet.
-
-La première version constituait mon premier laboratoire réseau d'entreprise. Toujours construite de manière autodidacte. Elle m'a permis de mettre en pratique de nombreux concepts, mais elle a également révélé plusieurs limites de conception. 
-
-Une part importante du travail a consisté à diagnostiquer des comportements inattendus, comprendre leurs causes et corriger les erreurs de configuration.
-
-Plutôt que d'appliquer des correctifs successifs, j'ai choisi de reconstruire entièrement le projet. 
-
-Cette seconde version reprend les objectifs de la première avec une architecture plus cohérente, une méthodologie plus rigoureuse et une documentation plus structurée.
-
-Ce **rebuild** est le résultat des enseignements tirés de la première itération. Il ne cherche pas à masquer les erreurs initiales, mais à démontrer la capacité à les identifier, les comprendre et les transformer en une conception plus robuste et plus reproductible.
-
----
 ## 🏁 Conclusion
+
+---
 
 L'objectif initial de l'apprentissage est largement dépassé. 
 
