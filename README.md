@@ -9,6 +9,10 @@ Ce dépôt présente **TheBigOffice**, un laboratoire réseau simulant une infra
 - [🖥️ Partie 4 : Datacenter](./P4/)
 - [📞  Partie 5 : VoIP](./P5/) 
 - [📶 Partie 6 : WiFI](./P6/)
+- 
+Ce laboratoire a été construit de manière autodidacte pour mettre en pratique les compétences couvertes par la **CompTIA Network+**, tout en explorant des notions plus avancées. 
+
+Ce projet n'a pas vocation à représenter une architecture de production clé en main. Il s'agit avant tout d'un **portfolio technique junior,** les erreurs de conception font partie du processus d'apprentissage et sont traitées comme des opportunités d'analyse et d'amélioration.
 
 La documentation du laboratoire est structurée autour de ressources globales :
 
@@ -29,10 +33,6 @@ Cette organisation permet de suivre l'ensemble du cycle de vie d'une implémenta
 - ✅ Validation du fonctionnement
 - 🔎 Diagnostic et résolution d'incidents
 - 📈 Analyse des limites de conception et amélioration de l'architecture
-
-Ce laboratoire a été construit de manière autodidacte pour mettre en pratique les compétences couvertes par la **CompTIA Network+**, tout en explorant des notions plus avancées. 
-
-Ce projet n'a pas vocation à représenter une architecture de production clé en main. Il s'agit avant tout d'un **portfolio technique junior,** les erreurs de conception font partie du processus d'apprentissage et sont traitées comme des opportunités d'analyse et d'amélioration.
 
 ## Périmètre du projet
 
