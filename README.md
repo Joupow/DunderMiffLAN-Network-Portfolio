@@ -24,7 +24,6 @@ Ce laboratoire a été construit de manière autodidacte pour mettre en pratique
 Ce projet n'a pas vocation à représenter une architecture de production clé en main. Il s'agit avant tout d'un **portfolio technique junior,** les erreurs de conception font partie du processus d'apprentissage et sont traitées comme des opportunités d'analyse et d'amélioration.
 
 ## Périmètre du projet
----
 
 | Partie               | Sujet                   | Résultat principal                                                                                        |
 | -------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------- |
@@ -36,7 +35,6 @@ Ce projet n'a pas vocation à représenter une architecture de production clé e
 | [P6](./P6/README.md) | Wi-Fi                   | WLC + APs lightweight (CAPWAP), SSID WPA2 Corp/Guest, **HSRPv2 VLAN 300 sur DIST-SW1**                    |
 
 ## Ce que ce portfolio démontre
----
 
 | Domaine de compétence | Preuve dans le projet |
 |---|---|
@@ -49,7 +47,6 @@ Ce projet n'a pas vocation à représenter une architecture de production clé e
 | Dépannage | Collision de Router-ID, chaîne de boot VoIP, confinement de boucle à l'ASA, limites du simulateur WLC |
 | Documentation | Chaque partie : notes de conception, CLI annotée, workflow, matrice de validation honnête, registre de dette |
 ## Topologie du projet
----
 
 
 ![Topologie Global](./assets/topologies/topology-global.svg)
@@ -58,7 +55,6 @@ Ce projet n'a pas vocation à représenter une architecture de production clé e
 - →  Schémas de topologie dans chaque partie.
 
 ## Principes transverses
----
 
 Quelques règles de conception qui traversent tout le dépôt :
 
@@ -73,7 +69,6 @@ Quelques règles de conception qui traversent tout le dépôt :
 - **Nommer les limites du simulateur, ne jamais les cacher.** Le data plane CAPWAP n'étant pas simulé, contrôle et données sont prouvés séparément — limite documentée, pas défaut caché.
 
 ## Carte du dépôt
----
 
 
 ```
@@ -103,7 +98,6 @@ P1 LAN 3 niveaux · P2 HSRP/OSPF/DHCP · P3 ASA/DMZ/NAT · P4 Spine-Leaf · P5 V
 Pour chaque partie : le **README** cadre (objectif, périmètre, compétences, matrice de validation) ; le **WORKFLOW** reproduit (CLI annotée, validation par étape, registre de dette, annexe de captures).
 
 ## Usage de l'IA dans ce projet
----
 
 L'assistance par IA a été utilisée comme **outil d'apprentissage et de revue**, pas comme une autorité ni comme un substitut à la compréhension du réseau. 
 
@@ -119,7 +113,6 @@ L'essentiel était la **supervision**. Les sorties de l'IA n'étaient pas tenues
 Ce projet démontre donc aussi une compétence qui compte dans le travail technique réel : **piloter un assistant IA par un prompting clair et itératif, tout en gardant la responsabilité d'ingénierie, la vérification et le jugement final du côté humain.**
 
 ## Plan initial
----
 
 Le plan initial incluait 11 parties avec d'avantages de sujets pour couvrir la majorité des objectifs de la CompTIA Network+ comme :  IPv6, monitoring, PKI/RADIUS, notions de cloud, simulation d'attaques. 
 
@@ -135,7 +128,6 @@ L'objectif : passer du simulateur à l'émulateur, un standard plus exigeant qua
 
 ## 🏁 Conclusion
 
----
 
 L'objectif initial de l'apprentissage est largement dépassé. 
 
