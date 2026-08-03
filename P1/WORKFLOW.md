@@ -522,8 +522,6 @@ write memory
 
 ## <a id="annexe--captures-de-preuve"></a>Annexe : Captures de preuve
 
-![Capture P1-08](../assets/captures/P1/Capture_P1_08.png)
-
 **<a id="p-01"></a> [P-01] · CORE `show interfaces status`** — Gi1/0/1-2 `connected trunk`
 
 ![Capture P1-10](../assets/captures/P1/Capture_P1_10.png)
