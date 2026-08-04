@@ -598,4 +598,4 @@ write memory
 
 ---
 
-⬆️ [README de la partie](./README.md) · [Vue d'ensemble du projet](../README.md) — Suivant : [WORKFLOW Partie 2](../P2/WORKFLOW.md) (migration des SVIs sur la Distribution, HSRP, OSPF P2P, DHCP + relais).
+⬆️  [Sommaire](#sommaire) · [Vue d'ensemble du projet](../README.md) · Suivant : [WORKFLOW Partie 2](../P2/WORKFLOW.md) (migration des SVIs sur la Distribution, HSRP, OSPF P2P, DHCP + relais).
