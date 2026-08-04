@@ -1,4 +1,4 @@
-# TheBigOffice — Vue d'ensemble technique
+# TheBigOffice : Vue d'ensemble technique
 
 ## Sommaire
 
