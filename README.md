@@ -1,18 +1,41 @@
 # TheBigOffice - Packet Tracer - Portfolio
-## 📓 Home lab pratique pour la CompTIA Network+
+## 📓 Home lab pratique pour la CompTIA Network+ (et au-delà)
 
 Ce dépôt présente **TheBigOffice**, un laboratoire réseau construit de manière autodidacte pour mettre en pratique les compétences couvertes par la **CompTIA Network+**, tout en explorant des notions plus avancées. 
 
-Ce laboratoire réseau simule une infrastructure d'entreprise sous Cisco Packet Tracer en 6 parties.
+Ce laboratoire réseau simule une infrastructure d'entreprise sous Cisco Packet Tracer en six parties, construites de manière progressive, chaque étape venant enrichir et compléter la précédente..
 
-- [🏗️ Partie 1 : Fondations LAN 3 niveaux](./P1/) 
-- [🧭 Partie 2 : Routage & redondance](./P2/) 
-- [🛡️ Partie 3 : DMZ & Pare-feu](./P3/) 
-- [🖥️ Partie 4 : Datacenter](./P4/)
-- [📞  Partie 5 : VoIP](./P5/) 
-- [📶 Partie 6 : WiFi](./P6/)
+| Partie               | Sujet                        | **Concepts clés**                                                                                   |
+| -------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------- |
+| [P1](./P1/README.md) | 🏗️ Fondations LAN 3 niveaux | Modèle hiérarchique Cisco 3 niveaux · VLANs · 802.1Q · STP · routage inter-VLAN · SVI · Rapid PVST+ |
+| [P2](./P2/README.md) | 🧭 routage & redondance      | Routage · HSRP · DHCP · Relay Helper · OSFP P2P                                                     |
+| [P3](./P3/README.md) | 🛡️DMZ & pare-feu            | ASA · DMZ · NAT/PAT · filtrage · ACL · IDS/SPAN                                                     |
+| [P4](./P4/README.md) | 🖥️ Datacenter               | Spine-Leaf · Border Leafs · trafic E-O et N-S · tiers serveurs · load balancer · stockage           |
+| [P5](./P5/README.md) | 📞VoIP                       | VoIP · CME · TFTP · DHCP Option 150 · QoS voix                                                      |
+| [P6](./P6/README.md) | 📶 WiFi                      | WLC · APs lightweight · CAPWAP · SSID WPA2 Corp/Guest · HSRPv2 VLAN 300                             |
 
 Le projet n'a pas vocation à représenter une architecture de production clé en main. Il s'agit avant tout d'un **portfolio technique junior,** les erreurs de conception font partie du processus d'apprentissage et sont traitées comme des opportunités d'analyse et d'amélioration.
+
+## Topologie du projet
+
+
+![Topologie Global](./assets/topologies/topology-global.svg)
+
+## Ce qui distingue ce lab
+
+- **Une discipline de séquençage, pas seulement des protocoles configurés.** L'ordre de build évite les pannes _avant_ qu'elles existent : root STP posé avant la redondance (P1), Core routé et SVIs retirés avant de lever les VIP pour ne jamais provoquer de split-brain (P2), routage et NAT prouvés _sans ACL_ avant d'ajouter le filtrage (P3), fabric datacenter prouvée avant de brancher NAT (P4).
+
+- **Un fil rouge unique : « le service suit l'Active ».** Par VLAN, Active HSRP = root STP = service hébergé sur le même boîtier. Principe posé en P1 et hérité jusqu'au CME (P5) et au Wi-Fi (P6). Chaque partie solde explicitement les dettes de la précédente : le lab se lit comme **une seule histoire d'ingénierie continue**, pas six exercices isolés.
+
+- **Prouver par un état ou un trafic réel, jamais par un écran.** Un flux bloqué se prouve au compteur d'ACL, un poste par `REGISTERED in SCCP`, une autorité DHCP par le fait qu'_aucun autre serveur_ ne répond sur le segment, jamais par un timeout ni une capture « qui a l'air de marcher ».
+
+- **Le débogage comme cœur de l'apprentissage.** Le motif récurrent du **chemin de retour** - l'OFFER DHCP qui ne sait pas revenir (P2), la route par défaut qu'il faut injecter dans OSPF (P3), plus collision de Router-ID et asymétrie TFTP : des pièges qui ne se comprennent qu'en les résolvant.
+
+- **Nommer les limites de l'outil, jamais les cacher.** Le data plane CAPWAP n'étant pas simulé, contrôle (WLC, 4 APs `Online`) et données (AP autonome) sont prouvés séparément. C'est aussi ce qui justifie la clôture à P6.
+
+- **IA en supervision, pas en autorité** : utilisée pour challenger des choix et relire des configs ; les sorties ont été vérifiées et corrigées humainement.
+
+## ## Documentation
 
 La documentation du laboratoire est structurée autour de ressources globales :
 
@@ -25,63 +48,8 @@ Chaque partie du laboratoire dispose ensuite de son propre espace documentaire c
 - 🪜 **WORKFLOW** 
 - 🧪 **Fichier Cisco Packet Tracer (.pkt)**
 
-Cette organisation permet de suivre l'ensemble du cycle de vie d'une implémentation réseau :
-
-- 🏛️ Conception de l'architecture réseau 
-- 🧩 Segmentation et organisation logique du réseau
-- ⚙️ Configuration des équipements 
-- ✅ Validation du fonctionnement
-- 🔎 Diagnostic et résolution d'incidents
-- 📈 Analyse des limites de conception et amélioration de l'architecture
-
-## Périmètre du projet
-
-| Partie               | Sujet                   | Résultat principal                                                                                        |
-| -------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------- |
-| [P1](./P1/README.md) | Fondations LAN du siège | VLANs, trunks 802.1Q, VLAN de management, **Rapid PVST+ avec roots sur la Distribution**                  |
-| [P2](./P2/README.md) | Routage & redondance    | **HSRP sur la Distribution**, OSPF point-à-point, DHCP centralisé + relais unique, Core en transit L3 pur |
-| [P3](./P3/README.md) | DMZ & pare-feu          | ASA trois zones, NAT/PAT, 3 ACL, IDS/SPAN, `default-information originate` + verrou résumé/Null0          |
-| [P4](./P4/README.md) | Datacenter              | Spine-Leaf routée, **2 Border Leafs sur le Core (ECMP N-S)**, tiers app + stockage, VIP de load balancer  |
-| [P5](./P5/README.md) | VoIP                    | CME co-localisé avec l'Active/root du VLAN 30, DHCP Option 150, SCCP, TFTP, frontière QoS                 |
-| [P6](./P6/README.md) | Wi-Fi                   | WLC + APs lightweight (CAPWAP), SSID WPA2 Corp/Guest, **HSRPv2 VLAN 300 sur DIST-SW1**                    |
-
-## Ce que ce portfolio démontre
-
-| Domaine de compétence | Preuve dans le projet |
-|---|---|
-| Conception réseau | Lab connecté type entreprise : siège, périmètre, datacenter, voix, Wi-Fi |
-| Commutation | VLANs, trunks 802.1Q, **Rapid PVST+ sur tous les switches**, natif 999 trou noir, PortFast + BPDU Guard |
-| Routage | Inter-VLAN, OSPF aire 0 sur `/30` routés, origination du défaut, résumé + verrou Null0 |
-| Haute disponibilité | Passerelles **HSRP sur la Distribution** (réparties Active/Standby), alignées sur les roots STP |
-| Sécurité | ASA trois zones, DMZ, 3 ACL aux philosophies opposées, NAT/PAT, proxy forcé, port-security, SPAN/IDS |
-| Services | Autorité DHCP par domaine + relais, NAT, VoIP/CME (Option 150, SCCP), TFTP, Wi-Fi à base de WLC |
-| Dépannage | Collision de Router-ID, chaîne de boot VoIP, confinement de boucle à l'ASA, limites du simulateur WLC |
-| Documentation | Chaque partie : notes de conception, CLI annotée, workflow, matrice de validation honnête, registre de dette |
-## Topologie du projet
-
-
-![Topologie Global](./assets/topologies/topology-global.svg)
-
-## Principes transverses
-
-Quelques règles de conception qui traversent tout le dépôt :
-
-- **Prouver par un état ou un trafic réel, jamais par un écran de config.** Un flux bloqué se prouve par le compteur d'ACL, pas par un timeout.
-
-- **Une seule autorité DHCP par domaine de broadcast** — pas un serveur unique pour tout (ce serait un SPOF), mais une autorité par segment (HQ-Router, CME, DIST-SW1). La preuve : **aucun** autre serveur ne répond.
-
-- **Un résumé de routes est dangereux dès qu'il inclut de l'espace non alloué.** L'ASA décrit l'intérieur par des résumés compacts, sécurisés par des **routes Null0 (AD 254)** ; le *longest-prefix match* fait toujours gagner une vraie route OSPF.
-
-- **La chaîne de boot VoIP casse silencieusement** (DHCP → TFTP → SCCP → enregistrement) : le symptôme apparaît souvent trois étapes après la cause.
-
-- **Nommer les limites du simulateur, ne jamais les cacher.** Le data plane CAPWAP n'étant pas simulé, contrôle et données sont prouvés séparément — limite documentée, pas défaut caché.
-
-## Carte du dépôt
-
-
 ```
 TheBigOffice - Packet Tracer Portfolio /
-│
 │
 ├── README.md               ← Vitrine : projet, compétences, périmètre, carte du dépôt
 ├── TECHNICAL_OVERVIEW.md   ← Architecture, prod, décisions, apprentissages  
@@ -100,34 +68,25 @@ TheBigOffice - Packet Tracer Portfolio /
 └──
 ```
 
-## Usage de l'IA dans ce projet
+Cette organisation permet de suivre l'ensemble du cycle de vie d'une implémentation réseau :
 
-L'assistance par IA a été utilisée comme **outil d'apprentissage et de revue**, pas comme une autorité ni comme un substitut à la compréhension du réseau. 
-
-Je m'en suis surtout servi pour :
-
-- Clarifier la syntaxe Cisco et les concepts réseau pendant la construction du lab ;
-- Challenger des choix de conception et faire remonter des incohérences avant qu'elles ne deviennent des bugs ;
-- Relire des extraits de configuration à la recherche d'erreurs courantes (`no shutdown` oublié, mauvais type de réseau OSPF, documentation contradictoire) ;
-- Structurer mes prompts et itérer pour obtenir des réponses précises et vérifiables plutôt que des explications vagues.
-
-L'essentiel était la **supervision**. Les sorties de l'IA n'étaient pas tenues pour automatiquement correctes : plusieurs points ont demandé une revue et une correction humaines. le risque de boucle lié au résumé de routes à l'ASA, l'ordre de la chaîne de boot VoIP, ou les limites du WLC dans Packet Tracer. 
-
-Ce projet démontre donc aussi une compétence qui compte dans le travail technique réel : **piloter un assistant IA par un prompting clair et itératif, tout en gardant la responsabilité d'ingénierie, la vérification et le jugement final du côté humain.**
-
+- 🏛️ Conception de l'architecture réseau 
+- 🧩 Segmentation et organisation logique du réseau
+- ⚙️ Configuration des équipements 
+- ✅ Validation du fonctionnement
+- 🔎 Diagnostic et résolution d'incidents
+- 📈 Analyse des limites de conception et amélioration de l'architecture
 ## Plan initial
 
 Le plan initial incluait 11 parties avec d'avantages de sujets pour couvrir la majorité des objectifs de la CompTIA Network+ comme :  IPv6, monitoring, PKI/RADIUS, notions de cloud, simulation d'attaques. 
 
 Le projet s'arrête à la Partie 6 parce que **Packet Tracer devient le facteur limitant**. 
 
-**L'observation :** À mesure que le réseau grandit, le ratio s'inverse : chaque nouvelle partie demande plus de temps à contourner les limites du simulateur (data plane CAPWAP, VXLAN, iSCSI, SNAT, NAT par port…) qu'à produire de la configuration représentative. 
+Au-delà d'un certain niveau, contourner les limites du simulateur (CAPWAP, VXLAN, iSCSI, SNAT…) coûte plus de temps que produire de la configuration représentative.
 
-Packet Tracer est un excellent outil d'**apprentissage** pour comprendre la logique réseau, mais il reste un **simulateur** : il modélise le comportement des protocoles sans exécuter un vrai IOS. Au-delà d'un certain niveau de complexité, le travail se réduit à documenter ce que l'outil *ne peut pas* faire.
+Excellent outil d'apprentissage, Packet Tracer reste un simulateur : il modélise les protocoles sans exécuter un vrai IOS. 
 
-**La décision:** Continuer les sujets restants sur **GNS3 / Cisco CML** ou un autre logiciel de virtualisation, qui émulent de vraies images IOS et permettent de tester réellement ce que Packet Tracer ne peut que représenter. 
-
-L'objectif : passer du simulateur à l'émulateur, un standard plus exigeant quand le sujet l'impose, et au passage, monter en compétence sur des outils professionnels.
+**La suite se fera sur GNS3 / Cisco CML**, ou un autre logiciel de virtualisation, qui émulent de vraies images IOS et permettent de tester réellement ce que Packet Tracer ne peut que représenter et monter en compétence sur des outils professionnels.
 
 ## 🏁 Conclusion
 
