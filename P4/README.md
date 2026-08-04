@@ -7,6 +7,10 @@
 - 📝 Progression étape par étape → [WORKFLOW P4](./WORKFLOW.md)
 - 🎓 **Certification :** CompTIA Network+
 
+## Topologie logique
+
+![Topologie P4](../assets/topologies/topology_p4.svg)
+
 ## Objectif
 
 Construire le datacenter comme une fabric Spine-Leaf **routée**, boulée sur le campus **à travers le Core, pas le HQ-Router**. Le but n'est pas « faire pinguer les serveurs », c'est de prouver une forme de trafic précise : 
@@ -17,18 +21,14 @@ Construire le datacenter comme une fabric Spine-Leaf **routée**, boulée sur le
 
 ## Contrainte structurante
 
-- Les deux Border Leafs terminent sur le **Core** (`10.0.12.0/30`, `10.0.13.0/30`), pas un sur le Core et un sur le HQ-Router comme j'avais pu produire dans mon premier build. 
+- Les deux Border Leafs terminent sur le **Core** (`10.0.12.0/30`, `10.0.13.0/30`)
 - Les deux chemins N-S sont de longueur identique → le Core apprend les sous-réseaux DC via BL1 **et** BL2 en **ECMP**, et le HQ-Router reste un pur edge campus.
-
 
 ## Décision de continuité (héritée de P3)
 
 - Le campus atteint déjà Internet. 
 - Le DC a seulement besoin qu'OSPF porte `172.16.2.0/24` + `172.16.3.0/24` jusqu'à l'edge, plus un objet PAT dédié. La route ASA + NAT se fait **en dernier**, une fois la fabric prouvée.
 
-## Topologie logique
-
-![Topologie P4](../assets/topologies/topology_p4.svg)
 
 ## Couverture CompTIA Network+
 
