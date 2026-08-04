@@ -3,7 +3,7 @@
 
 Ce dépôt présente **TheBigOffice**, un laboratoire réseau construit de manière autodidacte pour mettre en pratique les compétences couvertes par la **CompTIA Network+**, tout en explorant des notions plus avancées. 
 
-Ce laboratoire réseau simule une infrastructure d'entreprise sous Cisco Packet Tracer en six parties, construites de manière progressive, chaque étape venant enrichir et compléter la précédente.
+Ce laboratoire réseau simule une infrastructure d'entreprise sous Cisco Packet Tracer en six parties, construites de manière progressive, chacune venant enrichir et compléter la précédente.
 
 | Partie               | Sujet                        | **Concepts clés**                                                                                   |
 | -------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------- |
@@ -21,9 +21,9 @@ Le projet n'a pas vocation à représenter une architecture de production clé e
 
 ![Topologie Global](./assets/topologies/topology-global.svg)
 
-## Ce qui distingue ce lab
+## Les choix techniques structurants
 
-- **Une discipline de séquençage, pas seulement des protocoles configurés.** L'ordre de build évite les pannes _avant_ qu'elles existent : root STP posé avant la redondance (P1), Core routé et SVIs retirés avant de lever les VIP pour ne jamais provoquer de split-brain (P2), routage et NAT prouvés _sans ACL_ avant d'ajouter le filtrage (P3), fabric datacenter prouvée avant de brancher NAT (P4).
+- **l'apprentissage d'une discipline de séquençage, pas seulement des protocoles configurés.** L'ordre de build évite les pannes _avant_ qu'elles existent : root STP posé avant la redondance (P1), Core routé et SVIs retirés avant de lever les VIP pour ne jamais provoquer de split-brain (P2), routage et NAT prouvés _sans ACL_ avant d'ajouter le filtrage (P3), fabric datacenter prouvée avant de brancher NAT (P4).
 
 - **Un fil rouge unique : « le service suit l'Active ».** Par VLAN, Active HSRP = root STP = service hébergé sur le même boîtier. Principe posé en P1 et hérité jusqu'au CME (P5) et au Wi-Fi (P6). Chaque partie solde explicitement les dettes de la précédente : le lab se lit comme **une seule histoire d'ingénierie continue**, pas six exercices isolés.
 

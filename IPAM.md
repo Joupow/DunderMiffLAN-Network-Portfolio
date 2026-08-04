@@ -1,5 +1,4 @@
 # TheBigOffice : IPAM
-
 ## Sommaire
 
 - [Plan d'adressage IP](#plan-dadressage-ip)
@@ -9,6 +8,18 @@
 - [4. Autorité DHCP par domaine](#4-autorité-dhcp-par-domaine)
 - [5. Conventions d'allocation](#5-conventions-dallocation)
 - [6. Évolution par partie](#6-évolution-par-partie)
+
+## Plan d'adressage IP 
+
+Trois espaces d'adressage, séparés par rôle :
+
+- **Hôtes & VLAN** — `192.168.0.0/16` (campus, voix, Wi-Fi) et `172.16.0.0/16` (DMZ, datacenter).
+
+- **Transit routé interne** — bloc contigu `10.0.0.0/20`, découpé en `/30` point-à-point. Résumé unique à l'ASA, trous verrouillés par Null0 (voir P3).
+
+- **Périmètre / edge** — plages publiques de test (RFC 5737) côté Internet, plus le `/30` inside ASA↔HQ.
+
+Le plan est **stable de P1 à P6** : chaque partie *ajoute* un segment, aucune ne réadresse l'existant. La colonne « introduit en » de la dernière table trace cette progression.
 
 ## 1. Plan VLAN / zones
 
