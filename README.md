@@ -3,7 +3,7 @@
 
 Ce dépôt présente **TheBigOffice**, un laboratoire réseau construit de manière autodidacte pour mettre en pratique les compétences couvertes par la **CompTIA Network+**, tout en explorant des notions plus avancées. 
 
-Ce laboratoire réseau simule une infrastructure d'entreprise sous Cisco Packet Tracer en six parties, construites de manière progressive, chaque étape venant enrichir et compléter la précédente..
+Ce laboratoire réseau simule une infrastructure d'entreprise sous Cisco Packet Tracer en six parties, construites de manière progressive, chaque étape venant enrichir et compléter la précédente.
 
 | Partie               | Sujet                        | **Concepts clés**                                                                                   |
 | -------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------- |
@@ -53,8 +53,7 @@ TheBigOffice - Packet Tracer Portfolio /
 │
 ├── README.md               ← Vitrine : projet, compétences, périmètre, carte du dépôt
 ├── TECHNICAL_OVERVIEW.md   ← Architecture, prod, décisions, apprentissages  
-├── IPAM.md                 ← Plan d'adressage, VLAN/zones, Router-IDs, autorité DHCP) 
-│
+├── IPAM.md                 ← Plan d'adressage, VLAN/zones, Router-IDs, autorité DHCP 
 │
 ├── P1/ … P6/               ← Une partie par dossier
 │   ├── README.md           ← Cadre : objectif, périmètre, compétences, matrice de validation   
@@ -86,7 +85,7 @@ Au-delà d'un certain niveau, contourner les limites du simulateur (CAPWAP, VXLA
 
 Excellent outil d'apprentissage, Packet Tracer reste un simulateur : il modélise les protocoles sans exécuter un vrai IOS. 
 
-**La suite se fera sur GNS3 / Cisco CML**, ou un autre logiciel de virtualisation, qui émulent de vraies images IOS et permettent de tester réellement ce que Packet Tracer ne peut que représenter et monter en compétence sur des outils professionnels.
+**La suite se fera peut-être sur GNS3 / Cisco CML**, ou un autre logiciel de virtualisation, qui émulent de vraies images IOS et permettent de tester réellement ce que Packet Tracer ne peut que représenter, tout en continuant de monter en compétence sur des outils professionnels.
 
 ## 🏁 Conclusion
 
