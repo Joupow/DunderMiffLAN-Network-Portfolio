@@ -33,8 +33,6 @@ Le projet n'a pas vocation à représenter une architecture de production clé e
 
 - **Nommer les limites de l'outil, jamais les cacher.** Le data plane CAPWAP n'étant pas simulé, contrôle (WLC, 4 APs `Online`) et données (AP autonome) sont prouvés séparément. C'est aussi ce qui justifie la clôture à P6.
 
-- **IA en supervision, pas en autorité** : utilisée pour challenger des choix et relire des configs ; les sorties ont été vérifiées et corrigées humainement.
-
 ## ## Documentation
 
 La documentation du laboratoire est structurée autour de ressources globales :
@@ -75,6 +73,19 @@ Cette organisation permet de suivre l'ensemble du cycle de vie d'une implémenta
 - ✅ Validation du fonctionnement
 - 🔎 Diagnostic et résolution d'incidents
 - 📈 Analyse des limites de conception et amélioration de l'architecture
+
+## Usage de l'IA dans ce projet
+
+**IA en supervision, pas en autorité** : 
+
+L'IA a été utilisée comme un outil d'apprentissage, de relecture et d'aide à la conception, sans jamais remplacer la compréhension des concepts réseau. 
+
+Elle m'a permis de clarifier la syntaxe Cisco, d'identifier des incohérences et de vérifier les configurations tout au long de la réalisation du laboratoire. 
+
+Chaque réponse a toutefois été validée de manière critique, plusieurs points ayant nécessité une analyse et des corrections humaines. 
+
+Ce projet illustre ainsi l'importance d'un usage maîtrisé de l'IA, fondé sur un prompting précis, une vérification systématique et le maintien de la responsabilité d'ingénierie par l'utilisateur.
+
 ## Plan initial
 
 Le plan initial incluait 11 parties avec d'avantages de sujets pour couvrir la majorité des objectifs de la CompTIA Network+ comme :  IPv6, monitoring, PKI/RADIUS, notions de cloud, simulation d'attaques. 
