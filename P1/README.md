@@ -6,6 +6,9 @@
 - 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
 - 📝 Progression étape par étape → [WORKFLOW P1](./WORKFLOW.md)
 - 🎓 **Certification :** CompTIA Network+ 
+## Topologie logique
+
+![Topologie P1](../assets/topologies/topology_p1.svg)
 ## Objectif
 
 Construire la fondation du LAN d'entreprise sur le modèle hiérarchique Cisco à trois niveaux comprenant : 
@@ -25,9 +28,6 @@ Tout ce qui suit : HSRP, OSPF, DMZ, datacenter, voix, Wi-Fi, dépend de la propr
 **Pourquoi une base temporaire sur le core ?** 
 
 Une passerelle `.1` redondante sur deux switches de Distribution est **impossible sans FHRP** (même IP sur deux boîtiers = conflit). Livrer d'abord une base mono-boîtier qui fonctionne, puis la durcir avec HSRP + `/30` routé + OSPF en P2, de manière délibéré.
-## Topologie logique
-
-![Topologie P1](../assets/topologies/topology_p1.svg)
 
 ## Couverture CompTIA Network+
 
@@ -53,4 +53,4 @@ L'apprentissage central reste le principe de séquençage : positionner le root 
 
 ---
 
-⬆️ - Progression étape par étape →[Workflow P1](./WORKFLOW.md) **Suivant : [Partie 2 — Routage, redondance & services](../P2/README.md)** — migration des SVIs sur la Distribution, HSRP, OSPF point-à-point, DHCP centralisé + relais. · [Vue d'ensemble du projet](../README.md)
+⬆️ - Progression étape par étape →[Workflow P1](./WORKFLOW.md) **Suivant : [Partie 2 : Routage, redondance & services](../P2/README.md)** - migration des SVIs sur la Distribution, HSRP, OSPF point-à-point, DHCP centralisé + relais. · [Vue d'ensemble du projet](../README.md)
