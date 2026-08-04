@@ -26,7 +26,7 @@
 
 **3. Preuves & clôtures**
 
-- [Validation de bout en bout 
+- [Validation de bout en bout](#validation-de-bout-en-bout-gate-final)
 - [Dépannage (incidents de session)](#dépannage-incidents-de-session)
 - [Registre d'erreurs & dette technique](#registre-derreurs--dette-technique)
 - [Annexe : Captures de preuve](#annexe--captures-de-preuve)
