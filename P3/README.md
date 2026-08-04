@@ -6,6 +6,12 @@
 - 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
 - 📝 Progression étape par étape → [WORKFLOW P3](./WORKFLOW.md)
 - 🎓 **Certification :** CompTIA Network+
+
+## Topologie logique
+
+
+![Topologie P3](../assets/topologies/topology_p3.svg)
+
 ## Objectif
 
 Construire la frontière entre le réseau interne et Internet : 
@@ -27,11 +33,6 @@ Le but n'est **pas** « faire passer du trafic » (c'était P2) — c'est de dé
 - À la fin de P2, le campus n'atteignait Internet par personne. 
 - P3 l'introduit via le lien HQ-Router → ASA inside. 
 - Une route par défaut statique **ne suffit pas** : elle doit être poussée dans OSPF par `default-information originate`, même classe de piège « chemin de retour » que l'OFFER DHCP de P2.
-
-## Topologie logique
-
-
-![Topologie P3](../assets/topologies/topology_p3.svg)
 
 ## Couverture CompTIA Network+
 
