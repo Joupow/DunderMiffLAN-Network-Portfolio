@@ -3,10 +3,13 @@
  **Concepts clés** : Routage, HSRP, DHCP, OSFP P2P
  
 - 💻**Outil** : Cisco Packet Tracer 9.0
-- 🏷️ Plan d'adressage complet → [IPAM.m](../IPAM.md)
+- 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
 - 📝 Progression étape par étape → [WORKFLOW P2](./WORKFLOW.md)
 - 🎓 **Certification :** CompTIA Network+ 
 
+## Topologie logique
+
+![Topologie P2](../assets/topologies/topology_p2.svg)
 ## Objectif
 
 Transformer le LAN statique de P1 en un réseau routé, redondant et auto-adressé, autour de quatre chantiers :
@@ -31,27 +34,15 @@ Tout ce qui suit, DMZ, datacenter, voix, Wi-Fi s'appuie sur ce socle routé et r
 - P2 aligne HSRP dessus, sans re-toucher STP. 
 - La bascule est ordonnée **Core d'abord** : router les uplinks du Core et retirer ses SVIs data *avant* de lever les VIP de la Distribution, pour que la passerelle `.1` ne soit jamais revendiquée par deux boîtiers à la fois.
 
-## Topologie logique
-
-![Topologie P2](../assets/topologies/topology_p2.svg)
-
----
 ## Couverture CompTIA Network+
 
-| Domaine                | Concept                                    | Statut                                           |
-| ---------------------- | ------------------------------------------ | ------------------------------------------------ |
-| 🧭 Routage             | OSPFv2 mono-aire (aire 0)                  | ✅ tous les voisins `FULL`                        |
-| 🧭 Routage             | Type OSPF point-à-point                    | ✅ chaque `/30`, **zéro DR/BDR**                  |
-| 🧭 Routage             | Router-ID (manuel)                         | ✅ codé en dur + `clear ip ospf process`          |
-| 🧭 Routage             | `passive-interface` sélectif               | ✅ default + un-passive sur le transit uniquement |
-| 🧭 Routage             | Ports routés (`no switchport`)             | ✅ uplinks Core + DIST                            |
-| 🧭 Routage             | ECMP                                       | ✅ le Core atteint les VLANs via les deux DIST    |
-| 🔁 Haute disponibilité | FHRP — HSRP (VIP / priorité / preempt)     | ✅ failover **et** preempt prouvés, deux sens     |
-| 🔁 Haute disponibilité | Répartition Active/Standby HSRP            | ✅ DIST1 `{10,30}` · DIST2 `{20,99}`              |
-| 🔌 Commutation         | Root STP aligné sur l'Active HSRP          | ✅ les quatre VLANs vérifiés                      |
-| 🌐 Services            | Serveur DHCP (scopes, exclusions, options) | ✅ VLAN 10 & 20 sur HQ-Router                     |
-| 🌐 Services            | Relais DHCP (`ip helper-address`)          | ✅ chemin unique par VLAN                         |
-| 🏷️ Adressage IP       | Subnetting transit `/30`                   | ✅ 3 liens point-à-point, sans chevauchement      |
+| Domaine                | Concepts couverts                                                                                                       | Statut                                                   |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| 🧭 Routage OSPF        | point-à-point sans DR/BDR · Mono-aire (aire 0)  · Router-ID manuel · `passive-interface` sélectif · ports routés · ECMP | ✅ tous voisins `FULL`                                    |
+| 🔁 Haute disponibilité | HSRP (VIP / priorité / preempt) · répartition Active/Standby                                                            | ✅ DIST1 `{10,30}` · DIST2 `{20,99}` · failover deux sens |
+| 🔌 Commutation         | **Root STP aligné sur l'Active HSRP** : _le service suit l'Active_                                                      | ✅ 4 VLANs                                                |
+| 🌐 Services            | DHCP (scopes, exclusions, options) · relais `ip helper-address`                                                         | ✅ VLAN 10 & 20 sur HQ-Router                             |
+| 🏷️ Adressage          | Subnetting transit `/30`                                                                                                | ✅ 3 liens P2P, sans chevauchement                        |
 
 ## Conclusion
 
@@ -63,4 +54,4 @@ La leçon : chaque composant ajouté pour la résilience est aussi une nouvelle 
 
 ---
 
-⬆️ - Progression étape par étape → [Workflow P2](./WORKFLOW.md) **Suivant : [Partie 3 — DMZ & pare-feu](../P3/README.md)** — ASA 3 zones, NAT/PAT, 3 ACL, IDS/SPAN, origination de la route par défaut + verrou résumé/Null0. · [Vue d'ensemble du projet](../README.md)
+Progression étape par étape → [Workflow P2](./WORKFLOW.md) **Suivant : [Partie 3 : DMZ & pare-feu](../P3/README.md)** - ASA 3 zones, NAT/PAT, 3 ACL, IDS/SPAN, origination de la route par défaut + verrou résumé/Null0. · [Vue d'ensemble du projet](../README.md)

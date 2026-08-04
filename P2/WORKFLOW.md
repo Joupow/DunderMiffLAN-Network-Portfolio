@@ -3,7 +3,7 @@
  **Concepts clés** : Routage, HSRP, DHCP, OSFP P2P
  
 - 💻**Outil** : Cisco Packet Tracer 9.0
-- 🏷️ Plan d'adressage complet → [IPAM.m](../IPAM.md)
+- 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
 - 📄 Présentation de la partie 2 → [README P2](./README.md)
 - 🎓 **Certification :** CompTIA Network+ 
 ## Sommaire
