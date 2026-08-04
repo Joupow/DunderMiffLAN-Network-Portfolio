@@ -41,8 +41,6 @@ Une passerelle `.1` redondante sur deux switches de Distribution est **impossibl
 | 🛡️ Sécurité           | Isolation de ports · durcissement bordure                | ✅ 998 + shutdown · BPDU Guard bordure only           |
 | 🔁 Haute disponibilité | Dual-homing L2 · failover STP                            | ✅ mécanisme prouvé · ⏳ timing sous-seconde à mesurer |
 
-Chaque point est prouvé par un **résultat, un appel ou un état** — jamais par un timeout. Validation de bout en bout, captures et incidents de build : **WORKFLOW — validation**.
-
 ## Bilan pédagogique 
 
 Une base propre n'est pas une étape « facile » qu'on expédie : c'est la dette de toutes les parties suivantes. Ici, on pose les fondations avant les murs porteurs : la base L2 doit être stable avant d'empiler la redondance.
@@ -53,4 +51,4 @@ L'apprentissage central reste le principe de séquençage : positionner le root 
 
 ---
 
-⬆️ - Progression étape par étape →[Workflow P1](./WORKFLOW.md) **Suivant : [Partie 2 : Routage, redondance & services](../P2/README.md)** - migration des SVIs sur la Distribution, HSRP, OSPF point-à-point, DHCP centralisé + relais. · [Vue d'ensemble du projet](../README.md)
+ Progression étape par étape →[Workflow P1](./WORKFLOW.md) **Suivant : [Partie 2 : Routage, redondance & services](../P2/README.md)** - migration des SVIs sur la Distribution, HSRP, OSPF point-à-point, DHCP centralisé + relais. · [Vue d'ensemble du projet](../README.md)
