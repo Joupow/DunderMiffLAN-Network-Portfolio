@@ -10,7 +10,7 @@ Ce laboratoire réseau simule une infrastructure d'entreprise sous Cisco Packet 
 | [P1](./P1/README.md) | 🏗️ Fondations LAN 3 niveaux | Modèle hiérarchique Cisco 3 niveaux · VLANs · 802.1Q · STP · routage inter-VLAN · SVI · Rapid PVST+ |
 | [P2](./P2/README.md) | 🧭 routage & redondance      | Routage · HSRP · DHCP · Relay Helper · OSFP P2P                                                     |
 | [P3](./P3/README.md) | 🛡️DMZ & pare-feu            | ASA · DMZ · NAT/PAT · filtrage · ACL · IDS/SPAN                                                     |
-| [P4](./P4/README.md) | 🖥️ Datacenter               | Spine-Leaf · Border Leafs · trafic E-O et N-S · ECMP · tiers serveurs · load balancer · stockage           |
+| [P4](./P4/README.md) | 🖥️ Datacenter               | Spine-Leaf · Border Leafs · trafic E-O et N-S · ECMP · tiers serveurs · load balancer · stockage    |
 | [P5](./P5/README.md) | 📞VoIP                       | VoIP · CME · TFTP · DHCP Option 150 · QoS voix                                                      |
 | [P6](./P6/README.md) | 📶 WiFi                      | WLC · APs lightweight · CAPWAP · SSID WPA2 Corp/Guest · HSRPv2 VLAN 300                             |
 
@@ -23,7 +23,7 @@ Le projet n'a pas vocation à représenter une architecture de production clé e
 
 ## Les choix techniques structurants
 
-- **l'apprentissage d'une discipline de séquençage, pas seulement des protocoles configurés.** L'ordre de build évite les pannes _avant_ qu'elles existent : root STP posé avant la redondance (P1), Core routé et SVIs retirés avant de lever les VIP pour ne jamais provoquer de split-brain (P2), routage et NAT prouvés _sans ACL_ avant d'ajouter le filtrage (P3), fabric datacenter prouvée avant de brancher NAT (P4).
+- **l'apprentissage d'une discipline de séquençage, pas seulement des protocoles configurés.** L'ordre de build a été important pour éviter les pannes _avant_ qu'elles existent : root STP posé avant la redondance (P1), Core routé et SVIs retirés avant de lever les VIP pour ne jamais provoquer de split-brain (P2), routage et NAT prouvés _sans ACL_ avant d'ajouter le filtrage (P3), fabric datacenter prouvée avant de brancher NAT (P4).
 
 - **Un fil rouge unique : « le service suit l'Active ».** Par VLAN, Active HSRP = root STP = service hébergé sur le même boîtier. Principe posé en P1 et hérité jusqu'au CME (P5) et au Wi-Fi (P6). Chaque partie solde explicitement les dettes de la précédente : le lab se lit comme **une seule histoire d'ingénierie continue**, pas six exercices isolés.
 

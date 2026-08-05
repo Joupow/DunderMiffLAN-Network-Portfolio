@@ -7,7 +7,6 @@
 - [Ce qu'un reviewer challengera](#ce-quun-reviewer-challengera)
 - [Résumé technique par partie](#résumé-technique-par-partie)
 - [Décisions de conception structurantes](#décisions-de-conception-structurantes)
-- [Fils transversaux](#fils-transversaux)
 - [Écarts de production](#écarts-de-production)
 - [Preuve anti-copier-coller](#preuve-anti-copier-coller)
 
