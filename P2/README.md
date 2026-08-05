@@ -26,7 +26,7 @@ Tout ce qui suit, DMZ, datacenter, voix, Wi-Fi s'appuie sur ce socle routé et r
 ## Contrainte structurante 
 
 - La répartition HSRP place les deux VLANs lourds sur des boîtiers différents : DIST-SW1 Active `{10,30}`, DIST-SW2 Active `{20,99}`. 
-- Pour chaque VLAN : **Active HSRP = root STP = service hébergé** — *« le service suit l'Active »*.
+- Pour chaque VLAN : **Active HSRP = root STP = service hébergé** - *« le service suit l'Active »*.
 
 ## Décision de continuité (héritée de P1) 
 
@@ -48,10 +48,10 @@ Tout ce qui suit, DMZ, datacenter, voix, Wi-Fi s'appuie sur ce socle routé et r
 
 La leçon la plus transférable n'est pas « configurer HSRP », c'est l'**ordre de bascule** : router les uplinks du Core et retirer ses SVIs data _avant_ de lever les VIP de la Distribution, sous peine de voir la `.1` revendiquée par deux boîtiers (split-brain). 
 
-Deuxième acquis, contre-intuitif : la plupart des pannes de connectivité sont des problèmes de **chemin retour**, pas d'aller — le relais DHCP ne casse pas à la requête mais à l'OFFER qui ne sait pas revenir. On ne le comprend qu'en le débuggant.
+Deuxième acquis, contre-intuitif : la plupart des pannes de connectivité sont des problèmes de **chemin retour**, pas d'aller. Le relais DHCP ne casse pas à la requête mais à l'OFFER qui ne sait pas revenir. On ne le comprend qu'en le débuggant.
 
 La leçon : chaque composant ajouté pour la résilience est aussi une nouvelle chose qui peut casser en silence ; la redondance n'est réelle qu'une fois le chemin de panne vérifié, pas seulement le chemin nominal.
 
 ---
 
-Progression étape par étape → [Workflow P2](./WORKFLOW.md) **Suivant : [Partie 3 : DMZ & pare-feu](../P3/README.md)** - ASA 3 zones, NAT/PAT, 3 ACL, IDS/SPAN, origination de la route par défaut + verrou résumé/Null0. · [Vue d'ensemble du projet](../README.md)
+⬅️ [Partie 1 : Fondations LAN 3 niveaux](../P1/README.md) · ⬆️ [Vue d'ensemble du projet](../README.md) · 🔁 [Workflow P2](./WORKFLOW.md) · **Suivant : [Partie 3 : DMZ & Pare-feu](../P3/README.md)** : ASA 3 zones, NAT/PAT, 3 ACL, IDS/SPAN, origination de la route par défaut + verrou résumé/Null0.
