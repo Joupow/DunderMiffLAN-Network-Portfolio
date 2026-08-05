@@ -8,7 +8,7 @@ Ce laboratoire réseau simule une infrastructure d'entreprise sous Cisco Packet 
 | Partie               | Sujet                        | **Concepts clés**                                                                                   |
 | -------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------- |
 | [P1](./P1/README.md) | 🏗️ Fondations LAN 3 niveaux | Modèle hiérarchique Cisco 3 niveaux · VLANs · 802.1Q · STP · routage inter-VLAN · SVI · Rapid PVST+ |
-| [P2](./P2/README.md) | 🧭 routage & redondance      | Routage · HSRP · DHCP · Relay Helper · OSFP P2P                                                     |
+| [P2](./P2/README.md) | 🧭 routage & redondance      | Routage · HSRP · DHCP · Relay Helper · OSPF P2P                                                     |
 | [P3](./P3/README.md) | 🛡️DMZ & pare-feu            | ASA · DMZ · NAT/PAT · filtrage · ACL · IDS/SPAN                                                     |
 | [P4](./P4/README.md) | 🖥️ Datacenter               | Spine-Leaf · Border Leafs · trafic E-O et N-S · ECMP · tiers serveurs · load balancer · stockage    |
 | [P5](./P5/README.md) | 📞VoIP                       | VoIP · CME · TFTP · DHCP Option 150 · QoS voix                                                      |
@@ -33,11 +33,13 @@ Le projet n'a pas vocation à représenter une architecture de production clé e
 
 - **Nommer les limites de l'outil, jamais les cacher.** Le data plane CAPWAP n'étant pas simulé, contrôle (WLC, 4 APs `Online`) et données (AP autonome) sont prouvés séparément. C'est aussi ce qui justifie la clôture à P6.
 
-## ## Documentation
+- **IA en supervision, pas en autorité** :  L'IA a été utilisée comme un outil d'apprentissage, de relecture et d'aide à la conception, sans jamais remplacer la compréhension des concepts réseau.  Elle m'a permis de clarifier la syntaxe Cisco, d'identifier des incohérences et de vérifier les configurations tout au long de la réalisation du laboratoire. 
+
+## Documentation
 
 La documentation du laboratoire est structurée autour de ressources globales :
 
-- 🏷️ [IPAM](../IPAM.md)
+- 🏷️ [IPAM](./IPAM.md)
 - 📘 [TECHNICAL_OVERVIEW](./TECHNICAL_OVERVIEW.md) 
 
 Chaque partie du laboratoire dispose ensuite de son propre espace documentaire contenant : 
@@ -73,18 +75,6 @@ Cette organisation permet de suivre l'ensemble du cycle de vie d'une implémenta
 - ✅ Validation du fonctionnement
 - 🔎 Diagnostic et résolution d'incidents
 - 📈 Analyse des limites de conception et amélioration de l'architecture
-
-## Usage de l'IA dans ce projet
-
-**IA en supervision, pas en autorité** : 
-
-L'IA a été utilisée comme un outil d'apprentissage, de relecture et d'aide à la conception, sans jamais remplacer la compréhension des concepts réseau. 
-
-Elle m'a permis de clarifier la syntaxe Cisco, d'identifier des incohérences et de vérifier les configurations tout au long de la réalisation du laboratoire. 
-
-Chaque réponse a toutefois été validée de manière critique, plusieurs points ayant nécessité une analyse et des corrections humaines. 
-
-Ce projet illustre ainsi l'importance d'un usage maîtrisé de l'IA, fondé sur un prompting précis, une vérification systématique et le maintien de la responsabilité d'ingénierie par l'utilisateur.
 
 ## Plan initial
 
