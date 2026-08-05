@@ -31,14 +31,14 @@ Trois niveaux de documentation, avec **un domicile canonique par type de contenu
 
 | Type de contenu                                     | Domicile canonique                                                                  |
 | --------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| Décisions + *pourquoi* d'une partie                 | `README_PX` — Objectif, Contrainte structurante, Décision de continuité, Conclusion |
-| Couverture CompTIA Network+ + statut ✅/⚠️/❌         | `README_PX` — Couverture CompTIA Network+                                           |
+| Décisions + *pourquoi* d'une partie                 | `README_PX` : Objectif, Contrainte structurante, Décision de continuité, Conclusion |
+| Couverture CompTIA Network+ + statut ✅/⚠️/❌         | `README_PX` : Couverture CompTIA Network+                                           |
 | Plan d'adressage complet                            | [`IPAM.md`](./IPAM.md)                                                              |
 | Cadrage (topologie as-built, niveaux & équipements) | `WORKFLOW_PX` §1                                                                    |
-| CLI pas-à-pas d'une partie                          | `WORKFLOW_PX` §2 — Étapes de configuration                                          |
-| Preuves de validation + dépannage                   | `WORKFLOW_PX` §3 — Validation de bout en bout, Dépannage                            |
-| Registre corrections + dette + limites PT           | `WORKFLOW_PX` §3 — Registre d'erreurs & dette technique                             |
-| Écarts de production consolidés                     | **cet overview** — [Écarts de production](#écarts-de-production)                    |
+| CLI pas-à-pas d'une partie                          | `WORKFLOW_PX` §2 : Étapes de configuration                                          |
+| Preuves de validation + dépannage                   | `WORKFLOW_PX` §3 : Validation de bout en bout, Dépannage                            |
+| Registre corrections + dette + limites PT           | `WORKFLOW_PX` §3 : Registre d'erreurs & dette technique                             |
+| Écarts de production consolidés                     | **cet overview** : [Écarts de production](#écarts-de-production)                    |
 
 
 ## Ce qu'un reviewer challengera
@@ -70,7 +70,7 @@ Index du portfolio. Le détail vit dans le `README_PX` et le `WORKFLOW_PX` de ch
 | [P1](./P1/README.md) | LAN 3 niveaux        | Core 3650, 2× Distribution 3560, 4× Access 2960 | VLANs, trunks, Rapid PVST+, VLAN de management, natif 999 trou noir | Roots STP sur la Distribution, alignés sur le plan HSRP de P2 ; aucun Access n'est root                      |
 | [P2](./P2/README.md) | Routage & redondance | Core, Distribution, HQ-Router                   | HSRP réparti, OSPF `/30`, DHCP par domaine + relais unique          | Relais DHCP pointant le HQ-Router (`10.0.1.2`), pas le Core ; Active HSRP réparti par VLAN                   |
 | [P3](./P3/README.md) | DMZ & Pare-feu       | ASA 5506-X, routeur FAI, services DMZ           | Security-levels, 3 ACL opposées, NAT/PAT, IDS/SPAN, port-security   | Route par défaut originée dans OSPF ; résumés internes verrouillés par Null0 AD 254 (côté HQ-Router)         |
-| [P4](./P4/README.md) | Datacenter           | Spines / Leafs / Border Leafs — tous 3650       | Spine-Leaf routée, fabric OSPF, tiers app + stockage, VIP LB        | Deux Border Leafs sur le Core (ECMP) ; fabric entrée dans le `/20` sans renumérotation                       |
+| [P4](./P4/README.md) | Datacenter           | Spines / Leafs / Border Leafs : tous 3650       | Spine-Leaf routée, fabric OSPF, tiers app + stockage, VIP LB        | Deux Border Leafs sur le Core (ECMP) ; fabric entrée dans le `/20` sans renumérotation                       |
 | [P5](./P5/README.md) | VoIP                 | CME, postes IP, switches d'accès                | DHCP Option 150, SCCP, TFTP, frontière QoS                          | CME sur DIST-SW1 (Active + root du VLAN 30) ; héritage P3 vérifié — résumé `/20` audité sûr, aucune reconfig |
 | [P6](./P6/README.md) | WiFi                 | WLC, APs lightweight, AP autonome               | CAPWAP, SSID Corp 301 / Guest 310, WPA2, HSRPv2 VLAN 300            | VLAN 300 consolidé sur DIST-SW1 (Active + root + DHCP + WLC) ; contrôle et data plane prouvés séparément     |
 
@@ -92,18 +92,18 @@ Carte des choix qui traversent le lab. Chaque ligne est développée dans le `RE
 
 ## Écarts de production
 
-| Écart                      | État actuel (lab, as-built)                                                                                                        | Direction production                                                 |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| Authentification OSPF      | Non implémentée                                                                                                                    | Authentification des adjacences sur les liens routés                 |
-| Plan de management         | SSH/AAA partiels ; pas d'IP de management dédiée (managé in-band, Loopback0 différé)                                               | SSHv2, AAA, ACL de management, journalisation centralisée, Loopback0 |
-| Redondance DHCP            | Une autorité par domaine ; relais mono-chemin (helper côté Active seul), pool sur l'Active — pas de nouveau bail si l'Active tombe | Split-scope / HA, miroir sur le Standby                              |
-| Routage ASA                | Résumés statiques inside (`/16` + `/20`) + verrous Null0 (AD 254) sur le HQ-Router ; audités sûrs (P5)                             | Routage dynamique (OSPF) sur le pare-feu                             |
-| Data plane Wi-Fi           | Chemin client CAPWAP non simulé (prouvé par AP autonome)                                                                           | Vrai WLC, Cisco CML, GNS3 ou lab physique                            |
-| Isolation Guest (VLAN 310) | Configurée, non prouvée en data plane (pas de portail captif PT)                                                                   | Guest anchor WLC + portail captif                                    |
-| Load balancer datacenter   | VIP présentée, round-robin conceptuel (pas de moteur LB en PT)                                                                     | LB fonctionnel (HAProxy / F5), health-checks                         |
-| Contrôle VoIP              | Point CME/TFTP unique                                                                                                              | Contrôle d'appel + services TFTP redondants (Loopback)               |
-| Passerelle datacenter      | Un SVI par Leaf (SPOF par tier)                                                                                                    | Anycast Gateway via VXLAN EVPN                                       |
-|                            |                                                                                                                                    |                                                                      |
+| Écart                      | État actuel (lab, as-built)                                                                                                       | Direction production                                                 |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Authentification OSPF      | Non implémentée                                                                                                                   | Authentification des adjacences sur les liens routés                 |
+| Plan de management         | SSH/AAA partiels ; pas d'IP de management dédiée (managé in-band, Loopback0 différé)                                              | SSHv2, AAA, ACL de management, journalisation centralisée, Loopback0 |
+| Redondance DHCP            | Une autorité par domaine ; relais mono-chemin (helper côté Active seul), pool sur l'Active, pas de nouveau bail si l'Active tombe | Split-scope / HA, miroir sur le Standby                              |
+| Routage ASA                | Résumés statiques inside (`/16` + `/20`) + verrous Null0 (AD 254) sur le HQ-Router ; audités sûrs (P5)                            | Routage dynamique (OSPF) sur le pare-feu                             |
+| Data plane Wi-Fi           | Chemin client CAPWAP non simulé (prouvé par AP autonome)                                                                          | Vrai WLC, Cisco CML, GNS3 ou lab physique                            |
+| Isolation Guest (VLAN 310) | Configurée, non prouvée en data plane (pas de portail captif PT)                                                                  | Guest anchor WLC + portail captif                                    |
+| Load balancer datacenter   | VIP présentée, round-robin conceptuel (pas de moteur LB en PT)                                                                    | LB fonctionnel (HAProxy / F5), health-checks                         |
+| Contrôle VoIP              | Point CME/TFTP unique                                                                                                             | Contrôle d'appel + services TFTP redondants (Loopback)               |
+| Passerelle datacenter      | Un SVI par Leaf (SPOF par tier)                                                                                                   | Anycast Gateway via VXLAN EVPN                                       |
+
 
 ## Preuve anti-copier-coller
 
