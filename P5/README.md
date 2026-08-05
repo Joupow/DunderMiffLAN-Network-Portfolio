@@ -41,7 +41,7 @@ Le fil directeur est une **chaîne** : DHCP → TFTP → SCCP → registration ;
 |🎚️ QoS|Marquage DSCP EF (46) · frontière de confiance conditionnelle|✅ `trust device cisco-phone`|
 |📜 Protocoles|SCCP (Skinny) TCP 2000 · TFTP · CDP|✅ `REGISTERED in SCCP`|
 |🧭 Routage|Routes alignées sur l'espace alloué|✅ résumé `/20`|
-|🛡️ Sécurité|`ip tftp source-interface` (asymétrie TFTP)|📋 documenté — réf. prod, non testable en PT|
+|🛡️ Sécurité|`ip tftp source-interface` (asymétrie TFTP)|📋 documenté : réf. prod, non testable en PT|
 
 ## Conclusion
 
@@ -53,4 +53,4 @@ Second acquis, plus large que la voix : « une seule autorité DHCP » ne veut p
 
 ---
 
-[Partie 4 — Datacenter](../P4/README.md) ·  **Suivant : [Partie 6 — Wi-Fi](../P6/README.md)** — WLC + APs lightweight (CAPWAP), SSID WPA2 Corp/Guest, HSRPv2 VLAN 300, architecture hybride assumée (data plane par AP autonome). · [Vue d'ensemble du projet](../README.md)
+⬅️ [Partie 4 : Datacenter](../P4/README.md) · ⬆️ [Vue d'ensemble du projet](../README.md) · 🔁 [Workflow P5](./WORKFLOW.md) · **Suivant : [Partie 6 : Wi-Fi](../P6/README.md)** : WLC + APs lightweight (CAPWAP), SSID WPA2 Corp/Guest, HSRPv2 VLAN 300, architecture hybride assumée (data plane par AP autonome).
