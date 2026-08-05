@@ -41,8 +41,8 @@ C'est le seul moyen honnête de démontrer les deux plans dans l'outil.
 
 |Domaine|Concepts couverts|Statut|
 |---|---|---|
-|📶 Sans fil — infra|AP/WLC · autonome vs lightweight · CAPWAP · AP groups|✅ 4 LAP + AP autonome + WLC · 4 APs `Online`|
-|📶 Sans fil — diffusion & sécu|SSID/BSSID/ESSID · WPA2-PSK (AES) · canal 2.4 GHz non-recouvrant|✅ Corp + Guest · canal 6|
+|📶 Sans fil : infra|AP/WLC · autonome vs lightweight · CAPWAP · AP groups|✅ 4 LAP + AP autonome + WLC · 4 APs `Online`|
+|📶 Sans fil : diffusion & sécu|SSID/BSSID/ESSID · WPA2-PSK (AES) · canal 2.4 GHz non-recouvrant|✅ Corp + Guest · canal 6|
 |🔌 Commutation|802.1Q trunking · STP/PortFast/BPDU Guard · segmentation VLAN Wi-Fi|✅ root VLAN 300 · ports AP durcis|
 |🧭 Routage|Inter-VLAN sans fil|✅ 300 → 10 via AP autonome|
 |🔁 Haute disponibilité|HSRPv2 passerelle Wi-Fi|✅ groupe 300, Active/Standby|
@@ -50,10 +50,10 @@ C'est le seul moyen honnête de démontrer les deux plans dans l'outil.
 
 **Limites assumées & dette (contrainte outil, pas défaut de conception)**
 
-- 📋 WPA3 / 6 GHz / band steering · PSK-Enterprise (802.1X) — non supportés / non simulables en Packet Tracer, documentés comme référence prod.
+- 📋 WPA3 / 6 GHz / band steering · PSK-Enterprise (802.1X) : non supportés / non simulables en Packet Tracer, documentés comme référence prod.
 - ⚠️ Réseau Guest : configuré, isolation non vérifiable en data plane sous PT.
 - ⚠️ VLANs 301/310 : définis, pas exerçables sur le fil en PT (300 validé).
-- 🔧 Canal 6 (2.4 GHz) : downgrade assumé vs 5 GHz ch.36 — **dette L14**.
+- 🔧 Canal 6 (2.4 GHz) : downgrade assumé vs 5 GHz ch.36 : **dette L14**.
 
 ## Conclusion
 
@@ -65,4 +65,4 @@ C'est aussi ce qui justifie la clôture du projet ici et le passage à un émula
 
 ---
 
-⬅️ [Partie 5 — Téléphonie IP](../P5/README.md) · ⬆️ [Vue d'ensemble du projet](../README.md) · *(fin de la série Packet Tracer — suite sur GNS3 ou autre emulateur : IPv6 avancé, monitoring, PKI/RADIUS)*
+⬅️ [Partie 5 : VoIP](../P5/README.md) · ⬆️ [Vue d'ensemble du projet](../README.md) · 🔁 [Workflow P6](./WORKFLOW.md) ·
