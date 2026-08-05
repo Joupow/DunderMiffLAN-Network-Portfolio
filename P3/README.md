@@ -20,7 +20,7 @@ Construire la frontière entre le réseau interne et Internet :
 - confinement reverse-shell sur le serveur publié, 
 - sonde IDS passive. 
 
-Le but n'est **pas** « faire passer du trafic » (c'était P2) — c'est de définir **ce qui a le droit de traverser, et dans quel sens**, et de prouver chaque règle par un **compteur**, pas par une capture.
+Le but n'est **pas** « faire passer du trafic » (c'était P2) , ici c'est définir **ce qui a le droit de traverser, et dans quel sens**, et de prouver chaque règle par un **compteur**, pas par une capture.
 
 ## Contrainte structurante : l'ordre de build. 
 
@@ -54,4 +54,4 @@ Le moindre privilège est un scalpel, pas un mur où trop bloquer devient aussi 
 
 ---
 
-⬆️ Progression étape par étape → [Workflow P3](./WORKFLOW.md) **Suivant : [Partie 4 : Datacenter Spine-Leaf](../P4/README.md)** - fabric routée, 2 Border Leafs sur le Core (ECMP N-S), tiers applicatif + stockage, VIP de load balancer. · [Vue d'ensemble du projet](../README.md)
+⬅️ [Partie 2 : Routage & redondance](../P2/README.md) · ⬆️ [Vue d'ensemble du projet](../README.md) · 🔁 [Workflow P3](./WORKFLOW.md) · **Suivant : [Partie 4 : Datacenter](../P4/README.md)** : fabric routée, 2 Border Leafs sur le Core (ECMP N-S), tiers applicatif + stockage, VIP de load balancer.
