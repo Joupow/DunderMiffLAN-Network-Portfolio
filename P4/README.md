@@ -32,13 +32,13 @@ Construire le datacenter comme une fabric Spine-Leaf **routée**, boulée sur le
 
 ## Couverture CompTIA Network+
 
-|Domaine|Concepts couverts|Statut|
+|Domaine|Concepts couverts| Statut                                                 |
 |---|---|---|
-|🗺️ Topologie & architecture|Fabric spine-leaf 2×2 + 2 border leafs · trafic Est-Ouest vs Nord-Sud · appli 3 tiers (présentation/app/data)|✅ E-O `Leaf→Spine→Leaf` · N-S via Border Leaf|
-|🧭 Routage fabric|Accès routé (pas de VLAN étiré) · OSPF point-à-point sans DR/BDR · ECMP équi-coût · entre dans le résumé `/20` de P3|✅ voisins `FULL` · Core→DC via BL1 **et** BL2|
-|🌐 Services|NAT/PAT pour le nouveau bloc interne|✅ objet PAT `DC-NET`|
-|🛡️ Sécurité|Exposition en tiers (backend sortie-seule) · confinement ports inutilisés (VLAN 998)|✅ sortie ok / entrée refusée · 998 sur toute la fabric|
-|🔁 Haute disponibilité|Concept load balancer / VIP|⚠️ documenté — LB fonctionnel = prod, hors PT|
+|🗺️ Topologie & architecture|Fabric spine-leaf 2×2 + 2 border leafs · trafic Est-Ouest vs Nord-Sud · appli 3 tiers (présentation/app/data)| ✅ E-O `Leaf→Spine→Leaf` · N-S via Border Leaf          |
+|🧭 Routage fabric|Accès routé (pas de VLAN étiré) · OSPF point-à-point sans DR/BDR · ECMP équi-coût · entre dans le résumé `/20` de P3| ✅ voisins `FULL` · Core→DC via BL1 **et** BL2          |
+|🌐 Services|NAT/PAT pour le nouveau bloc interne| ✅ objet PAT `DC-NET`                                   |
+|🛡️ Sécurité|Exposition en tiers (backend sortie-seule) · confinement ports inutilisés (VLAN 998)| ✅ sortie ok / entrée refusée · 998 sur toute la fabric |
+|🔁 Haute disponibilité|Concept load balancer / VIP| ⚠️ documenté : LB fonctionnel = prod, hors PT          |
 
 ## Conclusion
 
@@ -50,4 +50,4 @@ Chaque direction devant être prouvée séparément, parce qu'un flux qui marche
 
 ---
 
-⬆️ Progression étape par étape → [Workflow P4](./WORKFLOW.md) **Suivant : [Partie 5 — Téléphonie IP](../P5/README.md)** — CME co-localisé avec l'Active/root du VLAN 30, DHCP Option 150, SCCP, TFTP, frontière QoS. · [Vue d'ensemble du projet](../README.md)
+⬅️ [Partie 3 : DMZ & Pare-feu](../P3/README.md) · ⬆️ [Vue d'ensemble du projet](../README.md) · 🔁 [Workflow P4](./WORKFLOW.md) · **Suivant : [Partie 5 : VoIP](../P5/README.md)** : CME co-localisé avec l'Active/root du VLAN 30, DHCP Option 150, SCCP, TFTP, frontière QoS.
