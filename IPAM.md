@@ -1,59 +1,59 @@
-# TheBigOffice : IPAM
-## Sommaire
+# TheBigOffice: IPAM
+## Contents
 
-- [Plan d'adressage IP](#plan-dadressage-ip)
-- [1. Plan VLAN / zones](#1-plan-vlan--zones)
-- [2. Liens de transit routés /30 : bloc 10.0.0.0/20](#2-liens-de-transit-routés-30--bloc-1000020)
-- [3. Router-IDs OSPF (codés en dur)](#3-router-ids-ospf-codés-en-dur)
-- [4. Autorité DHCP par domaine](#4-autorité-dhcp-par-domaine)
-- [5. Conventions d'allocation](#5-conventions-dallocation)
-- [6. Évolution par partie](#6-évolution-par-partie)
+- [IP addressing plan](#ip-addressing-plan)
+- [1. VLAN plan / zones](#1-vlan-plan--zones)
+- [2. Routed /30 transit links: block 10.0.0.0/20](#2-routed-30-transit-links-block-1000020)
+- [3. OSPF Router-IDs (hardcoded)](#3-ospf-router-ids-hardcoded)
+- [4. DHCP authority per domain](#4-dhcp-authority-per-domain)
+- [5. Allocation conventions](#5-allocation-conventions)
+- [6. Evolution by part](#6-evolution-by-part)
 
-## Plan d'adressage IP 
+## IP addressing plan 
 
-Trois espaces d'adressage, séparés par rôle :
+Three addressing spaces, separated by role:
 
-- **Hôtes & VLAN** : `192.168.0.0/16` (campus, voix, Wi-Fi) et `172.16.0.0/16` (DMZ, datacenter).
+- **Hosts & VLANs**: `192.168.0.0/16` (campus, voice, Wi-Fi) and `172.16.0.0/16` (DMZ, datacenter).
 
-- **Transit routé interne** : bloc contigu `10.0.0.0/20`, découpé en `/30` point-à-point. Résumé unique à l'ASA, trous verrouillés par Null0 (voir P3).
+- **Internal routed transit**: contiguous `10.0.0.0/20` block, carved into point-to-point `/30`s. Single summary at the ASA, holes locked by Null0 (see P3).
 
-- **Périmètre / edge** : plages publiques de test (RFC 5737) côté Internet, plus le `/30` inside ASA↔HQ.
+- **Perimeter / edge**: public test ranges (RFC 5737) on the Internet side, plus the inside `/30` ASA↔HQ.
 
-Le plan est **stable de P1 à P6** : chaque partie *ajoute* un segment, aucune ne réadresse l'existant. La colonne « introduit en » de la dernière table trace cette progression.
+The plan is **stable from P1 to P6**: each part *adds* a segment, none readdresses the existing ones. The "introduced in" column of the last table traces this progression.
 
-## 1. Plan VLAN / zones
+## 1. VLAN plan / zones
 
-| Zone / VLAN                 | Sous-réseau                 | Rôle                                          | Passerelle                          |
+| Zone / VLAN                 | Subnet                      | Role                                          | Gateway                             |
 | --------------------------- | --------------------------- | --------------------------------------------- | ----------------------------------- |
-| VLAN 10 : RH                | `192.168.10.0/24`           | Utilisateurs RH                               | `.1` (VIP HSRP : DIST-SW1 Active)   |
-| VLAN 20 : IT                | `192.168.20.0/24`           | Utilisateurs IT                               | `.1` (VIP HSRP : DIST-SW2 Active)   |
-| VLAN 30 : VOIP              | `192.168.30.0/24`           | Téléphonie IP                                 | `.1` (VIP HSRP : DIST-SW1 Active)   |
-| VLAN 99 : MGMT              | `192.168.99.0/24`           | Administration des équipements                | `.1` (VIP HSRP : DIST-SW2 Active)   |
-| VLAN 210 : DC applicatif    | `172.16.2.0/24`             | Tier applicatif (APP-WEB1/2 + LB)             | `172.16.2.1` (SVI DC-Leaf1)         |
-| VLAN 220 : DC data          | `172.16.3.0/24`             | Tier data (SAN)                               | `172.16.3.1` (SVI DC-Leaf2)         |
-| VLAN 300 : Wi-Fi mgmt       | `192.168.100.0/24`          | Management Wi-Fi (WLC + LAP)                  | `.1` (VIP HSRPv2 : DIST-SW1 Active) |
-| VLAN 301 : Corp             | (pas d'IP sur le fil en PT) | SSID `TheBigOffice-Corp`                      | ⚠️ défini, non porté en PT          |
-| VLAN 310 : Guest            | (pas d'IP sur le fil en PT) | SSID `TheBigOffice-Guest`                     | ⚠️ défini, non porté en PT          |
-| Zone DMZ                    | `172.16.0.0/24`             | Serveurs exposés (WEB-PUBLIC, PROXY)          | `172.16.0.1` (ASA dmz)              |
-| VLAN 998 : QUARANTINE       | -                           | Ports inutilisés isolés + `shutdown`          | -                                   |
-| VLAN 999 : NATIVE_BLACKHOLE | -                           | VLAN natif de tous les trunks : untagged jeté | -                                   |
+| VLAN 10: RH                 | `192.168.10.0/24`           | HR users                                      | `.1` (HSRP VIP: DIST-SW1 Active)    |
+| VLAN 20: IT                 | `192.168.20.0/24`           | IT users                                      | `.1` (HSRP VIP: DIST-SW2 Active)    |
+| VLAN 30: VOIP               | `192.168.30.0/24`           | IP telephony                                  | `.1` (HSRP VIP: DIST-SW1 Active)    |
+| VLAN 99: MGMT               | `192.168.99.0/24`           | Equipment administration                      | `.1` (HSRP VIP: DIST-SW2 Active)    |
+| VLAN 210: Application DC    | `172.16.2.0/24`             | Application tier (APP-WEB1/2 + LB)            | `172.16.2.1` (DC-Leaf1 SVI)         |
+| VLAN 220: Data DC           | `172.16.3.0/24`             | Data tier (SAN)                               | `172.16.3.1` (DC-Leaf2 SVI)         |
+| VLAN 300: Wi-Fi mgmt        | `192.168.100.0/24`          | Wi-Fi management (WLC + LAP)                  | `.1` (HSRPv2 VIP: DIST-SW1 Active)  |
+| VLAN 301: Corp             | (no IP on the wire in PT)    | SSID `TheBigOffice-Corp`                      | ⚠️ defined, not carried in PT       |
+| VLAN 310: Guest            | (no IP on the wire in PT)    | SSID `TheBigOffice-Guest`                     | ⚠️ defined, not carried in PT       |
+| DMZ zone                    | `172.16.0.0/24`             | Exposed servers (WEB-PUBLIC, PROXY)           | `172.16.0.1` (ASA dmz)              |
+| VLAN 998: QUARANTINE        | -                           | Unused ports isolated + `shutdown`            | -                                   |
+| VLAN 999: NATIVE_BLACKHOLE  | -                           | Native VLAN of all trunks: untagged dropped   | -                                   |
 
-> `172.16.1.0/24` reste libre entre la DMZ (`.0`) et le DC (`.2`/`.3`) : réserve d'expansion, non alloué.
+> `172.16.1.0/24` stays free between the DMZ (`.0`) and the DC (`.2`/`.3`): expansion reserve, unallocated.
 
 
-## 2. Liens de transit routés `/30` : bloc `10.0.0.0/20`
+## 2. Routed `/30` transit links: block `10.0.0.0/20`
 
 **Campus (P2)**
 
-| Lien | Sous-réseau | `.1` | `.2` |
+| Link | Subnet | `.1` | `.2` |
 |---|---|---|---|
 | Core ↔ HQ-Router | `10.0.1.0/30` | Core | HQ-Router |
 | Core ↔ DIST-SW1 | `10.0.2.0/30` | Core | DIST-SW1 |
 | Core ↔ DIST-SW2 | `10.0.3.0/30` | Core | DIST-SW2 |
 
-**Fabric datacenter (P4)**
+**Datacenter fabric (P4)**
 
-| Lien | Sous-réseau | `.1` | `.2` |
+| Link | Subnet | `.1` | `.2` |
 |---|---|---|---|
 | Spine1 ↔ Leaf1 | `10.0.4.0/30` | DC-Spine1 | DC-Leaf1 |
 | Spine1 ↔ Leaf2 | `10.0.5.0/30` | DC-Spine1 | DC-Leaf2 |
@@ -66,19 +66,19 @@ Le plan est **stable de P1 à P6** : chaque partie *ajoute* un segment, aucune n
 | BorderLeaf1 ↔ Core | `10.0.12.0/30` | DC-BorderLeaf1 | Core |
 | BorderLeaf2 ↔ Core | `10.0.13.0/30` | DC-BorderLeaf2 | Core |
 
-> `10.0.0.0/30` (avant `10.0.1.0`) et l'espace au-delà de `10.0.13.0/30` restent libres dans le `/20` : c'est cet espace vide que le verrou Null0 (AD 254) protège contre les boucles (voir P3).
+> `10.0.0.0/30` (before `10.0.1.0`) and the space beyond `10.0.13.0/30` stay free within the `/20`: it is this empty space that the Null0 lock (AD 254) protects against loops (see P3).
 
-**Périmètre / edge**
+**Perimeter / edge**
 
-| Lien | Sous-réseau | `.1` / bas | `.2` / haut | Notes |
+| Link | Subnet | `.1` / low | `.2` / high | Notes |
 |---|---|---|---|---|
-| Inside : ASA ↔ HQ-Router | `192.168.200.0/30` | ASA `.1` | HQ-Router `.2` | Pas d'OSPF sur l'ASA (statiques) |
-| Outside : ISP ↔ ASA | `203.0.113.0/30` | ISP `.1` | ASA `.2` | RFC 5737 · `.2` partagé PAT + publication WEB-PUBLIC |
-| Test externe : ISP ↔ PC | `198.51.100.0/24` | ISP `.1` | PC-EXTERIEUR `.10` | RFC 5737 · « côté Internet » |
+| Inside: ASA ↔ HQ-Router | `192.168.200.0/30` | ASA `.1` | HQ-Router `.2` | No OSPF on the ASA (statics) |
+| Outside: ISP ↔ ASA | `203.0.113.0/30` | ISP `.1` | ASA `.2` | RFC 5737 · `.2` shared PAT + WEB-PUBLIC publication |
+| External test: ISP ↔ PC | `198.51.100.0/24` | ISP `.1` | PC-EXTERIEUR `.10` | RFC 5737 · "Internet side" |
 
-## 3. Router-IDs OSPF (codés en dur)
+## 3. OSPF Router-IDs (hardcoded)
 
-| Équipement | RID | Équipement | RID |
+| Device | RID | Device | RID |
 |---|---|---|---|
 | CORE-SW | `10.255.255.1` | DC-Spine1 | `41.41.41.41` |
 | DIST-SW1 | `2.2.2.2` | DC-Spine2 | `42.42.42.42` |
@@ -87,60 +87,60 @@ Le plan est **stable de P1 à P6** : chaque partie *ajoute* un segment, aucune n
 | | | DC-BorderLeaf1 | `45.45.45.45` |
 | | | DC-BorderLeaf2 | `46.46.46.46` |
 
-> **Absents volontaires :** l'**ASA** ne participe pas à OSPF (routes statiques + `default-information originate` côté HQ) ; le **CME** ancre le VLAN 30 en L2 (broadcast direct, aucun routage) ; l'**ISP-Router** simule Internet. Aucun n'a de RID par conception, pas par omission.
+> **Deliberately absent:** the **ASA** does not participate in OSPF (static routes + `default-information originate` on the HQ side); the **CME** anchors VLAN 30 at L2 (direct broadcast, no routing); the **ISP-Router** simulates the Internet. None has a RID by design, not by omission.
 
 ---
 
-## 4. Autorité DHCP par domaine
+## 4. DHCP authority per domain
 
-> **Règle : une seule autorité DHCP par domaine de broadcast.** Pas un serveur unique pour tout le réseau (SPOF), pas deux serveurs sur un même segment. La preuve n'est pas seulement qu'un serveur distribue des baux : c'est qu'**aucun autre** ne répond sur le segment.
+> **Rule: a single DHCP authority per broadcast domain.** Not one server for the whole network (SPOF), not two servers on the same segment. The proof is not merely that a server hands out leases: it is that **no other** responds on the segment.
 
-| VLAN           | Autorité   | Distribution                                                                          |
+| VLAN           | Authority  | Distribution                                                                          |
 | -------------- | ---------- | ------------------------------------------------------------------------------------- |
-| 10 : RH        | HQ-Router  | Relais `ip helper-address` via le SVI Active (DIST-SW1)                               |
-| 20 : IT        | HQ-Router  | Relais `ip helper-address` via le SVI Active (DIST-SW2)                               |
-| 30 : VOIP      | CME-Router | Broadcast direct, aucun helper : pool `VOIP_PHONES`                                   |
-| 99 : MGMT      | -          | Statique (infrastructure)                                                             |
-| 210 / 220 : DC | -          | Statique (serveurs)                                                                   |
-| 300 : Wi-Fi    | DIST-SW1   | Broadcast direct : pool `VLAN300` · DHCP interne du WLC **off** (anti double-serveur) |
+| 10: HR         | HQ-Router  | `ip helper-address` relay via the Active SVI (DIST-SW1)                               |
+| 20: IT         | HQ-Router  | `ip helper-address` relay via the Active SVI (DIST-SW2)                               |
+| 30: VOIP       | CME-Router | Direct broadcast, no helper: `VOIP_PHONES` pool                                       |
+| 99: MGMT       | -          | Static (infrastructure)                                                               |
+| 210 / 220: DC  | -          | Static (servers)                                                                      |
+| 300: Wi-Fi     | DIST-SW1   | Direct broadcast: `VLAN300` pool · WLC internal DHCP **off** (anti dual-server)       |
 
-## 5. Conventions d'allocation
+## 5. Allocation conventions
 
-**Passerelles & SVI**
+**Gateways & SVIs**
 
-- `.1` = passerelle de chaque VLAN L3 : **VIP HSRP/HSRPv2** partagée (10/20/30/99/300), IP directe pour les SVI de leaf DC (`172.16.2.1`, `172.16.3.1`) et la DMZ (`172.16.0.1`, ASA).
-- SVI réels de la Distribution : `.2` = DIST-SW1, `.3` = DIST-SW2 (ex. `192.168.30.2`/`.3`, `192.168.100.2`/`.3`).
+- `.1` = gateway of each L3 VLAN: shared **HSRP/HSRPv2 VIP** (10/20/30/99/300), direct IP for the DC leaf SVIs (`172.16.2.1`, `172.16.3.1`) and the DMZ (`172.16.0.1`, ASA).
+- Actual Distribution SVIs: `.2` = DIST-SW1, `.3` = DIST-SW2 (e.g. `192.168.30.2`/`.3`, `192.168.100.2`/`.3`).
 
-**Adresses de service (haut ou fixe)**
+**Service addresses (high or fixed)**
 
-- CME-Router `192.168.30.254` · Generic WLC `192.168.100.200` · WLC 3504 (réf. prod, déconnecté) `192.168.100.201` · IDS-Sensor `192.168.99.20`.
-- Serveurs DMZ : WEB-PUBLIC `172.16.0.10`, PROXY `172.16.0.20`.
-- Serveurs DC : LB-APP (VIP) `172.16.2.10`, APP-WEB1 `172.16.2.11`, APP-WEB2 `172.16.2.12`, SAN `172.16.3.10`.
+- CME-Router `192.168.30.254` · Generic WLC `192.168.100.200` · WLC 3504 (prod ref., disconnected) `192.168.100.201` · IDS-Sensor `192.168.99.20`.
+- DMZ servers: WEB-PUBLIC `172.16.0.10`, PROXY `172.16.0.20`.
+- DC servers: LB-APP (VIP) `172.16.2.10`, APP-WEB1 `172.16.2.11`, APP-WEB2 `172.16.2.12`, SAN `172.16.3.10`.
 
-**Plages de baux & exclusions**
+**Lease ranges & exclusions**
 
-- VLAN 30 : baux `192.168.30.50–.99` · exclusions `.1–.49` et `.100–.254`.
-- VLAN 300 : baux `192.168.100.10–.50` · exclusions `.1–.9` et `.51–.254`.
-- VLAN 10 / 20 : baux à partir de `.50` · exclusions `.1–.49` (`ip dhcp excluded-address .1 .49` sur le HQ-Router : voir WORKFLOW P2 §5).
-- Adresses basses (`.1`–`.9`) réservées passerelles, VIP et services ; jamais distribuées par DHCP.
+- VLAN 30: leases `192.168.30.50–.99` · exclusions `.1–.49` and `.100–.254`.
+- VLAN 300: leases `192.168.100.10–.50` · exclusions `.1–.9` and `.51–.254`.
+- VLAN 10 / 20: leases from `.50` · exclusions `.1–.49` (`ip dhcp excluded-address .1 .49` on the HQ-Router: see WORKFLOW P2 §5).
+- Low addresses (`.1`–`.9`) reserved for gateways, VIPs and services; never handed out by DHCP.
 
-**VLAN structurants**
+**Structuring VLANs**
 
-- VLAN natif `999` (blackhole) sur tous les trunks : trafic untagged jeté.
-- VLAN `998` (quarantaine) : ports inutilisés, en `shutdown`.
+- Native VLAN `999` (blackhole) on all trunks: untagged traffic dropped.
+- VLAN `998` (quarantine): unused ports, in `shutdown`.
 
-**Masques**
+**Masks**
 
-- Transit interne en `/30` (et non `/31`) : deux IP « perdues » par lien, choix de lisibilité pédagogique assumé.
+- Internal transit in `/30` (and not `/31`): two "wasted" IPs per link, a deliberate choice for teaching readability.
 
 
-## 6. Évolution par partie
+## 6. Evolution by part
 
-| Introduit en         | Segment(s)                                                                                          | Détail                                                                 |
+| Introduced in        | Segment(s)                                                                                          | Detail                                                                 |
 | -------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| [P1](./P1/README.md) | VLAN 10 / 20 / 30 / 99 / 998 / 999                                                                  | VLAN créés ; passerelles `.1` temporaires sur SVI du Core              |
-| [P2](./P2/README.md) | Transit `10.0.1–3.0/30`                                                                             | OSPF aire 0 ; passerelles `.1` migrées en VIP HSRP sur la Distribution |
-| [P3](./P3/README.md) | DMZ `172.16.0.0/24` · outside `203.0.113.0/30` · inside `192.168.200.0/30` · test `198.51.100.0/24` | Périmètre ASA 3 zones ; sortie Internet                                |
-| [P4](./P4/README.md) | Fabric `10.0.4–13.0/30` · VLAN 210 `172.16.2.0/24` · VLAN 220 `172.16.3.0/24`                       | Datacenter Spine-Leaf routé ; 2 Border Leafs sur le Core               |
-| [P5](./P5/README.md) | (VLAN 30 activé)                                                                                    | CME `192.168.30.254` ; postes en DHCP `.50–.99`                        |
-| [P6](./P6/README.md) | VLAN 300 `192.168.100.0/24` · VLAN 301 · VLAN 310                                                   | Management Wi-Fi + SSID Corp/Guest ; HSRPv2 VLAN 300                   |
+| [P1](./P1/README.md) | VLAN 10 / 20 / 30 / 99 / 998 / 999                                                                  | VLANs created; temporary `.1` gateways on Core SVIs                    |
+| [P2](./P2/README.md) | Transit `10.0.1–3.0/30`                                                                             | OSPF area 0; `.1` gateways migrated to HSRP VIPs on the Distribution   |
+| [P3](./P3/README.md) | DMZ `172.16.0.0/24` · outside `203.0.113.0/30` · inside `192.168.200.0/30` · test `198.51.100.0/24` | 3-zone ASA perimeter; Internet egress                                  |
+| [P4](./P4/README.md) | Fabric `10.0.4–13.0/30` · VLAN 210 `172.16.2.0/24` · VLAN 220 `172.16.3.0/24`                       | Routed Spine-Leaf datacenter; 2 Border Leafs on the Core               |
+| [P5](./P5/README.md) | (VLAN 30 activated)                                                                                 | CME `192.168.30.254`; phones via DHCP `.50–.99`                        |
+| [P6](./P6/README.md) | VLAN 300 `192.168.100.0/24` · VLAN 301 · VLAN 310                                                   | Wi-Fi management + Corp/Guest SSID; HSRPv2 VLAN 300                     |
