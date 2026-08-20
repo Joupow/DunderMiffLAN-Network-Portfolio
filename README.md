@@ -5,14 +5,14 @@ This repository presents **TheBigOffice**, a self-taught lab I built to put into
 
 This network lab simulates an enterprise infrastructure under Cisco Packet Tracer in six parts, built progressively, each building on and extending the last.
 
-| Part                 | Topic                      | **Key concepts**                                                                                |
-| -------------------- | -------------------------- | ----------------------------------------------------------------------------------------------- |
-| [P1](./P1/README.md) | 🏗️ 3-tier LAN foundations | Cisco 3-tier hierarchical model · VLANs · 802.1Q · STP · inter-VLAN routing · SVI · Rapid PVST+ |
-| [P2](./P2/README.md) | 🧭 routing & redundancy    | Routing · HSRP · DHCP · Relay Helper · OSPF P2P                                                 |
-| [P3](./P3/README.md) | 🛡️ DMZ & firewall         | ASA · DMZ · NAT/PAT · filtering · ACL · IDS/SPAN                                                |
-| [P4](./P4/README.md) | 🖥️ Datacenter             | Spine-Leaf · Border Leafs · E-W and N-S traffic · ECMP · server tiers · load balancer · storage |
-| [P5](./P5/README.md) | 📞 VoIP                    | VoIP · CME · TFTP · DHCP Option 150 · voice QoS                                                 |
-| [P6](./P6/README.md) | 📶 WiFi                    | WLC · lightweight APs · CAPWAP · WPA2 Corp/Guest SSID · HSRPv2 VLAN 300                         |
+| Part        | Topic                      | **Key concepts**                                                                                |
+| ----------- | -------------------------- | ----------------------------------------------------------------------------------------------- |
+| [P1](./P1/) | 🏗️ 3-tier LAN foundations | Cisco 3-tier hierarchical model · VLANs · 802.1Q · STP · inter-VLAN routing · SVI · Rapid PVST+ |
+| [P2](./P2/) | 🧭 Routing & redundancy    | Routing · HSRP · DHCP · Relay Helper · OSPF P2P                                                 |
+| [P3](./P3/) | 🛡️ DMZ & firewall         | ASA · DMZ · NAT/PAT · filtering · ACL · IDS/SPAN                                                |
+| [P4](./P4/) | 🖥️ Datacenter             | Spine-Leaf · Border Leafs · E-W and N-S traffic · ECMP · server tiers · load balancer · storage |
+| [P5](./P5/) | 📞 VoIP                    | VoIP · CME · TFTP · DHCP Option 150 · voice QoS                                                 |
+| [P6](./P6/) | 📶 WiFi                    | WLC · lightweight APs · CAPWAP · WPA2 Corp/Guest SSID · HSRPv2 VLAN 300                         |
 
 The project is not intended to represent a turnkey production architecture. It is above all a **junior technical portfolio**; design mistakes are part of the learning process and are treated as opportunities for analysis and improvement.
 
@@ -23,7 +23,7 @@ The project is not intended to represent a turnkey production architecture. It i
 
 ## The defining technical choices
 
-- **learning a discipline of sequencing, not only the protocols configured.** The build order mattered to prevent failures _before_ they existed: STP root laid before redundancy (P1), Core routed and SVIs removed before raising the VIPs so as never to cause split-brain (P2), routing and NAT proven _without ACL_ before adding filtering (P3), datacenter fabric proven before wiring NAT (P4).
+- **Learning a discipline of sequencing, not only the protocols configured.** The build order mattered to prevent failures _before_ they existed: STP root laid before redundancy (P1), Core routed and SVIs removed before raising the VIPs so as never to cause split-brain (P2), routing and NAT proven _without ACL_ before adding filtering (P3), datacenter fabric proven before wiring NAT (P4).
 
 - **A single through-line: "the service follows the Active."** Per VLAN, HSRP Active = STP root = service hosted on the same box. A principle laid in P1 and inherited through to the CME (P5) and Wi-Fi (P6). Each part explicitly settles the debts of the previous one: the lab reads as **a single continuous engineering story**, not six isolated exercises.
 

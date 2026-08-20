@@ -136,11 +136,11 @@ The plan is **stable from P1 to P6**: each part *adds* a segment, none re-addres
 
 ## 6. Evolution by part
 
-| Introduced in        | Segment(s)                                                                                          | Detail                                                                 |
-| -------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| [P1](./P1/README.md) | VLAN 10 / 20 / 30 / 99 / 998 / 999                                                                  | VLANs created; temporary `.1` gateways on Core SVIs                    |
-| [P2](./P2/README.md) | Transit `10.0.1–3.0/30`                                                                             | OSPF area 0; `.1` gateways migrated to HSRP VIP on the Distribution    |
-| [P3](./P3/README.md) | DMZ `172.16.0.0/24` · outside `203.0.113.0/30` · inside `192.168.200.0/30` · test `198.51.100.0/24` | 3-zone ASA perimeter; Internet egress                                  |
-| [P4](./P4/README.md) | Fabric `10.0.4–13.0/30` · VLAN 210 `172.16.2.0/24` · VLAN 220 `172.16.3.0/24`                       | Routed Spine-Leaf datacenter; 2 Border Leafs on the Core              |
-| [P5](./P5/README.md) | (VLAN 30 activated)                                                                                 | CME `192.168.30.254`; hosts in DHCP `.50–.99`                          |
-| [P6](./P6/README.md) | VLAN 300 `192.168.100.0/24` · VLAN 301 · VLAN 310                                                   | Wi-Fi management + Corp/Guest SSID; HSRPv2 VLAN 300                    |
+| Introduced in | Segment(s)                                                                                          | Detail                                                              |
+| ------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| [P1](./P1/)   | VLAN 10 / 20 / 30 / 99 / 998 / 999                                                                  | VLANs created; temporary `.1` gateways on Core SVIs                 |
+| [P2](./P2/)   | Transit `10.0.1–3.0/30`                                                                             | OSPF area 0; `.1` gateways migrated to HSRP VIP on the Distribution |
+| [P3](./P3/)   | DMZ `172.16.0.0/24` · outside `203.0.113.0/30` · inside `192.168.200.0/30` · test `198.51.100.0/24` | 3-zone ASA perimeter; Internet egress                               |
+| [P4](./P4/)   | Fabric `10.0.4–13.0/30` · VLAN 210 `172.16.2.0/24` · VLAN 220 `172.16.3.0/24`                       | Routed Spine-Leaf datacenter; 2 Border Leafs on the Core            |
+| [P5](./P5/)   | (VLAN 30 activated)                                                                                 | CME `192.168.30.254`; hosts in DHCP `.50–.99`                       |
+| [P6](./P6/)   | VLAN 300 `192.168.100.0/24` · VLAN 301 · VLAN 310                                                   | Wi-Fi management + Corp/Guest SSID; HSRPv2 VLAN 300                 |

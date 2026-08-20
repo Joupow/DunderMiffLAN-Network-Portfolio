@@ -65,14 +65,14 @@ Three things a copy-paste does not produce:
 
 Portfolio index. The detail lives in the `README_PX` and `WORKFLOW_PX` of each row.
 
-| #                    | Block                | Main equipment                                  | Main concepts                                                       | Notable point                                                                                                |
-| -------------------- | -------------------- | ----------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| [P1](./P1/README.md) | 3-tier LAN           | Core 3650, 2× Distribution 3560, 4× Access 2960 | VLANs, trunks, Rapid PVST+, management VLAN, native 999 black hole  | STP roots on the Distribution, aligned with the P2 HSRP plan; no Access is root                             |
-| [P2](./P2/README.md) | Routing & redundancy | Core, Distribution, HQ-Router                   | Distributed HSRP, OSPF `/30`, DHCP per domain + single relay        | DHCP relay pointing to the HQ-Router (`10.0.1.2`), not the Core; HSRP Active distributed per VLAN            |
-| [P3](./P3/README.md) | DMZ & Firewall       | ASA 5506-X, ISP router, DMZ services            | Security-levels, 3 opposed ACLs, NAT/PAT, IDS/SPAN, port-security   | Default route originated into OSPF; internal summaries locked by Null0 AD 254 (on the HQ-Router)             |
-| [P4](./P4/README.md) | Datacenter           | Spines / Leafs / Border Leafs: all 3650         | Routed Spine-Leaf, OSPF fabric, app + storage tiers, LB VIP         | Two Border Leafs on the Core (ECMP); fabric entered into the `/20` without renumbering                       |
-| [P5](./P5/README.md) | VoIP                 | CME, IP phones, access switches                 | DHCP Option 150, SCCP, TFTP, QoS boundary                           | CME on DIST-SW1 (Active + root of VLAN 30); P3 inheritance verified — `/20` summary audited safe, no reconfig |
-| [P6](./P6/README.md) | WiFi                 | WLC, lightweight APs, autonomous AP             | CAPWAP, SSID Corp 301 / Guest 310, WPA2, HSRPv2 VLAN 300            | VLAN 300 consolidated on DIST-SW1 (Active + root + DHCP + WLC); control and data plane proven separately     |
+| #           | Block                | Main equipment                                  | Main concepts                                                      | Notable point                                                                                                 |
+| ----------- | -------------------- | ----------------------------------------------- | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- |
+| [P1](./P1/) | 3-tier LAN           | Core 3650, 2× Distribution 3560, 4× Access 2960 | VLANs, trunks, Rapid PVST+, management VLAN, native 999 black hole | STP roots on the Distribution, aligned with the P2 HSRP plan; no Access is root                               |
+| [P2](./P2/) | Routing & redundancy | Core, Distribution, HQ-Router                   | Distributed HSRP, OSPF `/30`, DHCP per domain + single relay       | DHCP relay pointing to the HQ-Router (`10.0.1.2`), not the Core; HSRP Active distributed per VLAN             |
+| [P3](./P3/) | DMZ & Firewall       | ASA 5506-X, ISP router, DMZ services            | Security-levels, 3 opposed ACLs, NAT/PAT, IDS/SPAN, port-security  | Default route originated into OSPF; internal summaries locked by Null0 AD 254 (on the HQ-Router)              |
+| [P4](./P4/) | Datacenter           | Spines / Leafs / Border Leafs: all 3650         | Routed Spine-Leaf, OSPF fabric, app + storage tiers, LB VIP        | Two Border Leafs on the Core (ECMP); fabric entered into the `/20` without renumbering                        |
+| [P5](./P5/) | VoIP                 | CME, IP phones, access switches                 | DHCP Option 150, SCCP, TFTP, QoS boundary                          | CME on DIST-SW1 (Active + root of VLAN 30); P3 inheritance verified — `/20` summary audited safe, no reconfig |
+| [P6](./P6/) | WiFi                 | WLC, lightweight APs, autonomous AP             | CAPWAP, SSID Corp 301 / Guest 310, WPA2, HSRPv2 VLAN 300           | VLAN 300 consolidated on DIST-SW1 (Active + root + DHCP + WLC); control and data plane proven separately      |
 
 ## Defining design decisions
 
