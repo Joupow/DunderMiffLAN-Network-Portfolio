@@ -1,57 +1,57 @@
-# Partie 2 : Routage & redondance
+# Part 2: Routing & Redundancy
 
- **Concepts clés** : Routage, HSRP, DHCP, OSFP P2P
- 
-- 💻**Outil** : Cisco Packet Tracer 9.0
-- 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
-- 📝 Progression étape par étape → [WORKFLOW P2](./WORKFLOW.md)
-- 🎓 **Certification :** CompTIA Network+ 
+ **Key concepts**: Routing, HSRP, DHCP, point-to-point OSPF
 
-## Topologie logique
+- 💻 **Tool**: Cisco Packet Tracer 9.0
+- 🏷️ Full addressing plan → [IPAM](../IPAM.md)
+- 📝 Step-by-step progression → [WORKFLOW P2](./WORKFLOW.md)
+- 🎓 **Certification:** CompTIA Network+
 
-![Topologie P2](../assets/topologies/topology_p2.svg)
-## Objectif
+## Logical topology
 
-Transformer le LAN statique de P1 en un réseau routé, redondant et auto-adressé, autour de quatre chantiers :
+![P2 topology](../assets/topologies/topology_p2.svg)
+## Objective
 
-- Migration des passerelles inter-VLAN du Core vers la Distribution en **HSRP dual-active** (VIP `.1`, physiques `.2`/`.3`)
-- Uplinks Core↔Distribution convertis en **liens routés `/30`**, avec **OSPF** en point-à-point comme IGP du campus
-- Adressage hôte centralisé : **autorité DHCP unique** sur le HQ-Router + relais `ip helper-address`
-- **Durcissement L2** des ports d'accès et **équilibrage STP PVST+** aligné sur les rôles HSRP
+Turn P1's static LAN into a routed, redundant, self-addressing network, across four workstreams:
 
-Cela solde les dettes critiques laissées ouvertes par P1 : SVIs sur le Core, SPOF inter-VLAN, passerelles sans redondance. 
+- Migrate the inter-VLAN default gateways from the Core to the Distribution layer as **dual-active HSRP** (VIP `.1`, physical `.2`/`.3`)
+- Convert the Core↔Distribution uplinks into **routed `/30` links**, with **OSPF** running point-to-point as the campus IGP
+- Centralize host addressing: a **single DHCP authority** on the HQ-Router + an `ip helper-address` relay
+- **L2 hardening** of the access ports and **STP PVST+ balancing** aligned with the HSRP roles
 
-Tout ce qui suit, DMZ, datacenter, voix, Wi-Fi s'appuie sur ce socle routé et redondant.
+This resolves the critical technical debt P1 left open: SVIs on the Core, an inter-VLAN SPOF, gateways without redundancy.
 
-## Contrainte structurante 
+Everything that follows, DMZ, datacenter, voice, Wi-Fi, builds on this routed, redundant foundation.
 
-- La répartition HSRP place les deux VLANs lourds sur des boîtiers différents : DIST-SW1 Active `{10,30}`, DIST-SW2 Active `{20,99}`. 
-- Pour chaque VLAN : **Active HSRP = root STP = service hébergé** - *« le service suit l'Active »*.
+## Structural constraint
 
-## Décision de continuité (héritée de P1) 
+- The HSRP split places the two heavy VLANs on different chassis: DIST-SW1 Active `{10,30}`, DIST-SW2 Active `{20,99}`.
+- For each VLAN: **HSRP Active = STP root = hosted service** - *"the service follows the Active."*
 
-- Le root STP a été posé en P1 sur la Distribution selon ce split
-- P2 aligne HSRP dessus, sans re-toucher STP. 
-- La bascule est ordonnée **Core d'abord** : router les uplinks du Core et retirer ses SVIs data *avant* de lever les VIP de la Distribution, pour que la passerelle `.1` ne soit jamais revendiquée par deux boîtiers à la fois.
+## Continuity decision (inherited from P1)
 
-## Couverture CompTIA Network+
+- The STP root was placed on the Distribution layer in P1 along this split
+- P2 aligns HSRP onto it, without touching STP again.
+- The cutover is ordered **Core first**: route the Core's uplinks and pull its data SVIs *before* raising the Distribution's VIPs, so the `.1` gateway is never claimed by two chassis at once.
 
-| Domaine                | Concepts couverts                                                                                                       | Statut                                                   |
+## CompTIA Network+ coverage
+
+| Domain                 | Concepts covered                                                                                                        | Status                                                   |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| 🧭 Routage OSPF        | point-à-point sans DR/BDR · Mono-aire (aire 0)  · Router-ID manuel · `passive-interface` sélectif · ports routés · ECMP | ✅ tous voisins `FULL`                                    |
-| 🔁 Haute disponibilité | HSRP (VIP / priorité / preempt) · répartition Active/Standby                                                            | ✅ DIST1 `{10,30}` · DIST2 `{20,99}` · failover deux sens |
-| 🔌 Commutation         | **Root STP aligné sur l'Active HSRP** : _le service suit l'Active_                                                      | ✅ 4 VLANs                                                |
-| 🌐 Services            | DHCP (scopes, exclusions, options) · relais `ip helper-address`                                                         | ✅ VLAN 10 & 20 sur HQ-Router                             |
-| 🏷️ Adressage          | Subnetting transit `/30`                                                                                                | ✅ 3 liens P2P, sans chevauchement                        |
+| 🧭 OSPF routing        | point-to-point, no DR/BDR · single-area (area 0) · manual Router-ID · selective `passive-interface` · routed ports · ECMP | ✅ all neighbors `FULL`                                  |
+| 🔁 High availability   | HSRP (VIP / priority / preempt) · Active/Standby distribution                                                           | ✅ DIST1 `{10,30}` · DIST2 `{20,99}` · failover both ways |
+| 🔌 Switching           | **STP root aligned with the HSRP Active**: _the service follows the Active_                                             | ✅ 4 VLANs                                                |
+| 🌐 Services            | DHCP (scopes, exclusions, options) · `ip helper-address` relay                                                         | ✅ VLAN 10 & 20 on the HQ-Router                          |
+| 🏷️ Addressing         | `/30` transit subnetting                                                                                                | ✅ 3 P2P links, no overlap                                |
 
 ## Conclusion
 
-La leçon la plus transférable n'est pas « configurer HSRP », c'est l'**ordre de bascule** : router les uplinks du Core et retirer ses SVIs data _avant_ de lever les VIP de la Distribution, sous peine de voir la `.1` revendiquée par deux boîtiers (split-brain). 
+The most transferable lesson isn't "configure HSRP," it's the **cutover order**: route the Core's uplinks and pull its data SVIs _before_ raising the Distribution's VIPs, or you'll watch the `.1` get claimed by two chassis (split-brain).
 
-Deuxième acquis, contre-intuitif : la plupart des pannes de connectivité sont des problèmes de **chemin retour**, pas d'aller. Le relais DHCP ne casse pas à la requête mais à l'OFFER qui ne sait pas revenir. On ne le comprend qu'en le débuggant.
+Second, counter-intuitive takeaway: most connectivity failures are **return-path** problems, not forward-path ones. The DHCP relay doesn't break on the request but on the OFFER that has no way home. You only understand that by debugging it.
 
-La leçon : chaque composant ajouté pour la résilience est aussi une nouvelle chose qui peut casser en silence ; la redondance n'est réelle qu'une fois le chemin de panne vérifié, pas seulement le chemin nominal.
+The lesson: every component you add for resilience is also one more thing that can fail silently; redundancy is only real once you've verified the failure path, not just the nominal one.
 
 ---
 
-⬅️ [Partie 1 : Fondations LAN 3 niveaux](../P1/README.md) · ⬆️ [Vue d'ensemble du projet](../README.md) · 🔁 [Workflow P2](./WORKFLOW.md) · **Suivant : [Partie 3 : DMZ & Pare-feu](../P3/README.md)** : ASA 3 zones, NAT/PAT, 3 ACL, IDS/SPAN, origination de la route par défaut + verrou résumé/Null0.
+⬅️ [Part 1: Three-Tier LAN Foundations](../P1/README.md) · ⬆️ [Project overview](../README.md) · 🔁 [Workflow P2](./WORKFLOW.md) · **Next: [Part 3: DMZ & Firewall](../P3/README.md)**: a 3-zone ASA, NAT/PAT, 3 ACLs, IDS/SPAN, default-route origination + summary/Null0 lock.

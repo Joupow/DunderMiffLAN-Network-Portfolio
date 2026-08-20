@@ -1,79 +1,79 @@
-# Partie 2 : Workflow 
+# Part 2: Workflow 
 
- **Concepts clés** : Routage, HSRP, DHCP, OSFP P2P
+ **Key concepts**: Routing, HSRP, DHCP, OSPF P2P
  
-- 💻**Outil** : Cisco Packet Tracer 9.0
-- 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
-- 📄 Présentation de la partie 2 → [README P2](./README.md)
-- 🎓 **Certification :** CompTIA Network+ 
-## Sommaire
+- 💻 **Tool**: Cisco Packet Tracer 9.0
+- 🏷️ Full addressing plan → [IPAM](../IPAM.md)
+- 📄 Part 2 overview → [README P2](./README.md)
+- 🎓 **Certification:** CompTIA Network+ 
+## <a id="sommaire"></a>Contents
 
-**1. Cadrage**
+**1. Scope**
 
-- [Topologie As-Built](#topologie-as-built)
-- [Niveaux & équipements](#niveaux--équipements)
+- [As-Built Topology](#topologie-as-built)
+- [Tiers & equipment](#niveaux--équipements)
 
-**2. Étapes de configuration**
+**2. Configuration steps**
 
-- [Étape 1 : Placement & câblage du HQ-Router](#étape-1--placement--câblage-du-hq-router)
-- [Étape 2 : CORE : uplinks routés + retrait des SVIs](#étape-2--core--uplinks-routés--retrait-des-svis)
-- [Étape 3 : DISTRIBUTION : ip routing + SVIs + HSRP](#étape-3--distribution--ip-routing--uplink-routé--svis--hsrp)
-- [Étape 4 : OSPF point-à-point (aire 0)](#étape-4--ospf-point-à-point-mono-aire-0)
-- [Étape 5 : DHCP centralisé](#étape-5--dhcp-centralisé-sur-le-hq-router)
-- [Étape 6 : Relais DHCP : chemin unique](#étape-6--relais-dhcp--chemin-unique)
+- [Step 1: HQ-Router placement & cabling](#étape-1--placement--câblage-du-hq-router)
+- [Step 2: CORE: routed uplinks + SVI removal](#étape-2--core--uplinks-routés--retrait-des-svis)
+- [Step 3: DISTRIBUTION: ip routing + SVIs + HSRP](#étape-3--distribution--ip-routing--uplink-routé--svis--hsrp)
+- [Step 4: Point-to-point OSPF (area 0)](#étape-4--ospf-point-à-point-mono-aire-0)
+- [Step 5: Centralized DHCP](#étape-5--dhcp-centralisé-sur-le-hq-router)
+- [Step 6: DHCP relay: single path](#étape-6--relais-dhcp--chemin-unique)
 
-**3. Preuves & clôtures**
+**3. Evidence & closure**
 
-- [Validation de bout en bout)](#validation-de-bout-en-bout-gate-final)
-- [Dépannage (incidents de session)](#dépannage-incidents-de-session)
-- [Registre d'erreurs & dette technique](#registre-derreurs--dette-technique)
-- [Annexe : Captures de preuve](#annexe--captures-de-preuve)
+- [End-to-end validation)](#validation-de-bout-en-bout-gate-final)
+- [Troubleshooting (session incidents)](#dépannage-incidents-de-session)
+- [Error log & technical debt](#registre-derreurs--dette-technique)
+- [Appendix: Evidence captures](#annexe--captures-de-preuve)
 
-# 1. Cadrage
+# 1. Scope
 
-## <a id="topologie-as-built"></a>Topologie As-Built
+## <a id="topologie-as-built"></a>As-Built Topology
 
-Schéma PT : passage L3/HA - OSPF, HSRP par VLAN, STP root réparti, DHCP
+PT diagram: shift to L3/HA – OSPF, per-VLAN HSRP, distributed STP root, DHCP
 
 ![Networ-overview-P2](../assets/network-overview/NO_P2.png)
 
-## <a id="niveaux--équipements"></a>Niveaux & équipements
+## <a id="niveaux--équipements"></a>Tiers & equipment
 
-| Rôle | Équipement | Rôle dans la partie |
+| Role | Equipment | Role in this part |
 |---|---|---|
-| Edge/Services | **HQ-Router** (ISR 2911) : *nouveau* | Serveur DHCP centralisé ; OSPF aire 0 ; futur edge ASA-inside (P3) |
-| Core | Catalyst **3650** (L3) | **Transit L3 pur** : SVIs data retirés, `/30` routés vers DIST + HQ, OSPF |
-| Distribution | 2× Catalyst **3560** | **Passerelle L3** : SVIs + VIP HSRP par VLAN, uplink routé `/30`, OSPF, root STP |
-| Access | 4× Catalyst **2960** (L2) | Inchangé : L2 dual-homed, VLANs trunkés vers la Distribution |
-| Postes | 8× PC | Migrés en **DHCP** (VLAN 10 & 20) ; passerelle = VIP HSRP |
+| Edge/Services | **HQ-Router** (ISR 2911): *new* | Centralized DHCP server; OSPF area 0; future ASA-inside edge (P3) |
+| Core | Catalyst **3650** (L3) | **Pure L3 transit**: data SVIs removed, routed `/30` toward DIST + HQ, OSPF |
+| Distribution | 2× Catalyst **3560** | **L3 gateway**: SVIs + per-VLAN HSRP VIP, routed `/30` uplink, OSPF, STP root |
+| Access | 4× Catalyst **2960** (L2) | Unchanged: dual-homed L2, VLANs trunked toward the Distribution |
+| Endpoints | 8× PC | Migrated to **DHCP** (VLAN 10 & 20); gateway = HSRP VIP |
 
-Rien n'est recâblé physiquement **sauf** le nouveau lien HQ-Router (`HQ Gi0/0` ↔ `Core Gi1/0/24`). 
+Nothing is physically re-cabled **except** the new HQ-Router link (`HQ Gi0/0` ↔ `Core Gi1/0/24`). 
 
-Ce qui change, c'est le **rôle** des liens existants : les uplinks Core↔DIST passent de trunk à routé `/30` ; le lien inter-Distribution (`Gi0/2`) **reste un trunk L2** (les hellos HSRP ont besoin du domaine de broadcast partagé).
+What changes is the **role** of the existing links: the Core↔DIST uplinks go from trunk to routed `/30`; the inter-Distribution link (`Gi0/2`) **stays an L2 trunk** (HSRP hellos need the shared broadcast domain).
 
-# 2. Étapes de configuration
+# 2. Configuration steps
 
-C'est une **migration** depuis un P1 vivant, pas un greenfield. 
+This is a **migration** from a live P1, not a greenfield. 
 
-Lever les VIP pendant que le Core détient encore `.1` sur un trunk connecté provoque un conflit d'IP dupliquée. 
+Raising the VIPs while the Core still holds `.1` on a connected trunk causes a duplicate-IP conflict. 
 
-Router les uplinks du Core d'abord fait tomber ses SVIs data en `down/down` d'eux-mêmes, ce qui laisse la Distribution prendre `.1` proprement.
-
----
-### <a id="étape-1--placement--câblage-du-hq-router"></a>Étape 1 : Placement & câblage du HQ-Router
-
-**Intention :** introduire le routeur qui porte le DHCP (et, en P3, le lien ASA-inside). Pas de CLI.
-
-**Câble** (straight-through) : **HQ `Gi0/0`** ↔ **Core `Gi1/0/24`**.
-
-> ⚠️ Les interfaces routeur sont par défaut `administratively down`, le lien ne montera pas tant que `no shutdown` n'est pas fait sur HQ `Gi0/0` (**incident #1**).
-
-**Validation** (sur le Core) : `show interfaces status | include 1/0/24` → `notconnect` jusqu'à ce que l'interface routeur soit montée à l'étape 3.
+Routing the Core uplinks first brings its data SVIs down to `down/down` on their own, which lets the Distribution take `.1` cleanly.
 
 ---
-### <a id="étape-2--core--uplinks-routés--retrait-des-svis"></a>Étape 2 : CORE : uplinks routés + retrait des SVIs
+### <a id="étape-1--placement--câblage-du-hq-router"></a>Step 1: HQ-Router placement & cabling
 
-**Intention :** transformer le Core en transit L3 pur et lui retirer son rôle de passerelle inter-VLAN. `default interface` efface la config trunk résiduelle de P1 avant que la config L3 n'arrive.
+**Intent:** introduce the router that carries DHCP (and, in P3, the ASA-inside link). No CLI.
+
+**Cable** (straight-through): **HQ `Gi0/0`** ↔ **Core `Gi1/0/24`**.
+
+> ⚠️ Router interfaces are `administratively down` by default; the link will not come up until `no shutdown` is done on HQ `Gi0/0` (**incident #1**).
+
+**Validation** (on the Core): `show interfaces status | include 1/0/24` → `notconnect` until the router interface is brought up in step 3.
+
+---
+### <a id="étape-2--core--uplinks-routés--retrait-des-svis"></a>Step 2: CORE: routed uplinks + SVI removal
+
+**Intent:** turn the Core into pure L3 transit and strip it of its inter-VLAN gateway role. `default interface` wipes the residual P1 trunk config before the L3 config lands.
 
 ```cisco
 enable
@@ -99,7 +99,7 @@ interface GigabitEthernet1/0/24
  ip ospf network point-to-point
  no shutdown
 
-! Retirer les SVIs data + mgmt temporaires (libère .1 pour la VIP)
+! Remove the temporary data + mgmt SVIs (frees .1 for the VIP)
 no interface vlan 10
 no interface vlan 20
 no interface vlan 30
@@ -109,20 +109,20 @@ end
 write memory
 ```
 
-> ⚠️ **Piège de conception #3 : Core d'abord.** Retirer les SVIs data du Core *avant* de lever les VIP évite la fenêtre où le SVI `.1` du Core et la VIP HSRP `.1` de la DIST sont vivants ensemble = conflit d'IP dupliquée / guerre d'ARP gratuit.
+> ⚠️ **Design pitfall #3: Core first.** Removing the Core's data SVIs *before* raising the VIPs avoids the window where the Core's `.1` SVI and the DIST's `.1` HSRP VIP are alive together = duplicate-IP conflict / gratuitous-ARP war.
 > 
-> ⚠️ Ne jamais recréer un SVI `.1` sur le Core ensuite. `ip routing` reste activé, c'est un routeur de transit, managé in-band via ses `/30` + OSPF.
+> ⚠️ Never recreate a `.1` SVI on the Core afterwards. `ip routing` stays enabled; it is a transit router, managed in-band via its `/30`s + OSPF.
 
-**Validation :** `show ip interface brief | include 10.0.` → `Gi1/0/1=10.0.2.1`, `Gi1/0/2=10.0.3.1`, `Gi1/0/24=10.0.1.1`, tous `up/up`. Les SVIs data/mgmt n'apparaissent plus.
+**Validation:** `show ip interface brief | include 10.0.` → `Gi1/0/1=10.0.2.1`, `Gi1/0/2=10.0.3.1`, `Gi1/0/24=10.0.1.1`, all `up/up`. The data/mgmt SVIs no longer appear.
 
-> 📷 **[P-01](#p-01)** CORE `show ip interface brief` : uplinks routés up.
+> 📷 **[P-01](#p-01)** CORE `show ip interface brief`: routed uplinks up.
 
 ---
-### <a id="étape-3--distribution--ip-routing--uplink-routé--svis--hsrp"></a>Étape 3 : DISTRIBUTION : ip routing + uplink routé + SVIs + HSRP
+### <a id="étape-3--distribution--ip-routing--uplink-routé--svis--hsrp"></a>Step 3: DISTRIBUTION: ip routing + routed uplink + SVIs + HSRP
 
-**Intention :** la Distribution devient la passerelle redondante. `ip routing` d'abord, sinon les SVIs ne routent pas. `Gi0/1` (uplink Core) → routé ; **`Gi0/2` (inter-Distribution) reste un trunk L2.**
+**Intent:** the Distribution becomes the redundant gateway. `ip routing` first, otherwise the SVIs don't route. `Gi0/1` (Core uplink) → routed; **`Gi0/2` (inter-Distribution) stays an L2 trunk.**
 
-**DIST-SW1 : Active `{10,30}`, Standby `{20,99}` :**
+**DIST-SW1: Active `{10,30}`, Standby `{20,99}`:**
 
 ```cisco
 enable
@@ -167,23 +167,23 @@ end
 write memory
 ```
 
-**DIST-SW2 : miroir exact :** Active `{20,99}`, Standby `{10,30}` : IP réelles `.3`, priorité `110` + `preempt` sur 20 & 99, `100` sur 10 & 30, uplink `10.0.3.2/30`.
+**DIST-SW2: exact mirror:** Active `{20,99}`, Standby `{10,30}`: real IPs `.3`, priority `110` + `preempt` on 20 & 99, `100` on 10 & 30, uplink `10.0.3.2/30`.
 
-**Validation :** `show standby brief`
-- DIST1 : `Active` sur Vl10/Vl30, `Standby` sur Vl20/Vl99, `P` (preempt) présent.
-- DIST2 : le miroir exact. Colonne `Virtual IP` = `.1` de chaque VLAN.
+**Validation:** `show standby brief`
+- DIST1: `Active` on Vl10/Vl30, `Standby` on Vl20/Vl99, `P` (preempt) present.
+- DIST2: the exact mirror. `Virtual IP` column = each VLAN's `.1`.
 
-> ⚠️ Si un VLAN montre `Active` sur les **deux** switches → le trunk inter-Dist `Gi0/2` ne porte pas ce VLAN (split-brain). Vérifier que sa liste allowed inclut `10,20,30,99,999` (retaper la liste complète : `add` rejeté sur PT 9.0).
-> ⚠️ Sur un switch L3 (`ip routing` actif), `ip default-gateway` est ignoré : ne pas le poser sur la DIST ; elles apprennent leurs routes via OSPF.
+> ⚠️ If a VLAN shows `Active` on **both** switches → the inter-Dist `Gi0/2` trunk isn't carrying that VLAN (split-brain). Check that its allowed list includes `10,20,30,99,999` (retype the full list: `add` rejected on PT 9.0).
+> ⚠️ On an L3 switch (`ip routing` active), `ip default-gateway` is ignored: don't set it on the DIST; they learn their routes via OSPF.
 
-> 📷 **[P-09](#p-09)** HSRP DIST-SW1 (Active V10/V30, Pri 110 P) · **[P-10](#p-10)** HSRP DIST-SW2 miroir (Active V20/V99).
+> 📷 **[P-09](#p-09)** HSRP DIST-SW1 (Active V10/V30, Pri 110 P) · **[P-10](#p-10)** HSRP DIST-SW2 mirror (Active V20/V99).
 
 ---
-### <a id="étape-4--ospf-point-à-point-mono-aire-0"></a>Étape 4 : OSPF point-à-point (mono-aire 0)
+### <a id="étape-4--ospf-point-à-point-mono-aire-0"></a>Step 4: Point-to-point OSPF (single area 0)
 
-**Intention :** une aire, tous les liens point-à-point (pas d'élection DR/BDR), RID codé en dur, SVIs annoncés mais passifs.
+**Intent:** one area, all links point-to-point (no DR/BDR election), hard-coded RID, SVIs advertised but passive.
 
-**CORE (transit uniquement, aucun SVI à annoncer) :**
+**CORE (transit only, no SVI to advertise):**
 
 ```cisco
 configure terminal
@@ -195,10 +195,10 @@ router ospf 1
  network 10.0.3.0 0.0.0.3 area 0
  
 end
-clear ip ospf process        ! répondre "yes" : requis pour que le RID prenne
+clear ip ospf process        ! answer "yes": required for the RID to take effect
 ```
 
-**DIST-SW1 (RID `2.2.2.2`) / DIST-SW2 (RID `3.3.3.3`) :**
+**DIST-SW1 (RID `2.2.2.2`) / DIST-SW2 (RID `3.3.3.3`):**
 
 ```cisco
 configure terminal
@@ -206,8 +206,8 @@ configure terminal
 router ospf 1
  router-id 2.2.2.2
  passive-interface default
- no passive-interface GigabitEthernet0/1     ! SEUL le transit /30 forme une adjacence
- network 10.0.2.0 0.0.0.3 area 0             ! DIST2 : 10.0.3.0 0.0.0.3
+ no passive-interface GigabitEthernet0/1     ! ONLY the /30 transit forms an adjacency
+ network 10.0.2.0 0.0.0.3 area 0             ! DIST2: 10.0.3.0 0.0.0.3
  network 192.168.10.0 0.0.0.255 area 0
  network 192.168.20.0 0.0.0.255 area 0
  network 192.168.30.0 0.0.0.255 area 0
@@ -217,9 +217,9 @@ end
 clear ip ospf process
 ```
 
-> `passive-interface default` = les sous-réseaux VLAN sont **annoncés** mais ne forment jamais d'adjacence sur un SVI (tue l'OSPF parasite sur le VLAN 99). `Gi0/2` inter-Dist étant L2, DIST1 et DIST2 n'ont **aucune** adjacence OSPF directe, ils apprennent leurs préfixes mutuels via le Core.
+> `passive-interface default` = the VLAN subnets are **advertised** but never form an adjacency on an SVI (kills stray OSPF on VLAN 99). Since the inter-Dist `Gi0/2` is L2, DIST1 and DIST2 have **no** direct OSPF adjacency; they learn each other's prefixes via the Core.
 
-**HQ-Router (RID `4.4.4.4`) :**
+**HQ-Router (RID `4.4.4.4`):**
 
 ```cisco
 enable
@@ -238,28 +238,28 @@ end
 clear ip ospf process
 ```
 
-> ⚠️ **Piège de conception #2 : le HQ-Router doit tourner OSPF.** 
+> ⚠️ **Design pitfall #2: the HQ-Router must run OSPF.** 
 > 
-> Sans route de retour vers les sous-réseaux VLAN, l'OFFER DHCP est généré mais jamais routé en retour : échec silencieux. Même classe de piège « chemin de retour » que la route par défaut en P3.
+> Without a return route to the VLAN subnets, the DHCP OFFER is generated but never routed back: silent failure. Same class of "return-path" pitfall as the default route in P3.
 
-**Validation :**
+**Validation:**
 
 ```cisco
-show ip ospf neighbor        ! tous FULL/ -, pas de DR/BDR
-show ip ospf interface brief ! chaque interface = P2P
-show ip route ospf           ! Core : ECMP vers les VLANs via les deux /30 ; HQ : tous les VLANs présents
+show ip ospf neighbor        ! all FULL/ -, no DR/BDR
+show ip ospf interface brief ! every interface = P2P
+show ip route ospf           ! Core: ECMP to the VLANs via both /30s; HQ: all VLANs present
 ```
 
-**Attendu :** le Core voit `4.4.4.4` (Gi1/0/24), `2.2.2.2` (Gi1/0/1), `3.3.3.3` (Gi1/0/2), tous `FULL/ -`. HQ `show ip route ospf` liste `10.0.2/3` et `192.168.10/20/30/99`.
+**Expected:** the Core sees `4.4.4.4` (Gi1/0/24), `2.2.2.2` (Gi1/0/1), `3.3.3.3` (Gi1/0/2), all `FULL/ -`. HQ `show ip route ospf` lists `10.0.2/3` and `192.168.10/20/30/99`.
 
-> 📷 **[P-02](#p-02)** OSPF neighbor Core (3 voisins `FULL`) · **[P-03](#p-03)** ECMP Core vers VLANs · **[P-04](#p-04)/[P-05](#p-05)** DIST-SW1 adjacence + routes · **[P-06](#p-06)** DIST-SW2 · **[P-07](#p-07)/[P-08](#p-08)** HQ-Router propagation + adjacence.
+> 📷 **[P-02](#p-02)** Core OSPF neighbors (3 `FULL` neighbors) · **[P-03](#p-03)** Core ECMP to VLANs · **[P-04](#p-04)/[P-05](#p-05)** DIST-SW1 adjacency + routes · **[P-06](#p-06)** DIST-SW2 · **[P-07](#p-07)/[P-08](#p-08)** HQ-Router propagation + adjacency.
 
 ---
-### <a id="étape-5--dhcp-centralisé-sur-le-hq-router"></a>Étape 5 : DHCP centralisé sur le HQ-Router
+### <a id="étape-5--dhcp-centralisé-sur-le-hq-router"></a>Step 5: Centralized DHCP on the HQ-Router
 
-**Intention :** une autorité DHCP pour les VLANs utilisateur. VLAN 30 = CME (P5) ; VLAN 99 = statique.
+**Intent:** one DHCP authority for the user VLANs. VLAN 30 = CME (P5); VLAN 99 = static.
 
-**HQ-Router :**
+**HQ-Router:**
 
 ```cisco
 configure terminal
@@ -269,7 +269,7 @@ ip dhcp excluded-address 192.168.20.1 192.168.20.49
 
 ip dhcp pool VLAN10
  network 192.168.10.0 255.255.255.0
- default-router 192.168.10.1        ! = VIP HSRP (survit à un failover)
+ default-router 192.168.10.1        ! = HSRP VIP (survives a failover)
  dns-server 192.168.99.1
 exit
 
@@ -283,63 +283,63 @@ write memory
 ```
 
 ---
-### <a id="étape-6--relais-dhcp--chemin-unique"></a>Étape 6 : Relais DHCP : chemin unique
+### <a id="étape-6--relais-dhcp--chemin-unique"></a>Step 6: DHCP relay: single path
 
-**Intention :** le helper vit sur le SVI de l'**Active** du VLAN, et sur lui seul.
+**Intent:** the helper lives on the SVI of the VLAN's **Active**, and on it alone.
 
-> **Cible du helper :** le serveur DHCP est **HQ-Router = `10.0.1.2`**, pas le Core `10.0.1.1`.
+> **Helper target:** the DHCP server is **HQ-Router = `10.0.1.2`**, not the Core `10.0.1.1`.
 
 ```cisco
-! DIST-SW1 : Active du VLAN 10
+! DIST-SW1: Active for VLAN 10
 
 interface vlan 10
  ip helper-address 10.0.1.2
 
-! DIST-SW2 : Active du VLAN 20
+! DIST-SW2: Active for VLAN 20
 
 interface vlan 20
  ip helper-address 10.0.1.2
 ```
 
-> ⚠️ **Piège de conception #1 : helper sur l'Active seul, pas les deux DIST.** 
+> ⚠️ **Design pitfall #1: helper on the Active only, not both DIST.** 
 > 
-> Le VLAN 10 s'étend sur DIST1 et DIST2 (trunk inter-Dist). Un DISCOVER est entendu par les deux SVI 10 ; deux helpers → deux relais → deux OFFERs. Le helper sur l'Active garantit un chemin unique.
+> VLAN 10 spans DIST1 and DIST2 (inter-Dist trunk). A DISCOVER is heard by both SVI 10s; two helpers → two relays → two OFFERs. The helper on the Active guarantees a single path.
 > 
-> 📋 **Dette #16 (acceptée) :** après un failover DIST1→DIST2, le SVI 10 de DIST2 n'a pas de helper → pas de *nouveau* bail en VLAN 10 tant que DIST1 est down (les baux existants tiennent). Compromis anti-double-relais délibéré.
+> 📋 **Debt #16 (accepted):** after a DIST1→DIST2 failover, DIST2's SVI 10 has no helper → no *new* lease in VLAN 10 while DIST1 is down (existing leases hold). Deliberate anti-double-relay trade-off.
 
-**Validation :** passer un PC du VLAN 10 en DHCP → `show ip dhcp binding` sur le HQ-Router. Confirmé ce build : baux `.10.50–.53` et `.20.51–.54`, serveur unique.
+**Validation:** switch a VLAN 10 PC to DHCP → `show ip dhcp binding` on the HQ-Router. Confirmed this build: leases `.10.50–.53` and `.20.51–.54`, single server.
 
-> 📷 **[P-20](#p-20)** baux DHCP centralisés (serveur unique).
+> 📷 **[P-20](#p-20)** centralized DHCP leases (single server).
 
-# 3. Preuves & clôtures
+# 3. Evidence & closure
 
-## <a id="validation-de-bout-en-bout-gate-final"></a>Validation de bout en bout 
+## <a id="validation-de-bout-en-bout-gate-final"></a>End-to-end validation 
 
-| Domaine | Vérification | Commande clé | Attendu | Preuve |
+| Domain | Check | Key command | Expected | Evidence |
 |---|---|---|---|---|
-| 🔗 Transit L3 | Uplinks routés `/30` | Core `show ip interface brief` | Gi1/0/1=10.0.2.1 · Gi1/0/2=10.0.3.1 · Gi1/0/24=10.0.1.1, tous up | [P-01](#p-01) |
-| 🌐 OSPF | Adjacences Core | Core `show ip ospf neighbor` | 3× `FULL/ -` (2.2.2.2, 3.3.3.3, 4.4.4.4), pas de DR/BDR | [P-02](#p-02) |
-| 🌐 OSPF | ECMP Core → VLANs | Core `show ip route ospf` | ECMP vers tous les VLANs via 10.0.2.2 **et** 10.0.3.2 | [P-03](#p-03) |
-| 🌐 OSPF | Adjacence + routes DIST1 | DIST1 `show ip ospf neighbor` + `route ospf` | 10.255.255.1 via 10.0.2.1 | [P-04](#p-04), [P-05](#p-05) |
-| 🌐 OSPF | Adjacence + routes DIST2 | DIST2 `show ip ospf neighbor` + `route ospf` | 10.255.255.1 via 10.0.3.1 | [P-06](#p-06) |
-| 🌐 OSPF | Propagation HQ-Router | HQ `show ip route ospf` + `neighbor` | transits + VLANs via 10.0.1.1 | [P-07](#p-07), [P-08](#p-08) |
-| 🔁 Haute dispo | Répartition HSRP | `show standby brief` (les deux DIST) | DIST1 Active 10/30 · DIST2 Active 20/99 | [P-09](#p-09), [P-10](#p-10) |
-| 🌳 STP | Root aligné sur l'Active | `show spanning-tree vlan 10/20/30/99` | root = l'Active du VLAN (4× `This bridge is the root`) | [P-11](#p-11)→[P-14](#p-14) |
-| 📦 Connectivité | Inter-VLAN routé | PC V10 `ping <PC V20>` | routé, TTL=127 (1er paquet ARP puis OK) | [P-21](#p-21) |
-| 📡 Services | Baux DHCP | HQ `show ip dhcp binding` | serveur unique, baux .10.50–.53 / .20.51–.54 | [P-20](#p-20) |
-| 🔁 Haute dispo | **Failover** | DIST1 `int vlan 10 / shutdown` + ping VIP `-t` | DIST2 promu Active, ping repris (~3 perdus) | [P-15](#p-15)→[P-17](#p-17) |
-| 🔁 Haute dispo | **Preempt** | DIST1 `int vlan 10 / no shutdown` | priorité 110 reprend l'Active sur DIST1 | [P-18](#p-18), [P-19](#p-19) |
+| 🔗 L3 transit | Routed `/30` uplinks | Core `show ip interface brief` | Gi1/0/1=10.0.2.1 · Gi1/0/2=10.0.3.1 · Gi1/0/24=10.0.1.1, all up | [P-01](#p-01) |
+| 🌐 OSPF | Core adjacencies | Core `show ip ospf neighbor` | 3× `FULL/ -` (2.2.2.2, 3.3.3.3, 4.4.4.4), no DR/BDR | [P-02](#p-02) |
+| 🌐 OSPF | ECMP Core → VLANs | Core `show ip route ospf` | ECMP to all VLANs via 10.0.2.2 **and** 10.0.3.2 | [P-03](#p-03) |
+| 🌐 OSPF | DIST1 adjacency + routes | DIST1 `show ip ospf neighbor` + `route ospf` | 10.255.255.1 via 10.0.2.1 | [P-04](#p-04), [P-05](#p-05) |
+| 🌐 OSPF | DIST2 adjacency + routes | DIST2 `show ip ospf neighbor` + `route ospf` | 10.255.255.1 via 10.0.3.1 | [P-06](#p-06) |
+| 🌐 OSPF | HQ-Router propagation | HQ `show ip route ospf` + `neighbor` | transits + VLANs via 10.0.1.1 | [P-07](#p-07), [P-08](#p-08) |
+| 🔁 High avail. | HSRP split | `show standby brief` (both DIST) | DIST1 Active 10/30 · DIST2 Active 20/99 | [P-09](#p-09), [P-10](#p-10) |
+| 🌳 STP | Root aligned to the Active | `show spanning-tree vlan 10/20/30/99` | root = the VLAN's Active (4× `This bridge is the root`) | [P-11](#p-11)→[P-14](#p-14) |
+| 📦 Connectivity | Routed inter-VLAN | PC V10 `ping <PC V20>` | routed, TTL=127 (1st ARP packet then OK) | [P-21](#p-21) |
+| 📡 Services | DHCP leases | HQ `show ip dhcp binding` | single server, leases .10.50–.53 / .20.51–.54 | [P-20](#p-20) |
+| 🔁 High avail. | **Failover** | DIST1 `int vlan 10 / shutdown` + ping VIP `-t` | DIST2 promoted to Active, ping resumes (~3 lost) | [P-15](#p-15)→[P-17](#p-17) |
+| 🔁 High avail. | **Preempt** | DIST1 `int vlan 10 / no shutdown` | priority 110 reclaims Active on DIST1 | [P-18](#p-18), [P-19](#p-19) |
 
-## <a id="dépannage-incidents-de-session"></a>Dépannage (incidents de session)
+## <a id="dépannage-incidents-de-session"></a>Troubleshooting (session incidents)
 
-> Incidents rencontrés pendant le build, avec le diagnostic qui a attrapé chacun. Historiques de session, **pas** des dettes ; chacun corrigé le jour même.
+> Incidents encountered during the build, with the diagnostic that caught each one. Session history, **not** debts; each fixed the same day.
 
-| # | Symptôme | Cause | Diagnostic | Correctif |
+| # | Symptom | Cause | Diagnosis | Fix |
 |---|---|---|---|---|
-| 1 | Core `Gi1/0/24` reste `Down` malgré `10.0.1.1/30` + `no switchport` | HQ-Router `Gi0/0` encore `administratively down` (les routeurs bootent interfaces éteintes) | `show ip interface brief` sur HQ | `interface Gi0/0 / no shutdown` (+ IP + `ip ospf network p2p`) |
-| 2 | DIST-SW2 `show ip ospf neighbor` vide ; le Core ne voit jamais `3.3.3.3` | `network 10.0.3.0 0.0.0.3 area 0` manquant : OSPF jamais activé sur le transit | `show ip ospf neighbor` (DIST2 vs DIST1) + recoupement sur le Core | Ajouter la ligne `network` + `clear ip ospf process` |
+| 1 | Core `Gi1/0/24` stays `Down` despite `10.0.1.1/30` + `no switchport` | HQ-Router `Gi0/0` still `administratively down` (routers boot with interfaces shut) | `show ip interface brief` on HQ | `interface Gi0/0 / no shutdown` (+ IP + `ip ospf network p2p`) |
+| 2 | DIST-SW2 `show ip ospf neighbor` empty; the Core never sees `3.3.3.3` | `network 10.0.3.0 0.0.0.3 area 0` missing: OSPF never enabled on the transit | `show ip ospf neighbor` (DIST2 vs DIST1) + cross-check on the Core | Add the `network` line + `clear ip ospf process` |
 
-**Commandes de référence :**
+**Reference commands:**
 
 ```cisco
 show ip ospf neighbor        show ip ospf interface brief    show ip route ospf
@@ -348,110 +348,110 @@ show ip interface brief      show interfaces trunk           show running-config
 clear ip ospf process        write memory
 ```
 
-## <a id="registre-derreurs--dette-technique"></a>Registre d'erreurs & dette technique
+## <a id="registre-derreurs--dette-technique"></a>Error log & technical debt
 
-> État final de chaque point (clos / porté / différé). Le dépannage de session est ci-dessus. 
-> ⚠️ **Numérotation inter-parties.** Ces numéros sont des identifiants cités par d'autres docs
+> Final state of each item (closed / carried / deferred). Session troubleshooting is above. 
+> ⚠️ **Cross-part numbering.** These numbers are identifiers referenced by other docs
 
-| #   | Point                                             | Gravité | Domaine             | Statut                                                                                  |
-| --- | ------------------------------------------------- | ------- | ------------------- | --------------------------------------------------------------------------------------- |
-| 1   | SVIs sur le Core au lieu de la Distribution       | 🟠      | Architecture L3     | ✅ **Clos** (HSRP sur la Distribution)                                                   |
-| 2   | Un seul Core = SPOF de routage inter-VLAN         | 🟠      | Haute disponibilité | ✅ **Clos** (double passerelle HSRP)                                                     |
-| 10  | PC adressés statiquement                          | 🟢      | Scalabilité         | ✅ **Clos** (DHCP + relais)                                                              |
-| 15  | Core = transit L3 nord-sud unique                 | 🟠      | Haute disponibilité | 📋 Dette : l'inter-VLAN local survit à la perte du Core ; l'externe non                 |
-| 15b | Core & HQ-Router sans IP de management dédiée     | 🟢      | Ops                 | 📋 Dette : managés in-band via leurs `/30` (joignables OSPF) ; Loopback0 différé        |
-| 16  | Relais DHCP mono-chemin (helper côté Active seul) | 🟢      | Services            | 📋 Dette : anti-double-relais délibéré ; pas de nouveau bail tant que l'Active est down |
-| 8   | Port Security                                     | 🟠      | Sécurité            | 🔜 P3                                                                                   |
-| 9   | Voice VLAN 30 sans poste IP                       | 🟢      | Démonstratif        | 🔜 P5                                                                                   |
-| 19  | Liens transit `/30` au lieu de `/31`              | 🟢      | IPAM                | 📋 Dette : choix lisibilité/parité                                                      |
-| 20  | Aire OSPF 0 unique                                | 🟢      | Scalabilité         | 📋 Dette : multi-aire = durcissement ultérieur                                          |
+| #   | Item                                              | Severity | Domain              | Status                                                                                  |
+| --- | ------------------------------------------------- | -------- | ------------------- | --------------------------------------------------------------------------------------- |
+| 1   | SVIs on the Core instead of the Distribution      | 🟠       | L3 architecture     | ✅ **Closed** (HSRP on the Distribution)                                                 |
+| 2   | A single Core = inter-VLAN routing SPOF           | 🟠       | High availability   | ✅ **Closed** (dual HSRP gateway)                                                        |
+| 10  | Statically addressed PCs                          | 🟢       | Scalability         | ✅ **Closed** (DHCP + relay)                                                             |
+| 15  | Core = single north-south L3 transit              | 🟠       | High availability   | 📋 Debt: local inter-VLAN survives loss of the Core; external does not                  |
+| 15b | Core & HQ-Router with no dedicated management IP  | 🟢       | Ops                 | 📋 Debt: managed in-band via their `/30`s (OSPF-reachable); Loopback0 deferred          |
+| 16  | Single-path DHCP relay (helper on the Active only)| 🟢       | Services            | 📋 Debt: deliberate anti-double-relay; no new lease while the Active is down            |
+| 8   | Port Security                                     | 🟠       | Security            | 🔜 P3                                                                                    |
+| 9   | Voice VLAN 30 with no IP phone                    | 🟢       | Demonstrative       | 🔜 P5                                                                                    |
+| 19  | `/30` transit links instead of `/31`             | 🟢       | IPAM                | 📋 Debt: readability/parity choice                                                      |
+| 20  | Single OSPF area 0                                | 🟢       | Scalability         | 📋 Debt: multi-area = later hardening                                                   |
 
-## <a id="annexe--captures-de-preuve"></a>Annexe : Captures de preuve
+## <a id="annexe--captures-de-preuve"></a>Appendix: Evidence captures
 
-**<a id="p-01"></a> [P-01] · Uplinks routés du Core up** : CORE-SW `show ip interface brief | include 10.0` → Gi1/0/1=10.0.2.1, Gi1/0/2=10.0.3.1, Gi1/0/24=10.0.1.1, tous up
+**<a id="p-01"></a> [P-01] · Core routed uplinks up**: CORE-SW `show ip interface brief | include 10.0` → Gi1/0/1=10.0.2.1, Gi1/0/2=10.0.3.1, Gi1/0/24=10.0.1.1, all up
 
 ![Capture P2-36](../assets/captures/P2/Capture_P2_36.png)
 
-**<a id="p-02"></a> [P-02] · Adjacences OSPF du Core (3 voisins)** : `show ip ospf neighbor` → 2.2.2.2 via 10.0.2.2, 3.3.3.3 via 10.0.3.2, 4.4.4.4 via 10.0.1.2, tous `FULL/ -`
+**<a id="p-02"></a> [P-02] · Core OSPF adjacencies (3 neighbors)**: `show ip ospf neighbor` → 2.2.2.2 via 10.0.2.2, 3.3.3.3 via 10.0.3.2, 4.4.4.4 via 10.0.1.2, all `FULL/ -`
 
 ![Capture P2-35](../assets/captures/P2/Capture_P2_35.png)
 
-**<a id="p-03"></a> [P-03] · ECMP du Core vers les VLANs** : `show ip route ospf` → 192.168.10/20/30/99 via 10.0.2.2 **et** 10.0.3.2
+**<a id="p-03"></a> [P-03] · Core ECMP to the VLANs**: `show ip route ospf` → 192.168.10/20/30/99 via 10.0.2.2 **and** 10.0.3.2
 
 ![Capture P2-34](../assets/captures/P2/Capture_P2_34.png)
 
-**<a id="p-04"></a> [P-04] · Adjacence DIST-SW1** : `show ip ospf neighbor` → 10.255.255.1 via 10.0.2.1 `FULL/ -`
+**<a id="p-04"></a> [P-04] · DIST-SW1 adjacency**: `show ip ospf neighbor` → 10.255.255.1 via 10.0.2.1 `FULL/ -`
 
 ![Capture P2-32](../assets/captures/P2/Capture_P2_32.png)
 
-**<a id="p-05"></a> [P-05] · Routes DIST-SW1** : `show ip route ospf` → transits via 10.0.2.1
+**<a id="p-05"></a> [P-05] · DIST-SW1 routes**: `show ip route ospf` → transits via 10.0.2.1
 
 ![Capture P2-31](../assets/captures/P2/Capture_P2_31.png)
 
-**<a id="p-06"></a> [P-06] · Adjacence + routes DIST-SW2** : `show ip ospf neighbor` + `route ospf` → 10.255.255.1 via 10.0.3.1
+**<a id="p-06"></a> [P-06] · DIST-SW2 adjacency + routes**: `show ip ospf neighbor` + `route ospf` → 10.255.255.1 via 10.0.3.1
 
 ![Capture P2-26](../assets/captures/P2/Capture_P2_26.png)
 
-**<a id="p-07"></a> [P-07] · Propagation HQ-Router** : `show ip route ospf` → transits 10.0.2/3 + VLANs via 10.0.1.1
+**<a id="p-07"></a> [P-07] · HQ-Router propagation**: `show ip route ospf` → transits 10.0.2/3 + VLANs via 10.0.1.1
 
 ![Capture P2-33](../assets/captures/P2/Capture_P2_33.png)
 
-**<a id="p-08"></a> [P-08] · Adjacence HQ-Router (Core↔HQ)** : `show ip ospf neighbor` → 10.255.255.1 via 10.0.1.1
+**<a id="p-08"></a> [P-08] · HQ-Router adjacency (Core↔HQ)**: `show ip ospf neighbor` → 10.255.255.1 via 10.0.1.1
 
 ![Capture P2-08](../assets/captures/P2/Capture_P2_08.png)
 
-**<a id="p-09"></a> [P-09] · Répartition HSRP DIST-SW1** : `show standby brief` → Active V10/V30 (Pri 110 P), Standby V20/V99
+**<a id="p-09"></a> [P-09] · HSRP split DIST-SW1**: `show standby brief` → Active V10/V30 (Pri 110 P), Standby V20/V99
 
 ![Capture P2-11](../assets/captures/P2/Capture_P2_11.png)
 
-**<a id="p-10"></a> [P-10] · Répartition HSRP DIST-SW2 (miroir)** : `show standby brief` → Active V20/V99 (Pri 110 P), Standby V10/V30
+**<a id="p-10"></a> [P-10] · HSRP split DIST-SW2 (mirror)**: `show standby brief` → Active V20/V99 (Pri 110 P), Standby V10/V30
 
 ![Capture P2-23](../assets/captures/P2/Capture_P2_23.png)
 
-**<a id="p-11"></a> [P-11] · Root STP VLAN 10 = DIST1** : `show spanning-tree vlan 10` → `This bridge is the root`
+**<a id="p-11"></a> [P-11] · STP root VLAN 10 = DIST1**: `show spanning-tree vlan 10` → `This bridge is the root`
 
 ![Capture P2-22](../assets/captures/P2/Capture_P2_22.png)
 
-**<a id="p-12"></a> [P-12] · Root STP VLAN 20 = DIST2** : `show spanning-tree vlan 20` → `This bridge is the root`
+**<a id="p-12"></a> [P-12] · STP root VLAN 20 = DIST2**: `show spanning-tree vlan 20` → `This bridge is the root`
 
 ![Capture P2-20](../assets/captures/P2/Capture_P2_20.png)
 
-**<a id="p-13"></a> [P-13] · Root STP VLAN 30 = DIST1** : `show spanning-tree vlan 30` → `This bridge is the root`
+**<a id="p-13"></a> [P-13] · STP root VLAN 30 = DIST1**: `show spanning-tree vlan 30` → `This bridge is the root`
 
 ![Capture P2-14](../assets/captures/P2/Capture_P2_14.png)
 
-**<a id="p-14"></a> [P-14] · Root STP VLAN 99 = DIST2** : `show spanning-tree vlan 99` → `This bridge is the root`
+**<a id="p-14"></a> [P-14] · STP root VLAN 99 = DIST2**: `show spanning-tree vlan 99` → `This bridge is the root`
 
 ![Capture P2-13](../assets/captures/P2/Capture_P2_13.png)
 
-**<a id="p-15"></a> [P-15] · Déclenchement du failover** : DIST-SW1 `interface vlan 10 / shutdown` → SVI down
+**<a id="p-15"></a> [P-15] · Failover trigger**: DIST-SW1 `interface vlan 10 / shutdown` → SVI down
 
 ![Capture P2-30](../assets/captures/P2/Capture_P2_30.png)
 
-**<a id="p-16"></a> [P-16] · Promotion du failover** : DIST-SW2 `show standby brief` → V10 `Active`, Standby `unknown` (DIST1 parti)
+**<a id="p-16"></a> [P-16] · Failover promotion**: DIST-SW2 `show standby brief` → V10 `Active`, Standby `unknown` (DIST1 gone)
 
 ![Capture P2-16](../assets/captures/P2/Capture_P2_16.png)
 
-**<a id="p-17"></a> [P-17] · Data-plane du failover** : PC `ping -t 192.168.10.1` → 3 timeouts puis reprise
+**<a id="p-17"></a> [P-17] · Failover data-plane**: PC `ping -t 192.168.10.1` → 3 timeouts then recovery
 
 ![Capture P2-18](../assets/captures/P2/Capture_P2_18.png)
 
-**<a id="p-18"></a> [P-18] · Preempt (log de transition)** : DIST-SW1 `interface vlan 10 / no shutdown` → `%HSRP-6-STATECHANGE: Vlan10 Grp 10 Standby -> Active`
+**<a id="p-18"></a> [P-18] · Preempt (transition log)**: DIST-SW1 `interface vlan 10 / no shutdown` → `%HSRP-6-STATECHANGE: Vlan10 Grp 10 Standby -> Active`
 
 ![Capture P2-29](../assets/captures/P2/Capture_P2_29.png)
 
-**<a id="p-19"></a> [P-19] · Preempt confirmé** : DIST-SW1 `show standby brief` → V10 `Active`/local, Standby 192.168.10.3
+**<a id="p-19"></a> [P-19] · Preempt confirmed**: DIST-SW1 `show standby brief` → V10 `Active`/local, Standby 192.168.10.3
 
 ![Capture P2-28](../assets/captures/P2/Capture_P2_28.png)
 
-**<a id="p-20"></a> [P-20] · Baux DHCP centralisés** : HQ-ROUTER `show ip dhcp binding` → .10.50–.53 / .20.51–.54, serveur unique
+**<a id="p-20"></a> [P-20] · Centralized DHCP leases**: HQ-ROUTER `show ip dhcp binding` → .10.50–.53 / .20.51–.54, single server
 
 ![Capture P2-21](../assets/captures/P2/Capture_P2_21.png)
 
-**<a id="p-21"></a> [P-21] · Inter-VLAN routé** : PC campus `ping .10.51` (0 %) + `ping .20.51` (TTL=127, un saut)
+**<a id="p-21"></a> [P-21] · Routed inter-VLAN**: campus PC `ping .10.51` (0 %) + `ping .20.51` (TTL=127, one hop)
 
 ![Capture P2-19](../assets/captures/P2/Capture_P2_19.png)
 
 ---
 
-⬅️ [Workflow P1](../P1/WORKFLOW.md) · ⬆️ [Sommaire](#sommaire) · [README de la partie](./README.md) · [Vue d'ensemble du projet](../README.md) · **Suivant : [Workflow P3](../P3/WORKFLOW.md)** - périmètre ASA, DMZ en tiers, NAT/PAT, routes internes exactes : pas de résumé qui bouclerait.
+⬅️ [Workflow P1](../P1/WORKFLOW.md) · ⬆️ [Contents](#sommaire) · [Part README](./README.md) · [Project overview](../README.md) · **Next: [Workflow P3](../P3/WORKFLOW.md)** – ASA perimeter, tiered DMZ, NAT/PAT, exact internal routes: no summary that would loop.
