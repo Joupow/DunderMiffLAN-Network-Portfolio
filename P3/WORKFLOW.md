@@ -74,7 +74,6 @@ The whole P1/P2 campus is **unchanged**: P3 only bolts the perimeter onto the ex
 
 The firewall is built inside-out: reachability, then translation, then filtering. Step 3 (default origination) is the real unlock, to be done before the ASA's routes, otherwise the ASA has a next-hop that no host reaches.
 
-
 ---
 ### <a id="étape-1--équipements--câblage"></a>Step 1: Equipment & cabling
 
@@ -430,25 +429,25 @@ The **group B protocol**: note the target line's hitcnt, run the flow once, re-r
 
 **✅ Group A: flows that must pass**
 
-| # | From | Action | Expected | Evidence |
-|---|---|---|---|---|
-| A1 | PC1 | `ping 8.8.8.8` | 4/4 reply (TTL=251) | OUTSIDE-IN `echo-reply` hitcnt climbs: survives the ACL: [P-01](#p-01), [P-06](#p-06) |
-| A2 | PC1 | `http://172.16.0.20` | page (via proxy) | INSIDE line 1 permit hit: [P-02](#p-02) |
-| A4 | ASA | `ping 172.16.0.10` / `.20` | 5/5 | DMZ `permit icmp any host .1` hit: order OK: [P-03](#p-03), [P-06](#p-06) |
-| A5 | PROXY | `ping 8.8.8.8` | 4/4 | DMZ `permit icmp host .20` hit: [P-04](#p-04) |
-| A6 | PC1 | `ping 8.8.8.8` then `show xlate` | `ICMP PAT … flags i` dynamic + static `flags s` | the dynamic entry is the NAT proof: [P-05](#p-05) |
+| #   | From  | Action                           | Expected                                        | Evidence                                                                              |
+| --- | ----- | -------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------- |
+| A1  | PC1   | `ping 8.8.8.8`                   | 4/4 reply (TTL=251)                             | OUTSIDE-IN `echo-reply` hitcnt climbs: survives the ACL: [P-01](#p-01), [P-06](#p-06) |
+| A2  | PC1   | `http://172.16.0.20`             | page (via proxy)                                | INSIDE line 1 permit hit: [P-02](#p-02)                                               |
+| A4  | ASA   | `ping 172.16.0.10` / `.20`       | 5/5                                             | DMZ `permit icmp any host .1` hit: order OK: [P-03](#p-03), [P-06](#p-06)             |
+| A5  | PROXY | `ping 8.8.8.8`                   | 4/4                                             | DMZ `permit icmp host .20` hit: [P-04](#p-04)                                         |
+| A6  | PC1   | `ping 8.8.8.8` then `show xlate` | `ICMP PAT … flags i` dynamic + static `flags s` | the dynamic entry is the NAT proof: [P-05](#p-05)                                     |
 
 > **A3 reclassified, blocked by design, not a failure.** PC1 → `http://172.16.0.10` (WEB-PUBLIC direct) times out: the reply is dropped by DMZ-RESTRICT `deny host .10`. Consistent with the forced proxy: internal hosts reach the web via `.20` (A2), never the DMZ server. A3 proves a second time that `deny host .10` works. [P-13](#p-13)
 
 **⛔ Group B: flows that must fail (proven by counter)**
 
-| # | From | Action | Rule that must increment | Evidence |
-|---|---|---|---|---|
-| B1 | PC1 | `http://8.8.8.8` | INSIDE `deny … eq www` | hitcnt 24: [P-06](#p-06); visual [P-07](#p-07) |
-| B2 | PC1 | `https://8.8.8.8` | INSIDE `deny … eq 443` | hitcnt 12: [P-08](#p-08); visual [P-07](#p-07) |
-| B3 | PC-EXTERIEUR | `telnet 203.0.113.2` | OUTSIDE-IN `deny … eq 23` | hitcnt 12: [P-08](#p-08); visual [P-09](#p-09) |
-| B4 | PC-EXTERIEUR | `ping 203.0.113.2` | OUTSIDE-IN `deny icmp echo` | hitcnt 9: [P-06](#p-06); visual [P-09](#p-09) |
-| B5 | WEB-PUBLIC | `ping 8.8.8.8` | DMZ `deny ip host .10` | hitcnt 80: [P-06](#p-06), [P-10](#p-10) |
+| #   | From         | Action               | Rule that must increment    | Evidence                                       |
+| --- | ------------ | -------------------- | --------------------------- | ---------------------------------------------- |
+| B1  | PC1          | `http://8.8.8.8`     | INSIDE `deny … eq www`      | hitcnt 24: [P-06](#p-06); visual [P-07](#p-07) |
+| B2  | PC1          | `https://8.8.8.8`    | INSIDE `deny … eq 443`      | hitcnt 12: [P-08](#p-08); visual [P-07](#p-07) |
+| B3  | PC-EXTERIEUR | `telnet 203.0.113.2` | OUTSIDE-IN `deny … eq 23`   | hitcnt 12: [P-08](#p-08); visual [P-09](#p-09) |
+| B4  | PC-EXTERIEUR | `ping 203.0.113.2`   | OUTSIDE-IN `deny icmp echo` | hitcnt 9: [P-06](#p-06); visual [P-09](#p-09)  |
+| B5  | WEB-PUBLIC   | `ping 8.8.8.8`       | DMZ `deny ip host .10`      | hitcnt 80: [P-06]v, [P-10](#p-10)              |
 
 **🔒 Group C: hardening**
 
@@ -498,17 +497,17 @@ show ip route ospf             ! DIST/Core: O*E2 0.0.0.0/0 = originated default
 > Final state of each item (closed / carried / deferred). Session troubleshooting is above. 
 > ⚠️ **Cross-part numbering.** These numbers are identifiers referenced by other docs
 
-| #   | Item                                             | Severity | Domain              | Status                                                               |
-| --- | ------------------------------------------------ | -------- | ------------------- | -------------------------------------------------------------------- |
-| 8   | Port Security absent on the access layer         | 🟠       | Security            | ✅ **Closed** (sticky, `maximum 2`, restrict)                         |
-| 22  | Inbound HTTP rendering via static NAT fails in PT| 🟠       | Services            | 📋 PT debt: SYN proven (line 7 hitcnt); physical ASA only            |
-| 23  | SPAN session source ignored                      | 🟠       | Detection           | 📋 PT debt: concept proven; physical Catalyst                        |
-| 24  | ACL `log` / `time-exceeded` unsupported in PT    | 🟢       | Observability       | 📋 PT debt: `log` → SIEM (P8); PMTUD preserved via `unreachable`.    |
-| 25  | HTTPS proxying non-functional                    | 🟠       | Services            | 📋 PT debt: Squid `:3128` + `deny … eq 443` in prod                  |
-| 26  | `service tcp 80 80` unsupported                  | 🟢       | Services            | 📋 PT debt: static NAT + ACL `:80`                                   |
-| 15  | Core = single north-south L3 transit             | 🟠       | High availability   | 📋 Carried debt                                                      |
-| 9   | Voice VLAN 30 with no IP phone                   | 🟢       | Demonstrative       | 🔜 P5                                                                |
-| L4  | 802.1X missing (basic port-security only)        | 🟠       | Security            | 🔜 P9 (RADIUS + 802.1X)                                              |
+| #   | Item                                              | Severity | Domain            | Status                                                            |
+| --- | ------------------------------------------------- | -------- | ----------------- | ----------------------------------------------------------------- |
+| 8   | Port Security absent on the access layer          | 🟠       | Security          | ✅ **Closed** (sticky, `maximum 2`, restrict)                      |
+| 22  | Inbound HTTP rendering via static NAT fails in PT | 🟠       | Services          | 📋 PT debt: SYN proven (line 7 hitcnt); physical ASA only         |
+| 23  | SPAN session source ignored                       | 🟠       | Detection         | 📋 PT debt: concept proven; physical Catalyst                     |
+| 24  | ACL `log` / `time-exceeded` unsupported in PT     | 🟢       | Observability     | 📋 PT debt: `log` → SIEM (P8); PMTUD preserved via `unreachable`. |
+| 25  | HTTPS proxying non-functional                     | 🟠       | Services          | 📋 PT debt: Squid `:3128` + `deny … eq 443` in prod               |
+| 26  | `service tcp 80 80` unsupported                   | 🟢       | Services          | 📋 PT debt: static NAT + ACL `:80`                                |
+| 15  | Core = single north-south L3 transit              | 🟠       | High availability | 📋 Carried debt                                                   |
+| 9   | Voice VLAN 30 with no IP phone                    | 🟢       | Demonstrative     | 🔜 P5                                                             |
+| L4  | 802.1X missing (basic port-security only)         | 🟠       | Security          | 🔜 P9 (RADIUS + 802.1X)                                           |
 
 
 ---
@@ -567,7 +566,7 @@ show ip route ospf             ! DIST/Core: O*E2 0.0.0.0/0 = originated default
 
 ![Capture P3-13](../assets/captures/P3/Capture_P3_13.png)
 
-**<a id="p-14"></a> [P-14] · debt #22: inbound HTTP rendering**: PC-EXTERIEUR `http://203.0.113.2` = Request Timeout; the SYN reaches the server (OUTSIDE-IN line 7 hitcnt, [P-06]), rendering blocked by PT. Works on a physical ASA
+**<a id="p-14"></a> [P-14] · debt #22: inbound HTTP rendering**: PC-EXTERIEUR `http://203.0.113.2` = Request Timeout; the SYN reaches the server (OUTSIDE-IN line 7 hitcnt, [P-06](#p-06)), rendering blocked by PT. Works on a physical ASA
 
 ![Capture P3-05](../assets/captures/P3/Capture_P3_05.png)
 
