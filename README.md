@@ -1,100 +1,57 @@
-# TheBigOffice · Network Portfolio
-## 📓 Packet Tracer home lab for CompTIA Network+ (and beyond)
+# Part 2: Routing & Redundancy
 
-This repository presents **TheBigOffice**, a self-taught lab I built to put into practice the skills covered by **CompTIA Network+**, while exploring more advanced concepts. 
+ **Key concepts**: Routing, HSRP, DHCP, point-to-point OSPF
 
-This network lab simulates an enterprise infrastructure under Cisco Packet Tracer in six parts, built progressively, each building on and extending the last.
+- 💻 **Tool**: Cisco Packet Tracer 9.0
+- 🏷️ Full addressing plan → [IPAM](../IPAM.md)
+- 📝 Step-by-step progression → [WORKFLOW P2](./WORKFLOW.md)
+- 🎓 **Certification:** CompTIA Network+
 
-| Part                 | Topic                      | **Key concepts**                                                                                |
-| -------------------- | -------------------------- | ----------------------------------------------------------------------------------------------- |
-| [P1](./P1/) | 🏗️ 3-tier LAN foundations | Cisco 3-tier hierarchical model · VLANs · 802.1Q · STP · inter-VLAN routing · SVI · Rapid PVST+ |
-| [P2](./P2/) | 🧭 routing & redundancy    | Routing · HSRP · DHCP · Relay Helper · OSPF P2P                                                 |
-| [P3](./P3/) | 🛡️ DMZ & firewall         | ASA · DMZ · NAT/PAT · filtering · ACL · IDS/SPAN                                                |
-| [P4](./P4/) | 🖥️ Datacenter             | Spine-Leaf · Border Leafs · E-W and N-S traffic · ECMP · server tiers · load balancer · storage |
-| [P5](./P5/) | 📞 VoIP                    | VoIP · CME · TFTP · DHCP Option 150 · voice QoS                                                 |
-| [P6](./P6/) | 📶 WiFi                    | WLC · lightweight APs · CAPWAP · WPA2 Corp/Guest SSID · HSRPv2 VLAN 300                         |
+## Logical topology
 
-The project is not intended to represent a turnkey production architecture. It is above all a **junior technical portfolio**; design mistakes are part of the learning process and are treated as opportunities for analysis and improvement.
+![P2 topology](../assets/topologies/topology_p2.svg)
+## Objective
 
-## Project topology
+Turn P1's static LAN into a routed, redundant, self-addressing network, across four workstreams:
 
+- Migrate the inter-VLAN default gateways from the Core to the Distribution layer as **dual-active HSRP** (VIP `.1`, physical `.2`/`.3`)
+- Convert the Core↔Distribution uplinks into **routed `/30` links**, with **OSPF** running point-to-point as the campus IGP
+- Centralize host addressing: a **single DHCP authority** on the HQ-Router + an `ip helper-address` relay
+- **L2 hardening** of the access ports and **STP PVST+ balancing** aligned with the HSRP roles
 
-![Global topology](./assets/topologies/topology-global.svg)
+This resolves the critical technical debt P1 left open: SVIs on the Core, an inter-VLAN SPOF, gateways without redundancy.
 
-## The defining technical choices
+Everything that follows, DMZ, datacenter, voice, Wi-Fi, builds on this routed, redundant foundation.
 
-- **learning a discipline of sequencing, not only the protocols configured.** The build order mattered to prevent failures _before_ they existed: STP root laid before redundancy (P1), Core routed and SVIs removed before raising the VIPs so as never to cause split-brain (P2), routing and NAT proven _without ACL_ before adding filtering (P3), datacenter fabric proven before wiring NAT (P4).
+## Structural constraint
 
-- **A single through-line: "the service follows the Active."** Per VLAN, HSRP Active = STP root = service hosted on the same box. A principle laid in P1 and inherited through to the CME (P5) and Wi-Fi (P6). Each part explicitly settles the debts of the previous one: the lab reads as **a single continuous engineering story**, not six isolated exercises.
+- The HSRP split places the two heavy VLANs on different chassis: DIST-SW1 Active `{10,30}`, DIST-SW2 Active `{20,99}`.
+- For each VLAN: **HSRP Active = STP root = hosted service** - *"the service follows the Active."*
 
-- **Prove by a real state or traffic, never by a screen.** A blocked flow is proven at the ACL counter, a host by `REGISTERED in SCCP`, a DHCP authority by the fact that _no other server_ answers on the segment, never by a timeout or a capture that "looks like it works."
+## Continuity decision (inherited from P1)
 
-- **Debugging as the core of the learning.** The recurring pattern of the **return path** - the DHCP OFFER that doesn't know how to come back (P2), the default route that has to be injected into OSPF (P3), plus Router-ID collision and TFTP asymmetry: traps that are only understood by solving them.
+- The STP root was placed on the Distribution layer in P1 along this split
+- P2 aligns HSRP onto it, without touching STP again.
+- The cutover is ordered **Core first**: route the Core's uplinks and pull its data SVIs *before* raising the Distribution's VIPs, so the `.1` gateway is never claimed by two chassis at once.
 
-- **Name the tool's limits, never hide them.** With the CAPWAP data plane not simulated, control (WLC, 4 APs `Online`) and data (autonomous AP) are proven separately. This is also what justifies closing at P6.
+## CompTIA Network+ coverage
 
-- **AI in supervision, not in authority**: AI was used as a tool for learning, review and design assistance, without ever replacing the understanding of networking concepts. It let me clarify Cisco syntax, identify inconsistencies and verify configurations throughout the build. 
+| Domain                 | Concepts covered                                                                                                        | Status                                                   |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+| 🧭 OSPF routing        | point-to-point, no DR/BDR · single-area (area 0) · manual Router-ID · selective `passive-interface` · routed ports · ECMP | ✅ all neighbors `FULL`                                  |
+| 🔁 High availability   | HSRP (VIP / priority / preempt) · Active/Standby distribution                                                           | ✅ DIST1 `{10,30}` · DIST2 `{20,99}` · failover both ways |
+| 🔌 Switching           | **STP root aligned with the HSRP Active**: _the service follows the Active_                                             | ✅ 4 VLANs                                                |
+| 🌐 Services            | DHCP (scopes, exclusions, options) · `ip helper-address` relay                                                         | ✅ VLAN 10 & 20 on the HQ-Router                          |
+| 🏷️ Addressing         | `/30` transit subnetting                                                                                                | ✅ 3 P2P links, no overlap                                |
 
-## Documentation
+## Conclusion
 
-The lab documentation is structured around global resources:
+The most transferable lesson isn't "configure HSRP," it's the **cutover order**: route the Core's uplinks and pull its data SVIs _before_ raising the Distribution's VIPs, or you'll watch the `.1` get claimed by two chassis (split-brain).
 
-- 🏷️ [IPAM](./IPAM.md)
-- 📘 [TECHNICAL_OVERVIEW](./TECHNICAL_OVERVIEW.md) 
+Second, counter-intuitive takeaway: most connectivity failures are **return-path** problems, not forward-path ones. The DHCP relay doesn't break on the request but on the OFFER that has no way home. You only understand that by debugging it.
 
-Each part of the lab then has its own documentary space containing: 
+The lesson: every component you add for resilience is also one more thing that can fail silently; redundancy is only real once you've verified the failure path, not just the nominal one.
 
-- 📄 **README**
-- 🪜 **WORKFLOW** 
-- 🧪 **Cisco Packet Tracer file (.pkt)**
+---
 
-```
-TheBigOffice - Packet Tracer Portfolio /
-│
-├── README.md               ← Showcase: project, skills, scope, repo map
-├── TECHNICAL_OVERVIEW.md   ← Architecture, prod, decisions, learnings  
-├── IPAM.md                 ← Addressing plan, VLAN/zones, Router-IDs, DHCP authority 
-│
-├── P1/ … P6/               ← One part per folder
-│   ├── README.md           ← Frame: objective, scope, skills, validation matrix   
-│   ├── WORKFLOW.md         ← reproduced: annotated CLI, step-by-step validation, 
-│   └── TBO-Part_X.pkt/     ← lab .pkt files
-│ 
-├── assets/
-│   ├── topologies/           ← topology_pX.svg + topology_global.svg
-│   ├── network-overview/     ← Topology captures in Packet Tracer: N0_pX.png
-│   └── captures/  P1/ … P6/  ← validation screenshots: Capture_PX_NN.png 
-└──
-```
-
-This organization lets you follow the entire lifecycle of a network implementation:
-
-- 🏛️ Network architecture design 
-- 🧩 Segmentation and logical organization of the network
-- ⚙️ Equipment configuration 
-- ✅ Operation validation
-- 🔎 Diagnosis and incident resolution
-- 📈 Analysis of design limits and architecture improvement
-
-## Initial plan
-
-The initial plan included 11 parts with more topics to cover the majority of the CompTIA Network+ objectives, such as: IPv6, monitoring, PKI/RADIUS, cloud notions, attack simulation. 
-
-The project stops at Part 6 because **Packet Tracer becomes the limiting factor**. 
-
-Beyond a certain level, working around the simulator's limits (CAPWAP, VXLAN, iSCSI, SNAT…) costs more time than producing representative configuration.
-
-An excellent learning tool, Packet Tracer remains a simulator: it models protocols without running a real IOS. 
-
-**The continuation will perhaps be on GNS3 / Cisco CML**, or another virtualization software, which emulate real IOS images and make it possible to actually test what Packet Tracer can only represent, while continuing to build skills on professional tools.
-
-## 🏁 Conclusion
-
-
-The project went far beyond its original learning goal. 
-
-Beyond CompTIA Network+ theory, this project demanded hands-on practice: designing a coherent architecture, implementing it and, above all, debugging it. 
-
-Debugging produced the most real learning: routing loops, addressing conflicts, TFTP asymmetries and Router-ID collisions are not learned in a course; they are understood by solving them. 
-
-The bet on learning by doing paid off, and it goes beyond mere preparation for the certification I've since earned. 
+⬅️ [Part 1: Three-Tier LAN Foundations](../P1/README.md) · ⬆️ [Project overview](../README.md) · 🔁 [Workflow P2](./WORKFLOW.md) · **Next: [Part 3: DMZ & Firewall](../P3/README.md)**: a 3-zone ASA, NAT/PAT, 3 ACLs, IDS/SPAN, default-route origination + summary/Null0 lock.
