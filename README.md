@@ -63,7 +63,7 @@ TheBigOffice - Packet Tracer Portfolio /
 ├── assets/
 │   ├── topologies/           ← topology_pX.svg + topology_global.svg
 │   ├── network-overview/     ← Topology captures in Packet Tracer: N0_pX.png
-│   └── captures/  P1/ … P6/  ← proof captures: Capture_PX_NN.png 
+│   └── captures/  P1/ … P6/  ← validation screenshots: Capture_PX_NN.png 
 └──
 ```
 
