@@ -1,113 +1,136 @@
-<svg viewBox="0 0 1180 720" xmlns="http://www.w3.org/2000/svg">
-<rect x="0" y="0" width="1180" height="720" fill="#ffffff"/>
-<rect x="0" y="0" width="1180" height="46" fill="#1a2332"/>
-<text x="26" y="30" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="18" font-weight="700">P2 — Intention de design</text>
-
-<!-- HQ-Router -->
-<rect x="200" y="90" width="180" height="52" rx="8" fill="#c2410c" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="290" y="114" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">HQ-Router 2911</text>
-<text x="290" y="130" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">DHCP VLAN10/20 · OSPF</text>
-<text x="290" y="143" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">RID 4.4.4.4</text>
-
-<!-- CORE -->
-<rect x="490" y="90" width="200" height="56" rx="8" fill="#1e3a5f" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="590" y="116" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">CORE-SW 3650</text>
-<text x="590" y="132" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">transit L3 pur (SVI retirés)</text>
-<text x="590" y="145" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">RID 10.255.255.1</text>
-
-<line x1="380" y1="116" x2="490" y2="116" stroke="#c2410c" stroke-width="2.2"/>
-<rect x="398" y="100" width="74" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
-<text x="435" y="111" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">routé P2P</text>
-
-<!-- DIST1 -->
-<rect x="210" y="240" width="220" height="64" rx="8" fill="#0f766e" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="320" y="270" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">DIST-SW1 3560</text>
-<text x="320" y="286" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">HSRP actif {10,30}</text>
-<text x="320" y="299" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">racine STP 10/30 · RID 2.2.2.2</text>
-
-<!-- DIST2 -->
-<rect x="760" y="240" width="220" height="64" rx="8" fill="#0f766e" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="870" y="270" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">DIST-SW2 3560</text>
-<text x="870" y="286" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">HSRP actif {20,99}</text>
-<text x="870" y="299" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">racine STP 20/99 · RID 3.3.3.3</text>
-
-<line x1="540" y1="146" x2="320" y2="240" stroke="#1e3a5f" stroke-width="2.2"/>
-<rect x="378" y="177" width="104" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
-<text x="430" y="188" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">routé · OSPF P2P</text>
-<line x1="640" y1="146" x2="870" y2="240" stroke="#1e3a5f" stroke-width="2.2"/>
-<rect x="703" y="177" width="104" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
-<text x="755" y="188" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">routé · OSPF P2P</text>
-
-<line x1="430" y1="272" x2="760" y2="272" stroke="#0f766e" stroke-width="1.6" stroke-dasharray="7 5"/>
-<rect x="505" y="256" width="180" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
-<text x="595" y="267" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">trunk L2 inter-Dist (Gi0/2)</text>
-
-<!-- HSRP table -->
-<rect x="420" y="330" width="360" height="150" rx="8" fill="#f1f5f9" stroke="#0f766e" stroke-width="1.3"/>
-<text x="438" y="352" fill="#0f766e" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="700">HSRP — VIP = racine STP = (plus tard) service</text>
-<text x="438" y="372" fill="#0f766e" font-family="Consolas,Menlo,monospace" font-size="9.5" font-weight="700">VLAN</text>
-<text x="514" y="372" fill="#0f766e" font-family="Consolas,Menlo,monospace" font-size="9.5" font-weight="700">VIP</text>
-<text x="590" y="372" fill="#0f766e" font-family="Consolas,Menlo,monospace" font-size="9.5" font-weight="700">.2 DIST1</text>
-<text x="666" y="372" fill="#0f766e" font-family="Consolas,Menlo,monospace" font-size="9.5" font-weight="700">.3 DIST2</text>
-<text x="742" y="372" fill="#0f766e" font-family="Consolas,Menlo,monospace" font-size="9.5" font-weight="700">Actif</text>
-<text x="438" y="392" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">10</text>
-<text x="514" y="392" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">192.168.10.1</text>
-<text x="590" y="392" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">réel</text>
-<text x="666" y="392" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">réel</text>
-<text x="742" y="392" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">DIST1</text>
-<text x="438" y="412" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">20</text>
-<text x="514" y="412" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">192.168.20.1</text>
-<text x="590" y="412" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">réel</text>
-<text x="666" y="412" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">réel</text>
-<text x="742" y="412" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">DIST2</text>
-<text x="438" y="432" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">30</text>
-<text x="514" y="432" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">192.168.30.1</text>
-<text x="590" y="432" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">réel</text>
-<text x="666" y="432" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">réel</text>
-<text x="742" y="432" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">DIST1</text>
-<text x="438" y="452" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">99</text>
-<text x="514" y="452" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">192.168.99.1</text>
-<text x="590" y="452" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">réel</text>
-<text x="666" y="452" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">réel</text>
-<text x="742" y="452" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">DIST2</text>
-
-<!-- Access -->
-<rect x="70" y="520" width="180" height="46" rx="8" fill="#2563eb" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="160" y="541" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="700">ACC-SW1 2960</text>
-<text x="160" y="557" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">accès + chemin relais</text>
-<line x1="160" y1="520" x2="320" y2="304" stroke="#0f766e" stroke-width="1.3"/>
-<rect x="300" y="520" width="180" height="46" rx="8" fill="#2563eb" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="390" y="541" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="700">ACC-SW2 2960</text>
-<text x="390" y="557" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">accès + chemin relais</text>
-<line x1="390" y1="520" x2="320" y2="304" stroke="#0f766e" stroke-width="1.3"/>
-<rect x="620" y="520" width="180" height="46" rx="8" fill="#2563eb" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="710" y="541" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="700">ACC-SW3 2960</text>
-<text x="710" y="557" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">accès + chemin relais</text>
-<line x1="710" y1="520" x2="870" y2="304" stroke="#0f766e" stroke-width="1.3"/>
-<rect x="880" y="520" width="180" height="46" rx="8" fill="#2563eb" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="970" y="541" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11.5" font-weight="700">ACC-SW4 2960</text>
-<text x="970" y="557" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">accès + chemin relais</text>
-<line x1="970" y1="520" x2="870" y2="304" stroke="#0f766e" stroke-width="1.3"/>
-
-<!-- Intention de design panel -->
-<rect x="70" y="586" width="720" height="126" rx="8" fill="#f1f5f9" stroke="#15803d" stroke-width="1.3"/>
-<text x="84" y="607" fill="#15803d" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12" font-weight="700">Intention de design — routage, redondance &amp; services</text>
-<text x="84" y="627" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• SVI migrés du Cœur → Distribution : le Cœur devient transit L3 pur</text>
-<text x="84" y="643" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• HSRP réparti : DIST1 actif {10,30} · DIST2 actif {20,99} (équilibrage, aligné STP)</text>
-<text x="84" y="659" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• OSPF aire unique · liens routés P2P (pas de DR/BDR) · RID uniques</text>
-<text x="84" y="675" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• DHCP centralisé (HQ-Router) · ip helper sur le SVI actif uniquement (anti double-relais)</text>
-<text x="84" y="691" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• Bascule « Core-first » : évite la fenêtre de duplicate-IP sur le VIP .1</text>
-<text x="84" y="706" fill="#64748b" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9" font-style="italic">Adressage détaillé → TECHNICAL_OVERVIEW.md · câblage réel → capture as-built (WORKFLOW.md)</text>
-
-<!-- Legend -->
-<rect x="810" y="586" width="270" height="126" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
-<text x="824" y="607" fill="#1a2332" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12" font-weight="700">Légende</text>
-<rect x="824" y="620" width="13" height="13" rx="3" fill="#c2410c"/>
-<text x="845" y="630" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">Routeur (2911)</text>
-<rect x="824" y="642" width="13" height="13" rx="3" fill="#1e3a5f"/>
-<text x="845" y="652" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">Cœur — transit L3</text>
-<rect x="824" y="664" width="13" height="13" rx="3" fill="#0f766e"/>
-<text x="845" y="674" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">Distribution — HSRP</text>
-<rect x="824" y="686" width="13" height="13" rx="3" fill="#2563eb"/>
-<text x="845" y="696" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">Accès (2960)</text>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.3.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1180 720" style="enable-background:new 0 0 1180 720;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;}
+	.st1{fill:none;stroke:#0F766E;stroke-width:1.3;}
+	.st2{fill:#1A2332;}
+	.st3{font-family:'SegoeUI-Bold';}
+	.st4{font-size:18px;}
+	.st5{fill:#C2410C;stroke:#0F172A;stroke-opacity:0.25;}
+	.st6{font-size:13px;}
+	.st7{fill:#E2E8F0;}
+	.st8{font-family:'SegoeUI';}
+	.st9{font-size:10.5px;}
+	.st10{fill:#CBD5E1;}
+	.st11{font-size:9.5px;}
+	.st12{fill:#1E3A5F;stroke:#0F172A;stroke-opacity:0.25;}
+	.st13{fill:none;stroke:#C2410C;stroke-width:2.2;}
+	.st14{fill:#FFFFFF;fill-opacity:0.88;}
+	.st15{fill:#334155;}
+	.st16{font-family:'Consolas';}
+	.st17{fill:#0F766E;stroke:#0F172A;stroke-opacity:0.25;}
+	.st18{fill:none;stroke:#1E3A5F;stroke-width:2.2;}
+	.st19{fill:none;stroke:#0F766E;stroke-width:1.6;stroke-dasharray:7,5;}
+	.st20{fill:#F1F5F9;stroke:#0F766E;stroke-width:1.3;}
+	.st21{fill:#0F766E;}
+	.st22{font-size:11.5px;}
+	.st23{font-family:'Consolas-Bold';}
+	.st24{fill:#2563EB;stroke:#0F172A;stroke-opacity:0.25;}
+	.st25{fill:#F1F5F9;stroke:#15803D;stroke-width:1.3;}
+	.st26{fill:#15803D;}
+	.st27{font-size:12px;}
+	.st28{font-size:10px;}
+	.st29{fill:#F8FAFC;stroke:#CBD5E1;}
+	.st30{fill:#C2410C;}
+	.st31{fill:#1E3A5F;}
+	.st32{fill:#2563EB;}
+</style>
+<rect y="0" class="st0" width="1180" height="720"/>
+<line class="st1" x1="710" y1="520" x2="870" y2="304"/>
+<rect y="0" class="st2" width="1180" height="46"/>
+<text transform="matrix(1 0 0 1 26 30)" class="st0 st3 st4">P2 | Design intent</text>
+<path class="st5" d="M208,90h164c4.4,0,8,4.4,8,9.9v44.4c0,5.5-3.6,9.9-8,9.9H208c-4.4,0-8-4.4-8-9.9V99.9C200,94.4,203.6,90,208,90
+	z"/>
+<text transform="matrix(1 0 0 1 240.1201 114)" class="st0 st3 st6">HQ-Router 2911</text>
+<text transform="matrix(1 0 0 1 232.1321 130)" class="st7 st8 st9">DHCP VLAN10/20 · OSPF</text>
+<text transform="matrix(1 0 0 1 267.9315 143)" class="st10 st8 st11">RID 4.4.4.4</text>
+<path class="st12" d="M498,90h184c4.4,0,8,4.4,8,9.9v49.3c0,5.5-3.6,9.9-8,9.9H498c-4.4,0-8-4.4-8-9.9V99.9
+	C490,94.4,493.6,90,498,90z"/>
+<text transform="matrix(1 0 0 1 543.8398 116)" class="st0 st3 st6">CORE-SW 3650</text>
+<text transform="matrix(1 0 0 1 520.4298 132)" class="st7 st8 st9">pure L3 transit (SVIs removed)</text>
+<text transform="matrix(1 0 0 1 555.1288 145)" class="st10 st8 st11">RID 10.255.255.1</text>
+<line class="st13" x1="380" y1="116" x2="490" y2="116"/>
+<path class="st14" d="M401,100h68c1.7,0,3,1.3,3,3v9c0,1.7-1.3,3-3,3h-68c-1.7,0-3-1.3-3-3v-9C398,101.3,399.3,100,401,100z"/>
+<text transform="matrix(1 0 0 1 408.8843 111)" class="st15 st16 st11">routed P2P</text>
+<path class="st17" d="M218,240h204c4.4,0,8,4.1,8,9.2v55.1c0,5.1-3.6,9.2-8,9.2H218c-4.4,0-8-4.1-8-9.2v-55.1
+	C210,244.1,213.6,240,218,240z"/>
+<text transform="matrix(1 0 0 1 272.4053 270)" class="st0 st3 st6">DIST-SW1 3560</text>
+<text transform="matrix(1 0 0 1 275.4929 286)" class="st7 st8 st9">HSRP active {10,30}</text>
+<text transform="matrix(1 0 0 1 263.1044 299)" class="st10 st8 st11">STP root 10/30 · RID 2.2.2.2</text>
+<path class="st17" d="M768,240h204c4.4,0,8,4.1,8,9.2v55.1c0,5.1-3.6,9.2-8,9.2H768c-4.4,0-8-4.1-8-9.2v-55.1
+	C760,244.1,763.6,240,768,240z"/>
+<text transform="matrix(1 0 0 1 822.4053 270)" class="st0 st3 st6">DIST-SW2 3560</text>
+<text transform="matrix(1 0 0 1 825.4929 286)" class="st7 st8 st9">HSRP active {20,99}</text>
+<text transform="matrix(1 0 0 1 813.1044 299)" class="st10 st8 st11">STP root 20/99 · RID 3.3.3.3</text>
+<line class="st18" x1="540" y1="146" x2="320" y2="240"/>
+<path class="st14" d="M381,177h98c1.7,0,3,1.3,3,3v9c0,1.7-1.3,3-3,3h-98c-1.7,0-3-1.3-3-3v-9C378,178.3,379.3,177,381,177z"/>
+<text transform="matrix(1 0 0 1 385.6033 188)" class="st15 st16 st11">routed · OSPF P2P</text>
+<line class="st18" x1="640" y1="146" x2="870" y2="240"/>
+<path class="st14" d="M706,177h98c1.7,0,3,1.3,3,3v9c0,1.7-1.3,3-3,3h-98c-1.7,0-3-1.3-3-3v-9C703,178.3,704.3,177,706,177z"/>
+<text transform="matrix(1 0 0 1 710.6033 188)" class="st15 st16 st11">routed · OSPF P2P</text>
+<line class="st19" x1="430" y1="272" x2="760" y2="272"/>
+<path class="st14" d="M508,256h174c1.7,0,3,1.3,3,3v9c0,1.7-1.3,3-3,3H508c-1.7,0-3-1.3-3-3v-9C505,257.3,506.3,256,508,256z"/>
+<text transform="matrix(1 0 0 1 524.4875 267)" class="st15 st16 st11">L2 inter-Dist trunk (Gi0/2)</text>
+<path class="st20" d="M428,330h344c4.4,0,8,3.6,8,8v134c0,4.4-3.6,8-8,8H428c-4.4,0-8-3.6-8-8V338C420,333.6,423.6,330,428,330z"/>
+<text transform="matrix(1 0 0 1 438 352)" class="st21 st3 st22">HSRP — VIP = STP root = (later) service</text>
+<text transform="matrix(1 0 0 1 438 372)" class="st21 st23 st11">VLAN</text>
+<text transform="matrix(1 0 0 1 514 372)" class="st21 st23 st11">VIP</text>
+<text transform="matrix(1 0 0 1 590 372)" class="st21 st23 st11">.2 DIST1</text>
+<text transform="matrix(1 0 0 1 666 372)" class="st21 st23 st11">.3 DIST2</text>
+<text transform="matrix(1 0 0 1 742 372)" class="st21 st23 st11">Active</text>
+<text transform="matrix(1 0 0 1 438 392)" class="st15 st16 st11">10</text>
+<text transform="matrix(1 0 0 1 514 392)" class="st15 st16 st11">192.168.10.1</text>
+<text transform="matrix(1 0 0 1 590 392)" class="st15 st16 st11">real</text>
+<text transform="matrix(1 0 0 1 666 392)" class="st15 st16 st11">real</text>
+<text transform="matrix(1 0 0 1 742 392)" class="st15 st16 st11">DIST1</text>
+<text transform="matrix(1 0 0 1 438 412)" class="st15 st16 st11">20</text>
+<text transform="matrix(1 0 0 1 514 412)" class="st15 st16 st11">192.168.20.1</text>
+<text transform="matrix(1 0 0 1 590 412)" class="st15 st16 st11">real</text>
+<text transform="matrix(1 0 0 1 666 412)" class="st15 st16 st11">real</text>
+<text transform="matrix(1 0 0 1 742 412)" class="st15 st16 st11">DIST2</text>
+<text transform="matrix(1 0 0 1 438 432)" class="st15 st16 st11">30</text>
+<text transform="matrix(1 0 0 1 514 432)" class="st15 st16 st11">192.168.30.1</text>
+<text transform="matrix(1 0 0 1 590 432)" class="st15 st16 st11">real</text>
+<text transform="matrix(1 0 0 1 666 432)" class="st15 st16 st11">real</text>
+<text transform="matrix(1 0 0 1 742 432)" class="st15 st16 st11">DIST1</text>
+<text transform="matrix(1 0 0 1 438 452)" class="st15 st16 st11">99</text>
+<text transform="matrix(1 0 0 1 514 452)" class="st15 st16 st11">192.168.99.1</text>
+<text transform="matrix(1 0 0 1 590 452)" class="st15 st16 st11">real</text>
+<text transform="matrix(1 0 0 1 666 452)" class="st15 st16 st11">real</text>
+<text transform="matrix(1 0 0 1 742 452)" class="st15 st16 st11">DIST2</text>
+<path class="st24" d="M78,520h164c4.4,0,8,3.6,8,8v30c0,4.4-3.6,8-8,8H78c-4.4,0-8-3.6-8-8v-30C70,523.6,73.6,520,78,520z"/>
+<text transform="matrix(1 0 0 1 119.59 541)" class="st0 st3 st22">ACC-SW1 2960</text>
+<text transform="matrix(1 0 0 1 115.8108 557)" class="st7 st8 st9">access + relay path</text>
+<line class="st1" x1="160" y1="520" x2="320" y2="304"/>
+<path class="st24" d="M308,520h164c4.4,0,8,3.6,8,8v30c0,4.4-3.6,8-8,8H308c-4.4,0-8-3.6-8-8v-30C300,523.6,303.6,520,308,520z"/>
+<text transform="matrix(1 0 0 1 349.59 541)" class="st0 st3 st22">ACC-SW2 2960</text>
+<text transform="matrix(1 0 0 1 345.8108 557)" class="st7 st8 st9">access + relay path</text>
+<line class="st1" x1="390" y1="520" x2="320" y2="304"/>
+<path class="st24" d="M628,520h164c4.4,0,8,3.6,8,8v30c0,4.4-3.6,8-8,8H628c-4.4,0-8-3.6-8-8v-30C620,523.6,623.6,520,628,520z"/>
+<text transform="matrix(1 0 0 1 669.59 541)" class="st0 st3 st22">ACC-SW3 2960</text>
+<text transform="matrix(1 0 0 1 665.8108 557)" class="st7 st8 st9">access + relay path</text>
+<path class="st24" d="M888,520h164c4.4,0,8,3.6,8,8v30c0,4.4-3.6,8-8,8H888c-4.4,0-8-3.6-8-8v-30C880,523.6,883.6,520,888,520z"/>
+<text transform="matrix(1 0 0 1 929.59 541)" class="st0 st3 st22">ACC-SW4 2960</text>
+<text transform="matrix(1 0 0 1 925.8108 557)" class="st7 st8 st9">access + relay path</text>
+<line class="st1" x1="970" y1="520" x2="870" y2="304"/>
+<path class="st25" d="M78,586h704c4.4,0,8,3.3,8,7.4v102.1c0,4.1-3.6,7.4-8,7.4H78c-4.4,0-8-3.3-8-7.4V593.4
+	C70,589.3,73.6,586,78,586z"/>
+<text transform="matrix(1 0 0 1 84 607)" class="st26 st3 st27">Design intent | routing, redundancy &amp; services</text>
+<text transform="matrix(1 0 0 1 84 627)" class="st15 st8 st28">• SVIs migrated from Core → Distribution: the Core becomes pure L3 transit</text>
+<text transform="matrix(1 0 0 1 84 643)" class="st15 st8 st28">• Split HSRP: DIST1 active {10,30} · DIST2 active {20,99} (load-sharing, STP-aligned)</text>
+<text transform="matrix(1 0 0 1 84 659)" class="st15 st8 st28">• Single-area OSPF · routed P2P links (no DR/BDR) · unique RIDs</text>
+<text transform="matrix(1 0 0 1 84 675)" class="st15 st8 st28">• Centralized DHCP (HQ-Router) · ip helper on the active SVI only (anti double-relay)</text>
+<text transform="matrix(1 0 0 1 84 691)" class="st15 st8 st28">• “Core-first” failover: avoids the duplicate-IP window on the VIP .1</text>
+<path class="st29" d="M818,586h254c4.4,0,8,3.6,8,8v110c0,4.4-3.6,8-8,8H818c-4.4,0-8-3.6-8-8V594C810,589.6,813.6,586,818,586z"/>
+<text transform="matrix(1 0 0 1 824 607)" class="st2 st3 st27">Legend</text>
+<path class="st30" d="M827,620h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C824,621.3,825.3,620,827,620z"/>
+<text transform="matrix(1 0 0 1 845 630)" class="st15 st8 st28">Router (2911)</text>
+<path class="st31" d="M827,642h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C824,643.3,825.3,642,827,642z"/>
+<text transform="matrix(1 0 0 1 845 652)" class="st15 st8 st28">Core — L3 transit</text>
+<path class="st21" d="M827,664h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C824,665.3,825.3,664,827,664z"/>
+<text transform="matrix(1 0 0 1 845 674)" class="st15 st8 st28">Distribution — HSRP</text>
+<path class="st32" d="M827,686h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C824,687.3,825.3,686,827,686z"/>
+<text transform="matrix(1 0 0 1 845 696)" class="st15 st8 st28">Access (2960)</text>
 </svg>

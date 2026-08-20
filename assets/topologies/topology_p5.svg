@@ -1,77 +1,100 @@
-<svg viewBox="0 0 1180 700" xmlns="http://www.w3.org/2000/svg">
-<rect x="0" y="0" width="1180" height="700" fill="#ffffff"/>
-<rect x="0" y="0" width="1180" height="46" fill="#1a2332"/>
-<text x="26" y="30" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="18" font-weight="700">P5 — Intention de design</text>
-
-<!-- CME -->
-<rect x="430" y="90" width="300" height="64" rx="8" fill="#a16207" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="580" y="120" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">CME sur DIST-SW1</text>
-<text x="580" y="136" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">Fa0/0 = 192.168.30.254 · SCCP</text>
-<text x="580" y="149" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">HSRP actif 30 + racine · telephony-service port 2000</text>
-
-<!-- Boot chain -->
-<rect x="60" y="200" width="300" height="200" rx="8" fill="#f1f5f9" stroke="#a16207" stroke-width="1.3"/>
-<text x="76" y="222" fill="#a16207" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5" font-weight="700">Chaîne de boot du poste (1 maillon cassé = tout échoue)</text>
-<rect x="80" y="234" width="260" height="22" rx="4" fill="#fef3c7"/>
-<text x="90" y="250" fill="#78350f" font-family="Consolas,Menlo,monospace" font-size="10">1  DHCP Discover (VLAN 30)</text>
-<line x1="210" y1="256" x2="210" y2="264" stroke="#a16207" stroke-width="1.4"/>
-<rect x="80" y="264" width="260" height="22" rx="4" fill="#fef3c7"/>
-<text x="90" y="280" fill="#78350f" font-family="Consolas,Menlo,monospace" font-size="10">2  Offer + Option 150 → .254</text>
-<line x1="210" y1="286" x2="210" y2="294" stroke="#a16207" stroke-width="1.4"/>
-<rect x="80" y="294" width="260" height="22" rx="4" fill="#fef3c7"/>
-<text x="90" y="310" fill="#78350f" font-family="Consolas,Menlo,monospace" font-size="10">3  Téléchargement config TFTP</text>
-<line x1="210" y1="316" x2="210" y2="324" stroke="#a16207" stroke-width="1.4"/>
-<rect x="80" y="324" width="260" height="22" rx="4" fill="#fef3c7"/>
-<text x="90" y="340" fill="#78350f" font-family="Consolas,Menlo,monospace" font-size="10">4  Enregistrement SCCP (port 2000)</text>
-<line x1="210" y1="346" x2="210" y2="354" stroke="#a16207" stroke-width="1.4"/>
-<rect x="80" y="354" width="260" height="22" rx="4" fill="#fef3c7"/>
-<text x="90" y="370" fill="#78350f" font-family="Consolas,Menlo,monospace" font-size="10">5  Poste ENREGISTRÉ</text>
-
-<!-- IP Phone -->
-<rect x="560" y="240" width="260" height="58" rx="8" fill="#a16207" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="690" y="267" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">IP Phone 7960 (ACC Fa0/5)</text>
-<text x="690" y="283" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">switchport access 10 + voice 30</text>
-<text x="690" y="296" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">DHCP .30.50-.99 · gw = VIP .30.1</text>
-<line x1="580" y1="154" x2="690" y2="240" stroke="#a16207" stroke-width="2.2"/>
-<rect x="598" y="181" width="74" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
-<text x="635" y="192" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">trunk voix</text>
-
-<!-- Daisy PC -->
-<rect x="560" y="360" width="260" height="54" rx="8" fill="#475569" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="690" y="385" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">PC en daisy-chain</text>
-<text x="690" y="401" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">données VLAN 10</text>
-<text x="690" y="414" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">port-security maximum 2</text>
-<line x1="690" y1="298" x2="690" y2="360" stroke="#475569" stroke-width="1.4"/>
-
-<!-- QoS box -->
-<rect x="880" y="200" width="270" height="150" rx="8" fill="#f1f5f9" stroke="#a16207" stroke-width="1.3"/>
-<text x="896" y="222" fill="#a16207" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">Frontière de confiance QoS</text>
-<text x="896" y="248" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">mls qos trust device</text>
-<text x="896" y="270" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">  cisco-phone   (via CDP)</text>
-<text x="896" y="292" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">trust DSCP seulement si un vrai</text>
-<text x="896" y="314" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">téléphone Cisco est détecté —</text>
-<text x="896" y="336" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">un PC ne peut pas usurper EF.</text>
-
-<!-- Intention de design panel -->
-<rect x="60" y="430" width="770" height="158" rx="8" fill="#f1f5f9" stroke="#15803d" stroke-width="1.3"/>
-<text x="74" y="451" fill="#15803d" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12" font-weight="700">Intention de design — téléphonie IP : CME, Option 150, QoS</text>
-<text x="74" y="471" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• CME co-localisé avec l'actif HSRP + racine STP du VLAN 30 (DIST-SW1) : une seule autorité voix</text>
-<text x="74" y="487" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• Boot du poste : DHCP → Option 150 (.254) → TFTP → SCCP (2000) — un maillon cassé = échec total</text>
-<text x="74" y="503" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• Pas d'ip helper pour VLAN 30 : le CME est dans le VLAN 30 avec les postes (broadcast direct)</text>
-<text x="74" y="519" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• Frontière QoS : trust DSCP seulement si téléphone Cisco détecté (CDP) — un PC ne peut usurper EF</text>
-<text x="74" y="535" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• Port d'accès : data VLAN 10 + voice VLAN 30 · PC en daisy-chain · port-security maximum 2</text>
-<text x="74" y="551" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• Limite assumée : CME = SPOF en lab → en prod : IP sur Loopback0 + ip tftp source-interface</text>
-<text x="74" y="573" fill="#64748b" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9" font-style="italic">Adressage détaillé → TECHNICAL_OVERVIEW.md · câblage réel → capture as-built (WORKFLOW.md)</text>
-
-<!-- Legend -->
-<rect x="850" y="430" width="270" height="158" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
-<text x="864" y="451" fill="#1a2332" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12" font-weight="700">Légende</text>
-<rect x="864" y="466" width="13" height="13" rx="3" fill="#a16207"/>
-<text x="885" y="476" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">CME &amp; téléphonie (SCCP)</text>
-<rect x="864" y="488" width="13" height="13" rx="3" fill="#475569"/>
-<text x="885" y="498" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">PC données (VLAN 10)</text>
-<rect x="864" y="510" width="13" height="13" rx="3" fill="#fef3c7" stroke="#a16207" stroke-width="1"/>
-<text x="885" y="520" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">étapes / encarts explicatifs</text>
-<text x="864" y="548" fill="#64748b" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9">VLAN 10 = données · VLAN 30 = voix</text>
-<text x="864" y="563" fill="#64748b" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9">VIP .30.1 = passerelle voix (HSRP)</text>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.3.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1180 700" style="enable-background:new 0 0 1180 700;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;}
+	.st1{fill:#1A2332;}
+	.st2{font-family:'SegoeUI-Bold';}
+	.st3{font-size:18px;}
+	.st4{fill:#A16207;stroke:#0F172A;stroke-opacity:0.25;}
+	.st5{font-size:13px;}
+	.st6{fill:#E2E8F0;}
+	.st7{font-family:'SegoeUI';}
+	.st8{font-size:10.5px;}
+	.st9{fill:#CBD5E1;}
+	.st10{font-size:9.5px;}
+	.st11{fill:#F1F5F9;stroke:#A16207;stroke-width:1.3;}
+	.st12{fill:#A16207;}
+	.st13{fill:#FEF3C7;}
+	.st14{fill:#78350F;}
+	.st15{font-family:'Consolas';}
+	.st16{font-size:10px;}
+	.st17{fill:none;stroke:#A16207;stroke-width:1.4;}
+	.st18{fill:none;stroke:#A16207;stroke-width:2.2;}
+	.st19{fill:#FFFFFF;fill-opacity:0.88;}
+	.st20{fill:#334155;}
+	.st21{fill:#475569;stroke:#0F172A;stroke-opacity:0.25;}
+	.st22{fill:none;stroke:#475569;stroke-width:1.4;}
+	.st23{font-size:11px;}
+	.st24{fill:#F1F5F9;stroke:#15803D;stroke-width:1.3;}
+	.st25{fill:#15803D;}
+	.st26{font-size:12px;}
+	.st27{fill:#F8FAFC;stroke:#CBD5E1;}
+	.st28{fill:#475569;}
+	.st29{fill:#FEF3C7;stroke:#A16207;}
+	.st30{fill:#64748B;}
+	.st31{font-size:9px;}
+</style>
+<rect y="0" class="st0" width="1180" height="700"/>
+<rect y="0" class="st1" width="1180" height="46"/>
+<text transform="matrix(1 0 0 1 26 30)" class="st0 st2 st3">P5 | Design intent</text>
+<path class="st4" d="M438,95h284c4.4,0,8,3.6,8,8v48c0,4.4-3.6,8-8,8H438c-4.4,0-8-3.6-8-8v-48C430,98.6,433.6,95,438,95z"/>
+<text transform="matrix(1 0 0 1 523.9248 120)" class="st0 st2 st5">CME on DIST-SW1</text>
+<text transform="matrix(1 0 0 1 510.1222 136)" class="st6 st7 st8">Fa0/0 = 192.168.30.254 · SCCP</text>
+<text transform="matrix(1 0 0 1 471.6244 149)" class="st9 st7 st10">HSRP active 30 + root · telephony-service port 2000</text>
+<path class="st11" d="M68,200h284c4.4,0,8,3.6,8,8v184c0,4.4-3.6,8-8,8H68c-4.4,0-8-3.6-8-8V208C60,203.6,63.6,200,68,200z"/>
+<text transform="matrix(1 0 0 1 76 222)" class="st12 st2 st8">Phone boot chain (1 broken link = total failure)</text>
+<path class="st13" d="M84,234h252c2.2,0,4,1.8,4,4v14c0,2.2-1.8,4-4,4H84c-2.2,0-4-1.8-4-4v-14C80,235.8,81.8,234,84,234z"/>
+<text transform="matrix(1 0 0 1 90 250)" class="st14 st15 st16">1 DHCP Discover (VLAN 30)</text>
+<line class="st17" x1="210" y1="256" x2="210" y2="264"/>
+<path class="st13" d="M84,264h252c2.2,0,4,1.8,4,4v14c0,2.2-1.8,4-4,4H84c-2.2,0-4-1.8-4-4v-14C80,265.8,81.8,264,84,264z"/>
+<text transform="matrix(1 0 0 1 90 280)" class="st14 st15 st16">2 Offer + Option 150 → .254</text>
+<line class="st17" x1="210" y1="286" x2="210" y2="294"/>
+<path class="st13" d="M84,294h252c2.2,0,4,1.8,4,4v14c0,2.2-1.8,4-4,4H84c-2.2,0-4-1.8-4-4v-14C80,295.8,81.8,294,84,294z"/>
+<text transform="matrix(1 0 0 1 90 310)" class="st14 st15 st16">3 TFTP config download</text>
+<line class="st17" x1="210" y1="316" x2="210" y2="324"/>
+<path class="st13" d="M84,324h252c2.2,0,4,1.8,4,4v14c0,2.2-1.8,4-4,4H84c-2.2,0-4-1.8-4-4v-14C80,325.8,81.8,324,84,324z"/>
+<text transform="matrix(1 0 0 1 90 340)" class="st14 st15 st16">4 SCCP registration (port 2000)</text>
+<line class="st17" x1="210" y1="346" x2="210" y2="354"/>
+<path class="st13" d="M84,354h252c2.2,0,4,1.8,4,4v14c0,2.2-1.8,4-4,4H84c-2.2,0-4-1.8-4-4v-14C80,355.8,81.8,354,84,354z"/>
+<text transform="matrix(1 0 0 1 90 370)" class="st14 st15 st16">5 Phone REGISTERED</text>
+<path class="st4" d="M568,247h244c4.4,0,8,3.6,8,8v42c0,4.4-3.6,8-8,8H568c-4.4,0-8-3.6-8-8v-42C560,250.6,563.6,247,568,247z"/>
+<text transform="matrix(1 0 0 1 608.2581 267)" class="st0 st2 st5">IP Phone 7960 (ACC Fa0/5)</text>
+<text transform="matrix(1 0 0 1 616.9076 283)" class="st6 st7 st8">switchport access 10 + voice 30</text>
+<text transform="matrix(1 0 0 1 622.4122 296)" class="st9 st7 st10">DHCP .30.50-.99 · gw = VIP .30.1</text>
+<line class="st18" x1="580" y1="154" x2="690" y2="240"/>
+<path class="st19" d="M601,181h68c1.7,0,3,1.3,3,3v9c0,1.7-1.3,3-3,3h-68c-1.7,0-3-1.3-3-3v-9C598,182.3,599.3,181,601,181z"/>
+<text transform="matrix(1 0 0 1 606.2727 192)" class="st20 st15 st10">voice trunk</text>
+<path class="st21" d="M568,367h244c4.4,0,8,3.6,8,8v38c0,4.4-3.6,8-8,8H568c-4.4,0-8-3.6-8-8v-38C560,370.6,563.6,367,568,367z"/>
+<text transform="matrix(1 0 0 1 637.1843 385)" class="st0 st2 st5">Daisy-chained PC</text>
+<text transform="matrix(1 0 0 1 658.0514 401)" class="st6 st7 st8">data VLAN 10</text>
+<text transform="matrix(1 0 0 1 637.3 414)" class="st9 st7 st10">port-security maximum 2</text>
+<line class="st22" x1="690" y1="298" x2="690" y2="360"/>
+<path class="st11" d="M888,200h254c4.4,0,8,3.6,8,8v134c0,4.4-3.6,8-8,8H888c-4.4,0-8-3.6-8-8V208C880,203.6,883.6,200,888,200z"/>
+<text transform="matrix(1 0 0 1 896 222)" class="st12 st2 st23">QoS trust boundary</text>
+<text transform="matrix(1 0 0 1 896 248)" class="st20 st15 st10">mls qos trust device</text>
+<text transform="matrix(1 0 0 1 896 270)" class="st20 st15 st10">cisco-phone (via CDP)</text>
+<text transform="matrix(1 0 0 1 896 292)" class="st20 st7 st10">trust DSCP only if a real</text>
+<text transform="matrix(1 0 0 1 896 314)" class="st20 st7 st10">Cisco phone is detected —</text>
+<text transform="matrix(1 0 0 1 896 336)" class="st20 st7 st10">a PC cannot spoof EF.</text>
+<path class="st24" d="M68,430h754c4.4,0,8,3.1,8,6.8v121.4c0,3.8-3.6,6.8-8,6.8H68c-4.4,0-8-3.1-8-6.8V436.8
+	C60,433.1,63.6,430,68,430z"/>
+<text transform="matrix(1 0 0 1 74 451)" class="st25 st2 st26">Design intent | IP telephony: CME, Option 150, QoS</text>
+<text transform="matrix(1 0 0 1 74 471)" class="st20 st7 st16">• CME co-located with the HSRP active + STP root of VLAN 30 (DIST-SW1): a single voice authority</text>
+<text transform="matrix(1 0 0 1 74 487)" class="st20 st7 st16">• Phone boot: DHCP → Option 150 (.254) → TFTP → SCCP (2000) — one broken link = total failure</text>
+<text transform="matrix(1 0 0 1 74 503)" class="st20 st7 st16">• No ip helper for VLAN 30: the CME sits in VLAN 30 with the phones (direct broadcast)</text>
+<text transform="matrix(1 0 0 1 74 519)" class="st20 st7 st16">• QoS boundary: trust DSCP only if a Cisco phone is detected (CDP) — a PC cannot spoof EF</text>
+<text transform="matrix(1 0 0 1 74 535)" class="st20 st7 st16">• Port d&apos;accès : data VLAN 10 + voice VLAN 30 · Daisy-chained PC · port-security maximum 2</text>
+<text transform="matrix(1 0 0 1 74 551)" class="st20 st7 st16">• Accepted limit: CME = SPOF in lab → in prod: IP on Loopback0 + ip tftp source-interface</text>
+<path class="st27" d="M858,430h254c4.4,0,8,3.6,8,8v142c0,4.4-3.6,8-8,8H858c-4.4,0-8-3.6-8-8V438C850,433.6,853.6,430,858,430z"/>
+<text transform="matrix(1 0 0 1 864 451)" class="st1 st2 st26">Legend</text>
+<path class="st12" d="M867,466h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C864,467.3,865.3,466,867,466z"/>
+<text transform="matrix(1 0 0 1 885 476)" class="st20 st7 st16">CME &amp; telephony (SCCP)</text>
+<path class="st28" d="M867,488h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C864,489.3,865.3,488,867,488z"/>
+<text transform="matrix(1 0 0 1 885 498)" class="st20 st7 st16">Data PC (VLAN 10)</text>
+<path class="st29" d="M867,510h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C864,511.3,865.3,510,867,510z"/>
+<text transform="matrix(1 0 0 1 885 520)" class="st20 st7 st16">steps / explanatory boxes</text>
+<text transform="matrix(1 0 0 1 864 548)" class="st30 st7 st31">VLAN 10 = data · VLAN 30 = voice</text>
+<text transform="matrix(1 0 0 1 864 563)" class="st30 st7 st31">VIP .30.1 = voice gateway (HSRP)</text>
 </svg>

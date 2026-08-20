@@ -1,62 +1,92 @@
-<svg viewBox="0 0 920 660" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Helvetica, Arial, sans-serif">
-  <rect x="0" y="0" width="920" height="660" fill="#ffffff"/>
-  <rect x="0" y="0" width="920" height="46" fill="#1a2332"/>
-  <text x="26" y="30" font-size="18" font-weight="700" fill="#ffffff">TheBigOffice — Vue d'ensemble du réseau</text>
-  <text x="26" y="63" font-size="12" fill="#6b7280">Architecture globale · 5 blocs fonctionnels · ~24 équipements Cisco · CompTIA Network+</text>
-
-  <!-- ===== INTERNET ===== -->
-  <ellipse cx="460" cy="102" rx="72" ry="26" fill="#f1f5f9" stroke="#cbd5e1"/>
-  <text x="460" y="106" text-anchor="middle" font-size="13" font-weight="700" fill="#475569">INTERNET (FAI)</text>
-  <line x1="460" y1="128" x2="460" y2="158" stroke="#94a3b8" stroke-width="2.5"/>
-
-  <!-- ===== BLOC SÉCURITÉ (P3) ===== -->
-  <rect x="330" y="158" width="260" height="70" rx="10" fill="#7f1d1d"/>
-  <text x="460" y="182" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">① Sécurité périmétrique — P3</text>
-  <text x="460" y="200" text-anchor="middle" font-size="11" fill="#fecaca">Pare-feu ASA 5506-X · DMZ · NAT/PAT</text>
-  <text x="460" y="216" text-anchor="middle" font-size="10" fill="#fecaca">3 ACL (proxy forcé) · IDS SPAN · route par défaut</text>
-  <line x1="460" y1="228" x2="460" y2="258" stroke="#94a3b8" stroke-width="2.5"/>
-
-  <!-- ===== BLOC SIÈGE (P1/P2) ===== -->
-  <rect x="290" y="258" width="340" height="96" rx="10" fill="#1d4ed8"/>
-  <text x="460" y="282" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">② Campus siège — P1 &amp; P2</text>
-  <text x="460" y="301" text-anchor="middle" font-size="11" fill="#bfdbfe">LAN 3 niveaux · VLANs · Rapid PVST+ · routage inter-VLAN</text>
-  <text x="460" y="317" text-anchor="middle" font-size="11" fill="#bfdbfe">OSPF point-à-point · HSRP sur la Distribution · DHCP par domaine + relais</text>
-  <text x="460" y="337" text-anchor="middle" font-size="10" fill="#93c5fd">Core 3650 · 2× Distribution 3560 · 4× Access 2960 · 8 PC</text>
-
-  <!-- liaisons vers les 3 blocs du bas -->
-  <line x1="380" y1="354" x2="180" y2="410" stroke="#94a3b8" stroke-width="2.5"/>
-  <line x1="460" y1="354" x2="460" y2="410" stroke="#94a3b8" stroke-width="2.5"/>
-  <line x1="540" y1="354" x2="740" y2="410" stroke="#94a3b8" stroke-width="2.5"/>
-
-  <!-- ===== BLOC DATACENTER (P4) ===== -->
-  <rect x="55" y="410" width="250" height="92" rx="10" fill="#0f766e"/>
-  <text x="180" y="434" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">③ Datacenter — P4</text>
-  <text x="180" y="453" text-anchor="middle" font-size="11" fill="#99f6e4">Spine-Leaf routée · fabric OSPF</text>
-  <text x="180" y="469" text-anchor="middle" font-size="11" fill="#99f6e4">Tier applicatif (LB + APP-WEB1/2) · SAN</text>
-  <text x="180" y="487" text-anchor="middle" font-size="10" fill="#5eead4">2 Border Leafs sur le Core (ECMP) · Jumbo (doc.)</text>
-
-  <!-- ===== BLOC VOIX (P5) ===== -->
-  <rect x="335" y="410" width="250" height="92" rx="10" fill="#334155"/>
-  <text x="460" y="434" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">④ Téléphonie IP — P5</text>
-  <text x="460" y="453" text-anchor="middle" font-size="11" fill="#cbd5e1">CallManager Express (CME)</text>
-  <text x="460" y="469" text-anchor="middle" font-size="11" fill="#cbd5e1">SCCP · DHCP Option 150 · QoS</text>
-  <text x="460" y="487" text-anchor="middle" font-size="10" fill="#94a3b8">VLAN voix 30 · CME co-localisé Active/root</text>
-
-  <!-- ===== BLOC WI-FI (P6) ===== -->
-  <rect x="615" y="410" width="250" height="92" rx="10" fill="#6d28d9"/>
-  <text x="740" y="434" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">⑤ Réseau Wi-Fi — P6</text>
-  <text x="740" y="453" text-anchor="middle" font-size="11" fill="#ddd6fe">WLC 3504 · APs lightweight 3702i</text>
-  <text x="740" y="469" text-anchor="middle" font-size="11" fill="#ddd6fe">CAPWAP · SSID Corp (301) / Guest (310)</text>
-  <text x="740" y="487" text-anchor="middle" font-size="10" fill="#c4b5fd">WPA2 · VLAN mgmt Wi-Fi 300 (HSRPv2, DIST-SW1)</text>
-
-  <!-- ===== BANDEAU AVANCEMENT ===== -->
-  <rect x="55" y="528" width="810" height="44" rx="8" fill="#f0fdf4" stroke="#bbf7d0"/>
-  <text x="70" y="547" font-size="12" font-weight="700" fill="#15803d">Avancement</text>
-  <text x="70" y="564" font-size="11" fill="#166534">Parties 1 à 6 terminées ✅ (siège, sécurité, datacenter, voix, Wi-Fi) — Parties 7 à 11 planifiées (DNS/IPv6, monitoring, PKI/RADIUS, cloud, attaques)</text>
-
-  <!-- ===== BANDEAU MÉTHODE ===== -->
-  <rect x="55" y="580" width="810" height="52" rx="8" fill="#eff6ff" stroke="#bfdbfe"/>
-  <text x="70" y="600" font-size="12" font-weight="700" fill="#1e40af">Méthode</text>
-  <text x="70" y="617" font-size="11" fill="#1e3a8a">Chaque partie passe par des cycles d'audit technique : les erreurs de conception sont trouvées, corrigées et documentées.</text>
-  <text x="70" y="631" font-size="11" fill="#3b82f6">Exemple : un conflit d'adressage IP entre deux sous-projets, détecté et résolu par une renumérotation documentée.</text>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.3.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 920 660" style="enable-background:new 0 0 920 660;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;}
+	.st1{fill:#1A2332;}
+	.st2{font-family:'SegoeUI-Bold';}
+	.st3{font-size:18px;}
+	.st4{fill:#6B7280;}
+	.st5{font-family:'SegoeUI';}
+	.st6{font-size:12px;}
+	.st7{fill:#F1F5F9;stroke:#CBD5E1;}
+	.st8{fill:#475569;}
+	.st9{font-size:13px;}
+	.st10{fill:none;stroke:#94A3B8;stroke-width:2.5;}
+	.st11{fill:#7F1D1D;}
+	.st12{enable-background:new    ;}
+	.st13{font-family:'KozGoPr6N-Regular-90ms-RKSJ-H';}
+	.st14{font-size:14px;}
+	.st15{fill:#FECACA;}
+	.st16{font-size:11px;}
+	.st17{font-size:10px;}
+	.st18{fill:#1D4ED8;}
+	.st19{fill:#BFDBFE;}
+	.st20{fill:#93C5FD;}
+	.st21{fill:#0F766E;}
+	.st22{fill:#99F6E4;}
+	.st23{fill:#5EEAD4;}
+	.st24{fill:#334155;}
+	.st25{fill:#CBD5E1;}
+	.st26{fill:#94A3B8;}
+	.st27{fill:#6D28D9;}
+	.st28{fill:#DDD6FE;}
+	.st29{fill:#C4B5FD;}
+	.st30{fill:#F0FDF4;stroke:#BBF7D0;}
+	.st31{fill:#15803D;}
+	.st32{fill:#166534;}
+	.st33{fill:#EFF6FF;stroke:#BFDBFE;}
+	.st34{fill:#1E40AF;}
+	.st35{fill:#1E3A8A;}
+	.st36{fill:#3B82F6;}
+</style>
+<rect y="0" class="st0" width="920" height="660"/>
+<rect y="0" class="st1" width="920" height="46"/>
+<text transform="matrix(1 0 0 1 26 30)" class="st0 st2 st3">TheBigOffice | Topology overview</text>
+<text transform="matrix(1 0 0 1 26 63)" class="st4 st5 st6">Global architecture · 5 functional blocks · ~24 Cisco devices · CompTIA Network+</text>
+<ellipse class="st7" cx="460" cy="102" rx="72" ry="26"/>
+<text transform="matrix(1 0 0 1 412.5449 106)" class="st8 st2 st9">INTERNET (ISP)</text>
+<line class="st10" x1="460" y1="128" x2="460" y2="158"/>
+<path class="st11" d="M340,158h240c5.5,0,10,4.5,10,10v50c0,5.5-4.5,10-10,10H340c-5.5,0-10-4.5-10-10v-50
+	C330,162.5,334.5,158,340,158z"/>
+<text transform="matrix(1 0 0 1 374.5269 182)" class="st12"><tspan x="0" y="0" class="st0 st13 st14">①</tspan><tspan x="14" y="0" class="st0 st2 st14"> Perimeter security - P3</tspan></text>
+<text transform="matrix(1 0 0 1 371.0144 200)" class="st15 st5 st16">ASA 5506-X firewall · DMZ · NAT/PAT</text>
+<text transform="matrix(1 0 0 1 355.8887 216)" class="st15 st5 st17">3 ACLs (forced proxy) · IDS SPAN · default route</text>
+<line class="st10" x1="460" y1="228" x2="460" y2="258"/>
+<path class="st18" d="M285.9,258h349.9c6,0,10.9,4.5,10.9,10v76c0,5.5-4.9,10-10.9,10H285.9c-6,0-10.9-4.5-10.9-10v-76
+	C274.9,262.5,279.8,258,285.9,258z"/>
+<text transform="matrix(1 0 0 1 378.4302 282)" class="st12"><tspan x="0" y="0" class="st0 st13 st14">②</tspan><tspan x="14" y="0" class="st0 st2 st14"> HQ campus - P1 &amp; P2</tspan></text>
+<text transform="matrix(1 0 0 1 328.2686 301)" class="st19 st5 st16">3-tier LAN · VLANs · Rapid PVST+ · inter-VLAN routing</text>
+<text transform="matrix(1 0 0 1 288.7668 317)" class="st19 st5 st16">Point-to-point OSPF · HSRP on Distribution · per-domain DHCP + relay</text>
+<text transform="matrix(1 0 0 1 334.0283 337)" class="st20 st5 st17">Core 3650 · 2× Distribution 3560 · 4× Access 2960 · 8 PCs</text>
+<line class="st10" x1="380" y1="354" x2="180" y2="410"/>
+<line class="st10" x1="460" y1="354" x2="460" y2="410"/>
+<line class="st10" x1="540" y1="354" x2="740" y2="410"/>
+<path class="st21" d="M65,410h230c5.5,0,10,4.5,10,10v72c0,5.5-4.5,10-10,10H65c-5.5,0-10-4.5-10-10v-72C55,414.5,59.5,410,65,410z"
+	/>
+<text transform="matrix(1 0 0 1 122.6997 434)" class="st12"><tspan x="0" y="0" class="st0 st13 st9">③</tspan><tspan x="13" y="0" class="st0 st2 st9"> Datacenter - P4</tspan></text>
+<text transform="matrix(1 0 0 1 105.1511 453)" class="st22 st5 st16">Routed spine-leaf · OSPF fabric</text>
+<text transform="matrix(1 0 0 1 79.7754 469)" class="st22 st5 st16">Application tier (LB + APP-WEB1/2) · SAN</text>
+<text transform="matrix(1 0 0 1 73.7842 487)" class="st23 st5 st17">2 border leafs to the Core (ECMP) · Jumbo (doc.)</text>
+<path class="st24" d="M345,410h230c5.5,0,10,4.5,10,10v72c0,5.5-4.5,10-10,10H345c-5.5,0-10-4.5-10-10v-72
+	C335,414.5,339.5,410,345,410z"/>
+<text transform="matrix(1 0 0 1 397.6152 434)" class="st12"><tspan x="0" y="0" class="st0 st13 st9">④</tspan><tspan x="13" y="0" class="st0 st2 st9"> IP telephony - P5</tspan></text>
+<text transform="matrix(1 0 0 1 394.0027 453)" class="st25 st5 st16">CallManager Express (CME)</text>
+<text transform="matrix(1 0 0 1 385.5674 469)" class="st25 st5 st16">SCCP · DHCP Option 150 · QoS</text>
+<text transform="matrix(1 0 0 1 362.5928 487)" class="st26 st5 st17">Voice VLAN 30 · CME co-located Active/root</text>
+<path class="st27" d="M625,410h230c5.5,0,10,4.5,10,10v72c0,5.5-4.5,10-10,10H625c-5.5,0-10-4.5-10-10v-72
+	C615,414.5,619.5,410,625,410z"/>
+<text transform="matrix(1 0 0 1 672.8418 434)" class="st12"><tspan x="0" y="0" class="st0 st13 st9">⑤</tspan><tspan x="13" y="0" class="st0 st2 st9"> Wi-Fi network - P6</tspan></text>
+<text transform="matrix(1 0 0 1 659.0415 453)" class="st28 st5 st16">WLC 3504 · 3702i lightweight APs</text>
+<text transform="matrix(1 0 0 1 643.2102 469)" class="st28 st5 st16">CAPWAP · SSID Corp (301) / Guest (310)</text>
+<text transform="matrix(1 0 0 1 627.5146 487)" class="st29 st5 st17">WPA2 · Wi-Fi mgmt VLAN 300 (HSRPv2, DIST-SW1)</text>
+<path class="st30" d="M63,528h794c4.4,0,8,3.6,8,8v28c0,4.4-3.6,8-8,8H63c-4.4,0-8-3.6-8-8v-28C55,531.6,58.6,528,63,528z"/>
+<text transform="matrix(1 0 0 1 70 547)" class="st31 st2 st6">Progress</text>
+<text transform="matrix(1 0 0 1 70 564)" class="st32 st5 st16">Parts 1 - 6 completed : HQ, security, datacenter, voice, Wi-Fi</text>
+<path class="st33" d="M63,580h794c4.4,0,8,3.8,8,8.6v38.6c0,4.7-3.6,8.6-8,8.6H63c-4.4,0-8-3.8-8-8.6v-38.6
+	C55,583.8,58.6,580,63,580z"/>
+<text transform="matrix(1 0 0 1 70 600)" class="st34 st2 st6">Method</text>
+<text transform="matrix(1 0 0 1 70 617)" class="st35 st5 st16">Each part goes through technical audit cycles: design errors are found, fixed, and documented.</text>
+<text transform="matrix(1 0 0 1 70 631)" class="st36 st5 st16">Example: an IP addressing conflict between two sub-projects, detected and resolved through a documented renumbering.</text>
 </svg>

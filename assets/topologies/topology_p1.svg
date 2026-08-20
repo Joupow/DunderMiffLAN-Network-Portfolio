@@ -1,115 +1,140 @@
-<svg viewBox="0 0 1180 720" xmlns="http://www.w3.org/2000/svg">
-<rect x="0" y="0" width="1180" height="720" fill="#ffffff"/>
-<rect x="0" y="0" width="1180" height="46" fill="#1a2332"/>
-<text x="26" y="30" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="18" font-weight="700">P1 — Intention de design</text>
-
-<!-- CORE -->
-<rect x="490" y="90" width="200" height="58" rx="8" fill="#1e3a5f" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="590" y="117" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">CORE-SW 3650</text>
-<text x="590" y="133" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">ip routing · SVI données .1 (temp)</text>
-<text x="590" y="146" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">routage inter-VLAN ici en P1</text>
-
-<!-- DIST1 -->
-<rect x="230" y="230" width="200" height="56" rx="8" fill="#0f766e" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="330" y="256" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">DIST-SW1 3560</text>
-<text x="330" y="272" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">racine STP {10,30,300}</text>
-<text x="330" y="285" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">SVI mgmt 99 .2</text>
-
-<!-- DIST2 -->
-<rect x="750" y="230" width="200" height="56" rx="8" fill="#0f766e" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="850" y="256" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">DIST-SW2 3560</text>
-<text x="850" y="272" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">racine STP {20,99}</text>
-<text x="850" y="285" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">SVI mgmt 99 .3</text>
-
-<!-- trunks core-dist -->
-<line x1="540" y1="148" x2="330" y2="230" stroke="#1e3a5f" stroke-width="2.2"/>
-<rect x="386" y="173" width="98" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
-<text x="435" y="184" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">trunk 802.1Q</text>
-<line x1="640" y1="148" x2="850" y2="230" stroke="#1e3a5f" stroke-width="2.2"/>
-<rect x="696" y="173" width="98" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
-<text x="745" y="184" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">trunk 802.1Q</text>
-
-<!-- inter-dist -->
-<line x1="430" y1="258" x2="750" y2="258" stroke="#0f766e" stroke-width="1.6" stroke-dasharray="7 5"/>
-<rect x="470" y="242" width="240" height="15" rx="3" fill="#ffffff" fill-opacity="0.88"/>
-<text x="590" y="253" text-anchor="middle" fill="#334155" font-family="Consolas,Menlo,monospace" font-size="9.5">trunk inter-Dist (Gi0/2) · native 999</text>
-
-<!-- access switches -->
-<rect x="70" y="380" width="180" height="52" rx="8" fill="#2563eb" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="160" y="404" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">ACC-SW1 2960</text>
-<text x="160" y="420" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">PortFast + BPDU Guard</text>
-<text x="160" y="433" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">accès 10/20/30 · inutilisés→998</text>
-<line x1="160" y1="380" x2="330" y2="286" stroke="#0f766e" stroke-width="1.4"/>
-<rect x="300" y="380" width="180" height="52" rx="8" fill="#2563eb" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="390" y="404" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">ACC-SW2 2960</text>
-<text x="390" y="420" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">PortFast + BPDU Guard</text>
-<text x="390" y="433" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">accès 10/20/30 · inutilisés→998</text>
-<line x1="390" y1="380" x2="330" y2="286" stroke="#0f766e" stroke-width="1.4"/>
-<rect x="620" y="380" width="180" height="52" rx="8" fill="#2563eb" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="710" y="404" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">ACC-SW3 2960</text>
-<text x="710" y="420" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">PortFast + BPDU Guard</text>
-<text x="710" y="433" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">accès 10/20/30 · inutilisés→998</text>
-<line x1="710" y1="380" x2="850" y2="286" stroke="#0f766e" stroke-width="1.4"/>
-<rect x="880" y="380" width="180" height="52" rx="8" fill="#2563eb" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="970" y="404" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="13" font-weight="700">ACC-SW4 2960</text>
-<text x="970" y="420" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">PortFast + BPDU Guard</text>
-<text x="970" y="433" text-anchor="middle" fill="#cbd5e1" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9.5">accès 10/20/30 · inutilisés→998</text>
-<line x1="970" y1="380" x2="850" y2="286" stroke="#0f766e" stroke-width="1.4"/>
-
-<!-- PCs -->
-<rect x="85" y="500" width="70" height="38" rx="8" fill="#475569" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="120" y="517" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">PC</text>
-<text x="120" y="533" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">VLAN10</text>
-<rect x="165" y="500" width="70" height="38" rx="8" fill="#475569" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="200" y="517" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">PC</text>
-<text x="200" y="533" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">VLAN20</text>
-<line x1="120" y1="538" x2="140" y2="432" stroke="#475569" stroke-width="1.2"/>
-<line x1="200" y1="538" x2="180" y2="432" stroke="#475569" stroke-width="1.2"/>
-<rect x="315" y="500" width="70" height="38" rx="8" fill="#475569" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="350" y="517" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">PC</text>
-<text x="350" y="533" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">VLAN10</text>
-<rect x="395" y="500" width="70" height="38" rx="8" fill="#475569" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="430" y="517" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">PC</text>
-<text x="430" y="533" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">VLAN20</text>
-<line x1="350" y1="538" x2="370" y2="432" stroke="#475569" stroke-width="1.2"/>
-<line x1="430" y1="538" x2="410" y2="432" stroke="#475569" stroke-width="1.2"/>
-<rect x="635" y="500" width="70" height="38" rx="8" fill="#475569" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="670" y="517" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">PC</text>
-<text x="670" y="533" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">VLAN10</text>
-<rect x="715" y="500" width="70" height="38" rx="8" fill="#475569" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="750" y="517" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">PC</text>
-<text x="750" y="533" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">VLAN20</text>
-<line x1="670" y1="538" x2="690" y2="432" stroke="#475569" stroke-width="1.2"/>
-<line x1="750" y1="538" x2="730" y2="432" stroke="#475569" stroke-width="1.2"/>
-<rect x="895" y="500" width="70" height="38" rx="8" fill="#475569" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="930" y="517" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">PC</text>
-<text x="930" y="533" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">VLAN10</text>
-<rect x="975" y="500" width="70" height="38" rx="8" fill="#475569" stroke="#0f172a" stroke-opacity="0.25"/>
-<text x="1010" y="517" text-anchor="middle" fill="#ffffff" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="11" font-weight="700">PC</text>
-<text x="1010" y="533" text-anchor="middle" fill="#e2e8f0" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10.5">VLAN20</text>
-<line x1="930" y1="538" x2="950" y2="432" stroke="#475569" stroke-width="1.2"/>
-<line x1="1010" y1="538" x2="990" y2="432" stroke="#475569" stroke-width="1.2"/>
-
-<!-- Intention de design panel -->
-<rect x="70" y="556" width="770" height="150" rx="8" fill="#f1f5f9" stroke="#15803d" stroke-width="1.3"/>
-<text x="84" y="577" fill="#15803d" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12" font-weight="700">Intention de design — socle LAN du siège</text>
-<text x="84" y="597" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• Hiérarchie 3 niveaux : Cœur 3650 · Distribution 3560 ×2 · Accès 2960 ×4</text>
-<text x="84" y="613" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• VLAN : 10/20/30 données · 99 management · 300 réservé Wi-Fi · 998 ports inutilisés · 999 native</text>
-<text x="84" y="629" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• Trunks 802.1Q · VLAN native 999 (protège du double-tagging)</text>
-<text x="84" y="645" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• STP pré-aligné sur le futur HSRP (P2) : DIST1 racine {10,30,300} · DIST2 racine {20,99}</text>
-<text x="84" y="661" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• Accès durci : PortFast + BPDU Guard · ports inutilisés → VLAN 998 + shutdown</text>
-<text x="84" y="677" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">• Routage inter-VLAN provisoire sur le Cœur → déplacé vers la Distribution en P2</text>
-<text x="84" y="695" fill="#64748b" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="9" font-style="italic">Adressage détaillé → TECHNICAL_OVERVIEW.md · câblage réel → capture as-built (WORKFLOW.md)</text>
-
-<!-- Legend -->
-<rect x="870" y="556" width="240" height="150" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
-<text x="884" y="577" fill="#1a2332" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="12" font-weight="700">Légende</text>
-<rect x="884" y="590" width="13" height="13" rx="3" fill="#1e3a5f"/>
-<text x="905" y="600" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">Cœur (3650)</text>
-<rect x="884" y="612" width="13" height="13" rx="3" fill="#0f766e"/>
-<text x="905" y="622" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">Distribution (3560)</text>
-<rect x="884" y="634" width="13" height="13" rx="3" fill="#2563eb"/>
-<text x="905" y="644" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">Accès (2960)</text>
-<rect x="884" y="656" width="13" height="13" rx="3" fill="#475569"/>
-<text x="905" y="666" fill="#334155" font-family="Segoe UI,Helvetica,Arial,sans-serif" font-size="10">PC hôte</text>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 24.3.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 1180 720" style="enable-background:new 0 0 1180 720;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;}
+	.st1{fill:none;stroke:#475569;stroke-width:1.2;}
+	.st2{fill:#1A2332;}
+	.st3{font-family:'SegoeUI-Bold';}
+	.st4{font-size:18px;}
+	.st5{fill:#1E3A5F;stroke:#0F172A;stroke-opacity:0.25;}
+	.st6{font-size:13px;}
+	.st7{fill:#E2E8F0;}
+	.st8{font-family:'SegoeUI';}
+	.st9{font-size:10.5px;}
+	.st10{fill:#CBD5E1;}
+	.st11{font-size:9.5px;}
+	.st12{fill:#0F766E;stroke:#0F172A;stroke-opacity:0.25;}
+	.st13{fill:none;stroke:#1E3A5F;stroke-width:2.2;}
+	.st14{fill:#FFFFFF;fill-opacity:0.88;}
+	.st15{fill:#334155;}
+	.st16{font-family:'Consolas';}
+	.st17{fill:none;stroke:#0F766E;stroke-width:1.6;stroke-dasharray:7,5;}
+	.st18{fill:#2563EB;stroke:#0F172A;stroke-opacity:0.25;}
+	.st19{fill:none;stroke:#0F766E;stroke-width:1.4;}
+	.st20{fill:#475569;stroke:#0F172A;stroke-opacity:0.25;}
+	.st21{font-size:11px;}
+	.st22{fill:#F1F5F9;stroke:#15803D;stroke-width:1.3;}
+	.st23{fill:#15803D;}
+	.st24{font-size:12px;}
+	.st25{font-size:10px;}
+	.st26{fill:#F8FAFC;stroke:#CBD5E1;}
+	.st27{fill:#1E3A5F;}
+	.st28{fill:#0F766E;}
+	.st29{fill:#2563EB;}
+	.st30{fill:#475569;}
+</style>
+<rect y="0" class="st0" width="1180" height="720"/>
+<line class="st1" x1="120" y1="538" x2="140" y2="432"/>
+<line class="st1" x1="200" y1="538" x2="180" y2="432"/>
+<line class="st1" x1="350" y1="538" x2="370" y2="432"/>
+<line class="st1" x1="430" y1="538" x2="410" y2="432"/>
+<line class="st1" x1="670" y1="538" x2="690" y2="432"/>
+<line class="st1" x1="750" y1="538" x2="730" y2="432"/>
+<line class="st1" x1="930" y1="538" x2="950" y2="432"/>
+<line class="st1" x1="1010" y1="538" x2="990" y2="432"/>
+<rect y="0" class="st2" width="1180" height="46"/>
+<text transform="matrix(1 0 0 1 26 30)" class="st0 st3 st4">P1 | Design intent</text>
+<path class="st5" d="M498,90h184c4.4,0,8,4.3,8,9.7v50.8c0,5.3-3.6,9.7-8,9.7H498c-4.4,0-8-4.3-8-9.7V99.7C490,94.3,493.6,90,498,90
+	z"/>
+<text transform="matrix(1 0 0 1 543.8398 117)" class="st0 st3 st6">CORE-SW 3650</text>
+<text transform="matrix(1 0 0 1 521.9602 133)" class="st7 st8 st9">ip routing · data SVI .1 (temp)</text>
+<text transform="matrix(1 0 0 1 527.6354 146)" class="st10 st8 st11">inter-VLAN routing here in P1</text>
+<path class="st12" d="M238,235.5h184c4.4,0,8,4,8,8.8v44.2c0,4.9-3.6,8.8-8,8.8H238c-4.4,0-8-4-8-8.8v-44.2
+	C230,239.5,233.6,235.5,238,235.5z"/>
+<text transform="matrix(1 0 0 1 282.4053 256)" class="st0 st3 st6">DIST-SW1 3560</text>
+<text transform="matrix(1 0 0 1 283.6318 272)" class="st7 st8 st9">STP root {10,30,300}</text>
+<text transform="matrix(1 0 0 1 298.0581 285)" class="st10 st8 st11">SVI mgmt 99 .2</text>
+<path class="st12" d="M758,235.5h184c4.4,0,8,4,8,8.8v44.2c0,4.9-3.6,8.8-8,8.8H758c-4.4,0-8-4-8-8.8v-44.2
+	C750,239.5,753.6,235.5,758,235.5z"/>
+<text transform="matrix(1 0 0 1 802.4053 256)" class="st0 st3 st6">DIST-SW2 3560</text>
+<text transform="matrix(1 0 0 1 813.2603 272)" class="st7 st8 st9">STP root {20,99}</text>
+<text transform="matrix(1 0 0 1 818.0581 285)" class="st10 st8 st11">SVI mgmt 99 .3</text>
+<line class="st13" x1="540" y1="148" x2="330" y2="230"/>
+<path class="st14" d="M389,173h92c1.7,0,3,1.3,3,3v9c0,1.7-1.3,3-3,3h-92c-1.7,0-3-1.3-3-3v-9C386,174.3,387.3,173,389,173z"/>
+<text transform="matrix(1 0 0 1 403.6611 184)" class="st15 st16 st11">trunk 802.1Q</text>
+<line class="st13" x1="640" y1="148" x2="850" y2="230"/>
+<path class="st14" d="M699,173h92c1.7,0,3,1.3,3,3v9c0,1.7-1.3,3-3,3h-92c-1.7,0-3-1.3-3-3v-9C696,174.3,697.3,173,699,173z"/>
+<text transform="matrix(1 0 0 1 713.6611 184)" class="st15 st16 st11">trunk 802.1Q</text>
+<line class="st17" x1="430" y1="258" x2="750" y2="258"/>
+<path class="st14" d="M473,242h234c1.7,0,3,1.3,3,3v9c0,1.7-1.3,3-3,3H473c-1.7,0-3-1.3-3-3v-9C470,243.3,471.3,242,473,242z"/>
+<text transform="matrix(1 0 0 1 493.3718 253)" class="st15 st16 st11">inter-Dist trunk (Gi0/2) · native 999</text>
+<path class="st18" d="M78,385h164c4.4,0,8,4.2,8,9.3v41.9c0,5.1-3.6,9.3-8,9.3H78c-4.4,0-8-4.2-8-9.3v-41.9
+	C70,389.2,73.6,385,78,385z"/>
+<text transform="matrix(1 0 0 1 114.3191 404)" class="st0 st3 st6">ACC-SW1 2960</text>
+<text transform="matrix(1 0 0 1 106.208 420)" class="st7 st8 st9">PortFast + BPDU Guard</text>
+<text transform="matrix(1 0 0 1 95.541 433)" class="st10 st8 st11">access 10/20/30 · unused→998</text>
+<line class="st19" x1="160" y1="380" x2="330" y2="286"/>
+<path class="st18" d="M308,385h164c4.4,0,8,4.2,8,9.3v41.9c0,5.1-3.6,9.3-8,9.3H308c-4.4,0-8-4.2-8-9.3v-41.9
+	C300,389.2,303.6,385,308,385z"/>
+<text transform="matrix(1 0 0 1 344.3191 404)" class="st0 st3 st6">ACC-SW2 2960</text>
+<text transform="matrix(1 0 0 1 336.208 420)" class="st7 st8 st9">PortFast + BPDU Guard</text>
+<text transform="matrix(1 0 0 1 325.541 433)" class="st10 st8 st11">access 10/20/30 · unused→998</text>
+<line class="st19" x1="390" y1="380" x2="330" y2="286"/>
+<path class="st18" d="M628,385h164c4.4,0,8,4.2,8,9.3v41.9c0,5.1-3.6,9.3-8,9.3H628c-4.4,0-8-4.2-8-9.3v-41.9
+	C620,389.2,623.6,385,628,385z"/>
+<text transform="matrix(1 0 0 1 664.3191 404)" class="st0 st3 st6">ACC-SW3 2960</text>
+<text transform="matrix(1 0 0 1 656.208 420)" class="st7 st8 st9">PortFast + BPDU Guard</text>
+<text transform="matrix(1 0 0 1 645.541 433)" class="st10 st8 st11">access 10/20/30 · unused→998</text>
+<line class="st19" x1="710" y1="380" x2="850" y2="286"/>
+<path class="st18" d="M888,385h164c4.4,0,8,4.2,8,9.3v41.9c0,5.1-3.6,9.3-8,9.3H888c-4.4,0-8-4.2-8-9.3v-41.9
+	C880,389.2,883.6,385,888,385z"/>
+<text transform="matrix(1 0 0 1 924.3191 404)" class="st0 st3 st6">ACC-SW4 2960</text>
+<text transform="matrix(1 0 0 1 916.208 420)" class="st7 st8 st9">PortFast + BPDU Guard</text>
+<text transform="matrix(1 0 0 1 905.541 433)" class="st10 st8 st11">access 10/20/30 · unused→998</text>
+<line class="st19" x1="970" y1="380" x2="850" y2="286"/>
+<path class="st20" d="M93,500h54c4.4,0,8,3.6,8,8v22c0,4.4-3.6,8-8,8H93c-4.4,0-8-3.6-8-8v-22C85,503.6,88.6,500,93,500z"/>
+<text transform="matrix(1 0 0 1 113.1895 517)" class="st0 st3 st21">PC</text>
+<text transform="matrix(1 0 0 1 101.1405 533)" class="st7 st8 st9">VLAN10</text>
+<path class="st20" d="M173,500h54c4.4,0,8,3.6,8,8v22c0,4.4-3.6,8-8,8h-54c-4.4,0-8-3.6-8-8v-22C165,503.6,168.6,500,173,500z"/>
+<text transform="matrix(1 0 0 1 193.1895 517)" class="st0 st3 st21">PC</text>
+<text transform="matrix(1 0 0 1 181.1405 533)" class="st7 st8 st9">VLAN20</text>
+<path class="st20" d="M323,500h54c4.4,0,8,3.6,8,8v22c0,4.4-3.6,8-8,8h-54c-4.4,0-8-3.6-8-8v-22C315,503.6,318.6,500,323,500z"/>
+<text transform="matrix(1 0 0 1 343.1895 517)" class="st0 st3 st21">PC</text>
+<text transform="matrix(1 0 0 1 331.1405 533)" class="st7 st8 st9">VLAN10</text>
+<path class="st20" d="M403,500h54c4.4,0,8,3.6,8,8v22c0,4.4-3.6,8-8,8h-54c-4.4,0-8-3.6-8-8v-22C395,503.6,398.6,500,403,500z"/>
+<text transform="matrix(1 0 0 1 423.1895 517)" class="st0 st3 st21">PC</text>
+<text transform="matrix(1 0 0 1 411.1405 533)" class="st7 st8 st9">VLAN20</text>
+<path class="st20" d="M643,500h54c4.4,0,8,3.6,8,8v22c0,4.4-3.6,8-8,8h-54c-4.4,0-8-3.6-8-8v-22C635,503.6,638.6,500,643,500z"/>
+<text transform="matrix(1 0 0 1 663.1895 517)" class="st0 st3 st21">PC</text>
+<text transform="matrix(1 0 0 1 651.1405 533)" class="st7 st8 st9">VLAN10</text>
+<path class="st20" d="M723,500h54c4.4,0,8,3.6,8,8v22c0,4.4-3.6,8-8,8h-54c-4.4,0-8-3.6-8-8v-22C715,503.6,718.6,500,723,500z"/>
+<text transform="matrix(1 0 0 1 743.1895 517)" class="st0 st3 st21">PC</text>
+<text transform="matrix(1 0 0 1 731.1405 533)" class="st7 st8 st9">VLAN20</text>
+<path class="st20" d="M903,500h54c4.4,0,8,3.6,8,8v22c0,4.4-3.6,8-8,8h-54c-4.4,0-8-3.6-8-8v-22C895,503.6,898.6,500,903,500z"/>
+<text transform="matrix(1 0 0 1 923.1895 517)" class="st0 st3 st21">PC</text>
+<text transform="matrix(1 0 0 1 911.1405 533)" class="st7 st8 st9">VLAN10</text>
+<path class="st20" d="M983,500h54c4.4,0,8,3.6,8,8v22c0,4.4-3.6,8-8,8h-54c-4.4,0-8-3.6-8-8v-22C975,503.6,978.6,500,983,500z"/>
+<text transform="matrix(1 0 0 1 1003.1895 517)" class="st0 st3 st21">PC</text>
+<text transform="matrix(1 0 0 1 991.1405 533)" class="st7 st8 st9">VLAN20</text>
+<path class="st22" d="M78,556h754c4.4,0,8,3.2,8,7.1v118.5c0,3.9-3.6,7.1-8,7.1H78c-4.4,0-8-3.2-8-7.1V563.1
+	C70,559.2,73.6,556,78,556z"/>
+<text transform="matrix(1 0 0 1 84 577)" class="st23 st3 st24">Design intent | HQ LAN foundation</text>
+<text transform="matrix(1 0 0 1 84 597)" class="st15 st8 st25">• 3-tier hierarchy: Core 3650 · Distribution 3560 ×2 · Access 2960 ×4</text>
+<text transform="matrix(1 0 0 1 84 613)" class="st15 st8 st25">• VLANs: 10/20/30 data · 99 management · 300 reserved Wi-Fi · 998 unused ports · 999 native</text>
+<text transform="matrix(1 0 0 1 84 629)" class="st15 st8 st25">• 802.1Q trunks · native VLAN 999 (protects against double-tagging)</text>
+<text transform="matrix(1 0 0 1 84 645)" class="st15 st8 st25">• STP pre-aligned with the future HSRP (P2): DIST1 root {10,30,300} · DIST2 root {20,99}</text>
+<text transform="matrix(1 0 0 1 84 661)" class="st15 st8 st25">• Hardened access: PortFast + BPDU Guard · unused ports → VLAN 998 + shutdown</text>
+<text transform="matrix(1 0 0 1 84 677)" class="st15 st8 st25">• Temporary inter-VLAN routing on the Core → moved to Distribution in P2</text>
+<path class="st26" d="M878,556h224c4.4,0,8,3.6,8,8v134c0,4.4-3.6,8-8,8H878c-4.4,0-8-3.6-8-8V564C870,559.6,873.6,556,878,556z"/>
+<text transform="matrix(1 0 0 1 884 577)" class="st2 st3 st24">Legend</text>
+<path class="st27" d="M887,590h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C884,591.3,885.3,590,887,590z"/>
+<text transform="matrix(1 0 0 1 905 600)" class="st15 st8 st25">Core (3650)</text>
+<path class="st28" d="M887,612h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C884,613.3,885.3,612,887,612z"/>
+<text transform="matrix(1 0 0 1 905 622)" class="st15 st8 st25">Distribution (3560)</text>
+<path class="st29" d="M887,634h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C884,635.3,885.3,634,887,634z"/>
+<text transform="matrix(1 0 0 1 905 644)" class="st15 st8 st25">Access (2960)</text>
+<path class="st30" d="M887,656h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C884,657.3,885.3,656,887,656z"/>
+<text transform="matrix(1 0 0 1 905 666)" class="st15 st8 st25">Host PC</text>
 </svg>
