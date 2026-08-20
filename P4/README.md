@@ -1,53 +1,53 @@
-# Partie 4 : Datacenter 
+# Part 4: Datacenter
 
- **Concepts clés** : Spine-Leaf, Border Leafs, tiers serveurs & load balancer
+ **Key concepts**: Spine-Leaf, Border Leafs, server tiers & load balancer
 
-- 💻**Outil** : Cisco Packet Tracer 9.0
-- 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
-- 📝 Progression étape par étape → [WORKFLOW P4](./WORKFLOW.md)
-- 🎓 **Certification :** CompTIA Network+
+- 💻 **Tool**: Cisco Packet Tracer 9.0
+- 🏷️ Full addressing plan → [IPAM](../IPAM.md)
+- 📝 Step-by-step progression → [WORKFLOW P4](./WORKFLOW.md)
+- 🎓 **Certification:** CompTIA Network+
 
-## Topologie logique
+## Logical topology
 
-![Topologie P4](../assets/topologies/topology_p4.svg)
+![P4 topology](../assets/topologies/topology_p4.svg)
 
-## Objectif
+## Objective
 
-Construire le datacenter comme une fabric Spine-Leaf **routée**, boulée sur le campus **à travers le Core, pas le HQ-Router**. Le but n'est pas « faire pinguer les serveurs », c'est de prouver une forme de trafic précise : 
+Build the datacenter as a **routed** Spine-Leaf fabric, wired into the campus **through the Core, not the HQ-Router**. The goal isn't "make the servers ping," it's to prove a precise traffic shape:
 
-- **Est-Ouest** uniforme (`Leaf→Spine→Leaf`)
-- **Nord-Sud** symétrique (`Leaf→Spine→BorderLeaf→Core→edge`), 
-- Et une **application trois tiers** où les serveurs applicatifs sortent mais ne sont jamais joignables en entrée, chaque sens prouvé par un compteur.
+- uniform **East-West** (`Leaf→Spine→Leaf`)
+- symmetric **North-South** (`Leaf→Spine→BorderLeaf→Core→edge`),
+- and a **three-tier application** where the app servers egress but are never reachable inbound, each direction proven by a counter.
 
-## Contrainte structurante
+## Structural constraint
 
-- Les deux Border Leafs terminent sur le **Core** (`10.0.12.0/30`, `10.0.13.0/30`)
-- Les deux chemins N-S sont de longueur identique → le Core apprend les sous-réseaux DC via BL1 **et** BL2 en **ECMP**, et le HQ-Router reste un pur edge campus.
+- Both Border Leafs terminate on the **Core** (`10.0.12.0/30`, `10.0.13.0/30`)
+- The two N-S paths are identical in length → the Core learns the DC subnets via BL1 **and** BL2 in **ECMP**, and the HQ-Router stays a pure campus edge.
 
-## Décision de continuité (héritée de P3)
+## Continuity decision (inherited from P3)
 
-- Le campus atteint déjà Internet. 
-- Le DC a seulement besoin qu'OSPF porte `172.16.2.0/24` + `172.16.3.0/24` jusqu'à l'edge, plus un objet PAT dédié. La route ASA + NAT se fait **en dernier**, une fois la fabric prouvée.
+- The campus already reaches the Internet.
+- The DC only needs OSPF to carry `172.16.2.0/24` + `172.16.3.0/24` to the edge, plus a dedicated PAT object. The ASA route + NAT is done **last**, once the fabric is proven.
 
 
-## Couverture CompTIA Network+
+## CompTIA Network+ coverage
 
-|Domaine|Concepts couverts| Statut                                                 |
+| Domain | Concepts covered | Status                                                 |
 |---|---|---|
-|🗺️ Topologie & architecture|Fabric spine-leaf 2×2 + 2 border leafs · trafic Est-Ouest vs Nord-Sud · appli 3 tiers (présentation/app/data)| ✅ E-O `Leaf→Spine→Leaf` · N-S via Border Leaf          |
-|🧭 Routage fabric|Accès routé (pas de VLAN étiré) · OSPF point-à-point sans DR/BDR · ECMP équi-coût · entre dans le résumé `/20` de P3| ✅ voisins `FULL` · Core→DC via BL1 **et** BL2          |
-|🌐 Services|NAT/PAT pour le nouveau bloc interne| ✅ objet PAT `DC-NET`                                   |
-|🛡️ Sécurité|Exposition en tiers (backend sortie-seule) · confinement ports inutilisés (VLAN 998)| ✅ sortie ok / entrée refusée · 998 sur toute la fabric |
-|🔁 Haute disponibilité|Concept load balancer / VIP| ⚠️ documenté : LB fonctionnel = prod, hors PT          |
+| 🗺️ Topology & architecture | 2×2 spine-leaf fabric + 2 border leafs · East-West vs North-South traffic · 3-tier app (presentation/app/data) | ✅ E-W `Leaf→Spine→Leaf` · N-S via Border Leaf          |
+| 🧭 Fabric routing | Routed access (no stretched VLAN) · point-to-point OSPF, no DR/BDR · equal-cost ECMP · folds into P3's `/20` summary | ✅ neighbors `FULL` · Core→DC via BL1 **and** BL2       |
+| 🌐 Services | NAT/PAT for the new internal block | ✅ `DC-NET` PAT object                                  |
+| 🛡️ Security | Tiered exposure (egress-only backend) · unused-port containment (VLAN 998) | ✅ egress ok / ingress denied · 998 across the fabric   |
+| 🔁 High availability | Load balancer / VIP concept | ⚠️ documented: a working LB = production, out of scope for PT |
 
 ## Conclusion
 
-Une décision de topologie peut acheter une propriété que la config ne rattrapera jamais : les **deux Border Leafs sur le Core** rendent les chemins Nord-Sud symétriques (ECMP) et sortent le HQ-Router du datacenter. 
+A topology decision can buy you a property that no amount of config will ever recover: putting **both Border Leafs on the Core** makes the North-South paths symmetric (ECMP) and takes the HQ-Router out of the datacenter.
 
-L'acquis de fond est la pensée « par sens de trafic » : Est-Ouest uniforme, Nord-Sud symétrique, tier applicatif qui **sort mais n'entre jamais**.
+The deeper takeaway is thinking "by traffic direction": East-West uniform, North-South symmetric, an application tier that **egresses but never ingresses**.
 
-Chaque direction devant être prouvée séparément, parce qu'un flux qui marche dans un sens ne dit rien de l'autre.
+Each direction has to be proven separately, because a flow that works one way tells you nothing about the other.
 
 ---
 
-⬅️ [Partie 3 : DMZ & Pare-feu](../P3/README.md) · ⬆️ [Vue d'ensemble du projet](../README.md) · 🔁 [Workflow P4](./WORKFLOW.md) · **Suivant : [Partie 5 : VoIP](../P5/README.md)** : CME co-localisé avec l'Active/root du VLAN 30, DHCP Option 150, SCCP, TFTP, frontière QoS.
+⬅️ [Part 3: DMZ & Firewall](../P3/README.md) · ⬆️ [Project overview](../README.md) · 🔁 [Workflow P4](./WORKFLOW.md) · **Next: [Part 5: VoIP](../P5/README.md)**: CME co-located with the VLAN 30 Active/root, DHCP Option 150, SCCP, TFTP, QoS boundary.
