@@ -76,7 +76,7 @@
 <text transform="matrix(1 0 0 1 896 248)" class="st20 st15 st10">mls qos trust device</text>
 <text transform="matrix(1 0 0 1 896 270)" class="st20 st15 st10">cisco-phone (via CDP)</text>
 <text transform="matrix(1 0 0 1 896 292)" class="st20 st7 st10">trust DSCP only if a real</text>
-<text transform="matrix(1 0 0 1 896 314)" class="st20 st7 st10">Cisco phone is detected —</text>
+<text transform="matrix(1 0 0 1 896 314)" class="st20 st7 st10">Cisco phone is detected </text>
 <text transform="matrix(1 0 0 1 896 336)" class="st20 st7 st10">a PC cannot spoof EF.</text>
 <path class="st24" d="M68,430h754c4.4,0,8,3.1,8,6.8v121.4c0,3.8-3.6,6.8-8,6.8H68c-4.4,0-8-3.1-8-6.8V436.8
 	C60,433.1,63.6,430,68,430z"/>

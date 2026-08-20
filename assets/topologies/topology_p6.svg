@@ -55,7 +55,8 @@
 <line class="st12" x1="430" y1="125" x2="720" y2="125"/>
 <path class="st13" d="M487,106h176c1.7,0,3,1.3,3,3v9c0,1.7-1.3,3-3,3H487c-1.7,0-3-1.3-3-3v-9C484,107.3,485.3,106,487,106z"/>
 <text transform="matrix(1 0 0 1 496.6528 117)" class="st14 st15 st11">VIP .100.1 · WLC DHCP disabled</text>
-<path class="st16" d="M158,230h214c4.4,0,8,3.6,8,8v44c0,4.4-3.6,8-8,8H158c-4.4,0-8-3.6-8-8v-44C150,233.6,153.6,230,158,230z"/>
+<path class="st16" d="M158,230h214c4.4,0,8,4.1,8,9.1v50c0,5-3.6,9.1-8,9.1H158c-4.4,0-8-4.1-8-9.1v-50C150,234.1,153.6,230,158,230
+	z"/>
 <text transform="matrix(1 0 0 1 206.7222 258)" class="st0 st3 st6">WLC .200 (Generic)</text>
 <text transform="matrix(1 0 0 1 198.8956 274)" class="st7 st8 st9">DIST-SW1 Fa0/5 · access 300</text>
 <text transform="matrix(1 0 0 1 179.7574 287)" class="st10 st8 st11">WLAN 301 Corp / 310 Guest · WPA2/AES</text>
@@ -96,8 +97,8 @@
 <line class="st22" x1="865" y1="416" x2="865" y2="470"/>
 <line class="st23" x1="265" y1="290" x2="205" y2="370"/>
 <path class="st24" d="M125,535h710c2.8,0,5,2.2,5,5v16c0,2.8-2.2,5-5,5H125c-2.8,0-5-2.2-5-5v-16C120,537.2,122.2,535,125,535z"/>
-<text transform="matrix(1 0 0 1 130 552)" class="st25 st3 st9">CAPWAP ×4 (control plane) → 4 APs Online on WLC .200 — proven</text>
-<path class="st16" d="M908,370h214c4.4,0,8,3.6,8,8v42c0,4.4-3.6,8-8,8H908c-4.4,0-8-3.6-8-8v-42C900,373.6,903.6,370,908,370z"/>
+<text transform="matrix(1 0 0 1 130 552)" class="st25 st3 st9">CAPWAP ×4 (control plane) → 4 APs Online on WLC .200 - proven</text>
+<path class="st16" d="M908,370h214c4.4,0,8,4,8,9v47.3c0,5-3.6,9-8,9H908c-4.4,0-8-4-8-9V379C900,374,903.6,370,908,370z"/>
 <text transform="matrix(1 0 0 1 910.6763 397)" class="st0 st3 st6">Autonomous AP (ACC-SW1 Fa0/6)</text>
 <text transform="matrix(1 0 0 1 946.7295 413)" class="st7 st8 st9">SSID TheBigOffice-Corp-Auto</text>
 <text transform="matrix(1 0 0 1 918.7916 426)" class="st10 st8 st11">2.4GHz ch6 · WPA2-PSK · portfast+bpduguard</text>

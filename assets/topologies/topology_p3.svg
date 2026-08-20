@@ -4,30 +4,30 @@
 	 viewBox="0 0 1180 700" style="enable-background:new 0 0 1180 700;" xml:space="preserve">
 <style type="text/css">
 	.st0{fill:#FFFFFF;}
-	.st1{fill:#1A2332;}
-	.st2{font-family:'SegoeUI-Bold';}
-	.st3{font-size:18px;}
-	.st4{fill:#0F172A;stroke:#0F172A;stroke-opacity:0.25;}
-	.st5{font-size:13px;}
-	.st6{fill:#E2E8F0;}
-	.st7{font-family:'SegoeUI';}
-	.st8{font-size:10.5px;}
-	.st9{fill:#CBD5E1;}
-	.st10{font-size:9.5px;}
-	.st11{fill:#B91C1C;stroke:#0F172A;stroke-opacity:0.25;}
-	.st12{fill:none;stroke:#0F172A;stroke-width:2.2;}
-	.st13{fill:#FFFFFF;fill-opacity:0.88;}
-	.st14{fill:#334155;}
-	.st15{font-family:'Consolas';}
-	.st16{fill:none;stroke:#0F172A;stroke-width:1.5;stroke-dasharray:7,5;}
-	.st17{fill:#FFFBEB;stroke:#B45309;stroke-width:1.5;stroke-dasharray:6,4;}
-	.st18{fill:#B45309;}
-	.st19{font-size:12.5px;}
-	.st20{fill:#7C2D12;stroke:#0F172A;stroke-opacity:0.25;}
-	.st21{fill:none;stroke:#B91C1C;stroke-width:2.2;}
-	.st22{fill:#C2410C;stroke:#0F172A;stroke-opacity:0.25;}
-	.st23{fill:#1E3A5F;stroke:#0F172A;stroke-opacity:0.25;}
-	.st24{fill:none;stroke:#1E3A5F;stroke-width:1.6;}
+	.st1{fill:none;stroke:#1E3A5F;stroke-width:1.6;}
+	.st2{fill:#1A2332;}
+	.st3{font-family:'SegoeUI-Bold';}
+	.st4{font-size:18px;}
+	.st5{fill:#0F172A;stroke:#0F172A;stroke-opacity:0.25;}
+	.st6{font-size:13px;}
+	.st7{fill:#E2E8F0;}
+	.st8{font-family:'SegoeUI';}
+	.st9{font-size:10.5px;}
+	.st10{fill:#CBD5E1;}
+	.st11{font-size:9.5px;}
+	.st12{fill:#B91C1C;stroke:#0F172A;stroke-opacity:0.25;}
+	.st13{fill:none;stroke:#0F172A;stroke-width:2.2;}
+	.st14{fill:#FFFFFF;fill-opacity:0.88;}
+	.st15{fill:#334155;}
+	.st16{font-family:'Consolas';}
+	.st17{fill:none;stroke:#0F172A;stroke-width:1.5;stroke-dasharray:7,5;}
+	.st18{fill:#FFFBEB;stroke:#B45309;stroke-width:1.5;stroke-dasharray:6,4;}
+	.st19{fill:#B45309;}
+	.st20{font-size:12.5px;}
+	.st21{fill:#7C2D12;stroke:#0F172A;stroke-opacity:0.25;}
+	.st22{fill:none;stroke:#B91C1C;stroke-width:2.2;}
+	.st23{fill:#C2410C;stroke:#0F172A;stroke-opacity:0.25;}
+	.st24{fill:#1E3A5F;stroke:#0F172A;stroke-opacity:0.25;}
 	.st25{fill:#F1F5F9;stroke:#B91C1C;stroke-width:1.2;}
 	.st26{fill:#B91C1C;}
 	.st27{font-size:11.5px;}
@@ -44,83 +44,84 @@
 	.st38{fill:#1E3A5F;}
 </style>
 <rect y="0" class="st0" width="1180" height="700"/>
-<rect y="0" class="st1" width="1180" height="46"/>
-<text transform="matrix(1 0 0 1 26 30)" class="st0 st2 st3">P3 | Design intent</text>
-<path class="st4" d="M68,120h134c4.4,0,8,3.6,8,8v32c0,4.4-3.6,8-8,8H68c-4.4,0-8-3.6-8-8v-32C60,123.6,63.6,120,68,120z"/>
-<text transform="matrix(1 0 0 1 125.304 142)" class="st0 st2 st5">ISP</text>
-<text transform="matrix(1 0 0 1 108.9448 158)" class="st6 st7 st8">203.0.113.1</text>
-<path class="st4" d="M68,250h154c4.4,0,8,3.6,8,8v32c0,4.4-3.6,8-8,8H68c-4.4,0-8-3.6-8-8v-32C60,253.6,63.6,250,68,250z"/>
-<text transform="matrix(1 0 0 1 101.8042 272)" class="st0 st2 st5">EXTERNAL-PC</text>
-<text transform="matrix(1 0 0 1 113.2847 288)" class="st6 st7 st8">198.51.100.10</text>
-<text transform="matrix(1 0 0 1 118.7729 301)" class="st9 st7 st10">Internet side</text>
-<path class="st11" d="M308,170h194c4.4,0,8,3.6,8,8v64c0,4.4-3.6,8-8,8H308c-4.4,0-8-3.6-8-8v-64C300,173.6,303.6,170,308,170z"/>
-<text transform="matrix(1 0 0 1 368.5803 208)" class="st0 st2 st5">ASA 5506-X</text>
-<text transform="matrix(1 0 0 1 358.4524 224)" class="st6 st7 st8">outside .2/30 (sec 0)</text>
-<text transform="matrix(1 0 0 1 349.1249 237)" class="st9 st7 st10">dmz .1 (50) · inside .1 (100)</text>
-<line class="st12" x1="210" y1="144" x2="300" y2="190"/>
-<path class="st13" d="M188,151h134c1.7,0,3,1.3,3,3v9c0,1.7-1.3,3-3,3H188c-1.7,0-3-1.3-3-3v-9C185,152.3,186.3,151,188,151z"/>
-<text transform="matrix(1 0 0 1 197.5454 162)" class="st14 st15 st10">outside 203.0.113.0/30</text>
-<line class="st16" x1="230" y1="274" x2="300" y2="235"/>
-<path class="st17" d="M572,90h396c6.6,0,12,5.4,12,12v126c0,6.6-5.4,12-12,12H572c-6.6,0-12-5.4-12-12V102C560,95.4,565.4,90,572,90
+<line class="st1" x1="405" y1="398" x2="405" y2="460"/>
+<rect y="0" class="st2" width="1180" height="46"/>
+<text transform="matrix(1 0 0 1 26 30)" class="st0 st3 st4">P3 | Design intent</text>
+<path class="st5" d="M68,120h134c4.4,0,8,3.6,8,8v32c0,4.4-3.6,8-8,8H68c-4.4,0-8-3.6-8-8v-32C60,123.6,63.6,120,68,120z"/>
+<text transform="matrix(1 0 0 1 125.304 142)" class="st0 st3 st6">ISP</text>
+<text transform="matrix(1 0 0 1 108.9448 158)" class="st7 st8 st9">203.0.113.1</text>
+<path class="st5" d="M68,250h154c4.4,0,8,4.3,8,9.6v38.3c0,5.3-3.6,9.6-8,9.6H68c-4.4,0-8-4.3-8-9.6v-38.3C60,254.3,63.6,250,68,250
 	z"/>
-<text transform="matrix(1 0 0 1 574 110)" class="st18 st2 st19">DMZ 172.16.0.0/24 · sec 50</text>
-<path class="st11" d="M588,118h164c4.4,0,8,4.2,8,9.4v39.9c0,5.2-3.6,9.4-8,9.4H588c-4.4,0-8-4.2-8-9.4v-39.9
+<text transform="matrix(1 0 0 1 101.8042 272)" class="st0 st3 st6">EXTERNAL-PC</text>
+<text transform="matrix(1 0 0 1 113.2847 288)" class="st7 st8 st9">198.51.100.10</text>
+<text transform="matrix(1 0 0 1 118.7729 301)" class="st10 st8 st11">Internet side</text>
+<path class="st12" d="M308,170h194c4.4,0,8,3.6,8,8v64c0,4.4-3.6,8-8,8H308c-4.4,0-8-3.6-8-8v-64C300,173.6,303.6,170,308,170z"/>
+<text transform="matrix(1 0 0 1 368.5803 208)" class="st0 st3 st6">ASA 5506-X</text>
+<text transform="matrix(1 0 0 1 358.4524 224)" class="st7 st8 st9">outside .2/30 (sec 0)</text>
+<text transform="matrix(1 0 0 1 349.1249 237)" class="st10 st8 st11">dmz .1 (50) · inside .1 (100)</text>
+<line class="st13" x1="210" y1="144" x2="300" y2="190"/>
+<path class="st14" d="M188,151h134c1.7,0,3,1.3,3,3v9c0,1.7-1.3,3-3,3H188c-1.7,0-3-1.3-3-3v-9C185,152.3,186.3,151,188,151z"/>
+<text transform="matrix(1 0 0 1 197.5454 162)" class="st15 st16 st11">outside 203.0.113.0/30</text>
+<line class="st17" x1="230" y1="274" x2="300" y2="235"/>
+<path class="st18" d="M572,90h396c6.6,0,12,5.4,12,12v126c0,6.6-5.4,12-12,12H572c-6.6,0-12-5.4-12-12V102C560,95.4,565.4,90,572,90
+	z"/>
+<text transform="matrix(1 0 0 1 574 110)" class="st19 st3 st20">DMZ 172.16.0.0/24 · sec 50</text>
+<path class="st12" d="M588,118h164c4.4,0,8,4.2,8,9.4v39.9c0,5.2-3.6,9.4-8,9.4H588c-4.4,0-8-4.2-8-9.4v-39.9
 	C580,122.2,583.6,118,588,118z"/>
-<text transform="matrix(1 0 0 1 619.8821 141)" class="st0 st2 st5">WEB-PUBLIC .10</text>
-<text transform="matrix(1 0 0 1 606.4617 157)" class="st6 st7 st8">static NAT → 203.0.113.2:80</text>
-<text transform="matrix(1 0 0 1 617.9286 170)" class="st9 st7 st10">cannot initiate outbound</text>
-<path class="st11" d="M788,118h164c4.4,0,8,3.6,8,8v34c0,4.4-3.6,8-8,8H788c-4.4,0-8-3.6-8-8v-34C780,121.6,783.6,118,788,118z"/>
-<text transform="matrix(1 0 0 1 837.8237 141)" class="st0 st2 st5">PROXY .20</text>
-<text transform="matrix(1 0 0 1 798.7969 157)" class="st6 st7 st8">forced egress (TCP/ICMP/DNS)</text>
-<path class="st20" d="M588,182h164c4.4,0,8,3.6,8,8v28c0,4.4-3.6,8-8,8H588c-4.4,0-8-3.6-8-8v-28C580,185.6,583.6,182,588,182z"/>
-<text transform="matrix(1 0 0 1 606.918 202)" class="st0 st2 st8">IDS-Sensor 192.168.99.20</text>
-<text transform="matrix(1 0 0 1 612.1013 218)" class="st6 st7 st8">SPAN copy only (passive)</text>
-<line class="st21" x1="510" y1="190" x2="560" y2="150"/>
-<path class="st13" d="M525,154h20c1.7,0,3,1.3,3,3v9c0,1.7-1.3,3-3,3h-20c-1.7,0-3-1.3-3-3v-9C522,155.3,523.3,154,525,154z"/>
-<text transform="matrix(1 0 0 1 527.1653 165)" class="st14 st15 st10">dmz</text>
-<path class="st22" d="M308,340h194c4.4,0,8,4.1,8,9.1v48c0,5-3.6,9.1-8,9.1H308c-4.4,0-8-4.1-8-9.1v-48C300,344.1,303.6,340,308,340
+<text transform="matrix(1 0 0 1 619.8821 141)" class="st0 st3 st6">WEB-PUBLIC .10</text>
+<text transform="matrix(1 0 0 1 606.4617 157)" class="st7 st8 st9">static NAT → 203.0.113.2:80</text>
+<text transform="matrix(1 0 0 1 617.9286 170)" class="st10 st8 st11">cannot initiate outbound</text>
+<path class="st12" d="M788,118h164c4.4,0,8,3.6,8,8v34c0,4.4-3.6,8-8,8H788c-4.4,0-8-3.6-8-8v-34C780,121.6,783.6,118,788,118z"/>
+<text transform="matrix(1 0 0 1 837.8237 141)" class="st0 st3 st6">PROXY .20</text>
+<text transform="matrix(1 0 0 1 798.7969 157)" class="st7 st8 st9">forced egress (TCP/ICMP/DNS)</text>
+<path class="st21" d="M588,182h164c4.4,0,8,3.6,8,8v28c0,4.4-3.6,8-8,8H588c-4.4,0-8-3.6-8-8v-28C580,185.6,583.6,182,588,182z"/>
+<text transform="matrix(1 0 0 1 606.918 202)" class="st0 st3 st9">IDS-Sensor 192.168.99.20</text>
+<text transform="matrix(1 0 0 1 612.1013 218)" class="st7 st8 st9">SPAN copy only (passive)</text>
+<line class="st22" x1="510" y1="190" x2="560" y2="150"/>
+<path class="st14" d="M525,154h20c1.7,0,3,1.3,3,3v9c0,1.7-1.3,3-3,3h-20c-1.7,0-3-1.3-3-3v-9C522,155.3,523.3,154,525,154z"/>
+<text transform="matrix(1 0 0 1 527.1653 165)" class="st15 st16 st11">dmz</text>
+<path class="st23" d="M308,340h194c4.4,0,8,4.1,8,9.1v48c0,5-3.6,9.1-8,9.1H308c-4.4,0-8-4.1-8-9.1v-48C300,344.1,303.6,340,308,340
 	z"/>
-<text transform="matrix(1 0 0 1 355.1201 367)" class="st0 st2 st5">HQ-Router 2911</text>
-<text transform="matrix(1 0 0 1 362.0438 383)" class="st6 st7 st8">inside .2/30 · OSPF</text>
-<text transform="matrix(1 0 0 1 343.9365 396)" class="st9 st7 st10">default-information originate</text>
-<line class="st21" x1="405" y1="250" x2="405" y2="340"/>
-<path class="st13" d="M335,279h140c1.7,0,3,1.3,3,3v9c0,1.7-1.3,3-3,3H335c-1.7,0-3-1.3-3-3v-9C332,280.3,333.3,279,335,279z"/>
-<text transform="matrix(1 0 0 1 344.9338 290)" class="st14 st15 st10">inside 192.168.200.0/30</text>
-<path class="st23" d="M308,460h194c4.4,0,8,4.3,8,9.7v41.1c0,5.3-3.6,9.7-8,9.7H308c-4.4,0-8-4.3-8-9.7v-41.1
+<text transform="matrix(1 0 0 1 355.1201 367)" class="st0 st3 st6">HQ-Router 2911</text>
+<text transform="matrix(1 0 0 1 362.0438 383)" class="st7 st8 st9">inside .2/30 · OSPF</text>
+<text transform="matrix(1 0 0 1 343.9365 396)" class="st10 st8 st11">default-information originate</text>
+<line class="st22" x1="405" y1="250" x2="405" y2="340"/>
+<path class="st14" d="M335,279h140c1.7,0,3,1.3,3,3v9c0,1.7-1.3,3-3,3H335c-1.7,0-3-1.3-3-3v-9C332,280.3,333.3,279,335,279z"/>
+<text transform="matrix(1 0 0 1 344.9338 290)" class="st15 st16 st11">inside 192.168.200.0/30</text>
+<path class="st24" d="M308,460h194c4.4,0,8,4.3,8,9.7v41.1c0,5.3-3.6,9.7-8,9.7H308c-4.4,0-8-4.3-8-9.7v-41.1
 	C300,464.3,303.6,460,308,460z"/>
-<text transform="matrix(1 0 0 1 348.3313 483)" class="st0 st2 st5">→ Campus (P1/P2)</text>
-<text transform="matrix(1 0 0 1 362.2566 499)" class="st6 st7 st8">Core · DIST · VLAN</text>
-<text transform="matrix(1 0 0 1 349.1272 512)" class="st9 st7 st10">reachable via default route</text>
-<line class="st24" x1="405" y1="398" x2="405" y2="460"/>
+<text transform="matrix(1 0 0 1 348.3313 483)" class="st0 st3 st6">→ Campus (P1/P2)</text>
+<text transform="matrix(1 0 0 1 362.2566 499)" class="st7 st8 st9">Core · DIST · VLAN</text>
+<text transform="matrix(1 0 0 1 349.1272 512)" class="st10 st8 st11">reachable via default route</text>
 <path class="st25" d="M568,270h404c4.4,0,8,3.6,8,8v104c0,4.4-3.6,8-8,8H568c-4.4,0-8-3.6-8-8V278C560,273.6,563.6,270,568,270z"/>
-<text transform="matrix(1 0 0 1 576 292)" class="st26 st2 st27">NAT / PAT (3 rules)</text>
-<text transform="matrix(1 0 0 1 576 314)" class="st14 st15 st10">OBJ-INSIDE-PAT dyn. 192.168.0.0/16 → outside .2</text>
-<text transform="matrix(1 0 0 1 576 336)" class="st14 st15 st10">OBJ-DMZ-PAT dyn. 172.16.0.0/24 → outside .2</text>
-<text transform="matrix(1 0 0 1 576 358)" class="st14 st15 st10">OBJ-WEB-PUBLIC static .0.10 ↔ 203.0.113.2 (ACL :80)</text>
+<text transform="matrix(1 0 0 1 576 292)" class="st26 st3 st27">NAT / PAT (3 rules)</text>
+<text transform="matrix(1 0 0 1 576 314)" class="st15 st16 st11">OBJ-INSIDE-PAT dyn. 192.168.0.0/16 → outside .2</text>
+<text transform="matrix(1 0 0 1 576 336)" class="st15 st16 st11">OBJ-DMZ-PAT dyn. 172.16.0.0/24 → outside .2</text>
+<text transform="matrix(1 0 0 1 576 358)" class="st15 st16 st11">OBJ-WEB-PUBLIC static .0.10 ↔ 203.0.113.2 (ACL :80)</text>
 <path class="st25" d="M568,410h404c4.4,0,8,3.6,8,8v104c0,4.4-3.6,8-8,8H568c-4.4,0-8-3.6-8-8V418C560,413.6,563.6,410,568,410z"/>
-<text transform="matrix(1 0 0 1 576 432)" class="st26 st2 st27">ACL — 3 opposing philosophies</text>
-<text transform="matrix(1 0 0 1 576 454)" class="st14 st15 st10">OUTSIDE-IN default deny; opens only :80 → WEB</text>
-<text transform="matrix(1 0 0 1 576 476)" class="st28"><tspan x="0" y="0" class="st14 st15 st10">INSIDE-PROXY permit proxy; deny direct 80/443 · permit ip any any </tspan><tspan x="344.7" y="0" class="st14 st29 st10">✔</tspan></text>
-<text transform="matrix(1 0 0 1 576 498)" class="st28"><tspan x="0" y="0" class="st14 st15 st10">DMZ-RESTRICT PROXY egress only · deny host WEB · NO permit any </tspan><tspan x="329.1" y="0" class="st14 st29 st10">✘</tspan></text>
+<text transform="matrix(1 0 0 1 576 432)" class="st26 st3 st27">ACL — 3 opposing philosophies</text>
+<text transform="matrix(1 0 0 1 576 454)" class="st15 st16 st11">OUTSIDE-IN default deny; opens only :80 → WEB</text>
+<text transform="matrix(1 0 0 1 576 476)" class="st28"><tspan x="0" y="0" class="st15 st16 st11">INSIDE-PROXY permit proxy; deny direct 80/443 · permit ip any any </tspan><tspan x="344.7" y="0" class="st15 st29 st11">✔</tspan></text>
+<text transform="matrix(1 0 0 1 576 498)" class="st28"><tspan x="0" y="0" class="st15 st16 st11">DMZ-RESTRICT PROXY egress only · deny host WEB · NO permit any </tspan><tspan x="329.1" y="0" class="st15 st29 st11">✘</tspan></text>
 <path class="st30" d="M68,546h684c4.4,0,8,3.2,8,7.1v114.2c0,3.9-3.6,7.1-8,7.1H68c-4.4,0-8-3.2-8-7.1V553.1
 	C60,549.2,63.6,546,68,546z"/>
-<text transform="matrix(1 0 0 1 74 567)" class="st31 st2 st32">Design intent | perimeter: ASA, DMZ, NAT, filtering</text>
-<text transform="matrix(1 0 0 1 74 587)" class="st14 st7 st33">• ASA 3 zones by security-level: outside 0 · dmz 50 · inside 100 (no upward flow without a rule)</text>
-<text transform="matrix(1 0 0 1 74 603)" class="st14 st7 st33">• Default route injected into OSPF (default-information originate) → the campus exits via the ASA</text>
-<text transform="matrix(1 0 0 1 74 619)" class="st14 st7 st33">• NAT/PAT: dynamic PAT inside &amp; dmz → outside .2 · static WEB publication → 203.0.113.2:80</text>
-<text transform="matrix(1 0 0 1 74 635)" class="st14 st7 st33">• 3 ACLs: OUTSIDE-IN default-deny · INSIDE forced egress via proxy · DMZ no free egress</text>
-<text transform="matrix(1 0 0 1 74 651)" class="st14 st7 st33">• Proxy = only DMZ egress path · passive IDS on SPAN copy (off the data path)</text>
-<text transform="matrix(1 0 0 1 74 667)" class="st14 st7 st33">• Accepted constraint: outside on /30, the ASA .2 serves both as PAT overload and WEB publication</text>
+<text transform="matrix(1 0 0 1 74 567)" class="st31 st3 st32">Design intent | perimeter: ASA, DMZ, NAT, filtering</text>
+<text transform="matrix(1 0 0 1 74 587)" class="st15 st8 st33">• ASA 3 zones by security-level: outside 0 · dmz 50 · inside 100 (no upward flow without a rule)</text>
+<text transform="matrix(1 0 0 1 74 603)" class="st15 st8 st33">• Default route injected into OSPF (default-information originate) → the campus exits via the ASA</text>
+<text transform="matrix(1 0 0 1 74 619)" class="st15 st8 st33">• NAT/PAT: dynamic PAT inside &amp; dmz → outside .2 · static WEB publication → 203.0.113.2:80</text>
+<text transform="matrix(1 0 0 1 74 635)" class="st15 st8 st33">• 3 ACLs: OUTSIDE-IN default-deny · INSIDE forced egress via proxy · DMZ no free egress</text>
+<text transform="matrix(1 0 0 1 74 651)" class="st15 st8 st33">• Proxy = only DMZ egress path · passive IDS on SPAN copy (off the data path)</text>
+<text transform="matrix(1 0 0 1 74 667)" class="st15 st8 st33">• Accepted constraint: outside on /30, the ASA .2 serves both as PAT overload and WEB publication</text>
 <path class="st34" d="M798,546h314c4.4,0,8,3.6,8,8v128c0,4.4-3.6,8-8,8H798c-4.4,0-8-3.6-8-8V554C790,549.6,793.6,546,798,546z"/>
-<text transform="matrix(1 0 0 1 804 567)" class="st1 st2 st32">Legend</text>
+<text transform="matrix(1 0 0 1 804 567)" class="st2 st3 st32">Legend</text>
 <path class="st35" d="M807,580h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C804,581.3,805.3,580,807,580z"/>
-<text transform="matrix(1 0 0 1 825 590)" class="st14 st7 st33">Internet / ISP / external host</text>
+<text transform="matrix(1 0 0 1 825 590)" class="st15 st8 st33">Internet / ISP / external host</text>
 <path class="st26" d="M807,602h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C804,603.3,805.3,602,807,602z"/>
-<text transform="matrix(1 0 0 1 825 612)" class="st14 st7 st33">ASA &amp; DMZ hosts</text>
+<text transform="matrix(1 0 0 1 825 612)" class="st15 st8 st33">ASA &amp; DMZ hosts</text>
 <path class="st36" d="M807,624h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C804,625.3,805.3,624,807,624z"/>
-<text transform="matrix(1 0 0 1 825 634)" class="st14 st7 st33">IDS (passive SPAN)</text>
+<text transform="matrix(1 0 0 1 825 634)" class="st15 st8 st33">IDS (passive SPAN)</text>
 <path class="st37" d="M807,646h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C804,647.3,805.3,646,807,646z"/>
-<text transform="matrix(1 0 0 1 825 656)" class="st14 st7 st33">Inside router (2911)</text>
+<text transform="matrix(1 0 0 1 825 656)" class="st15 st8 st33">Inside router (2911)</text>
 <path class="st38" d="M807,668h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C804,669.3,805.3,668,807,668z"/>
-<text transform="matrix(1 0 0 1 825 678)" class="st14 st7 st33">Internal campus (P1/P2)</text>
+<text transform="matrix(1 0 0 1 825 678)" class="st15 st8 st33">Internal campus (P1/P2)</text>
 </svg>

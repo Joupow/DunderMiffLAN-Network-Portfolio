@@ -128,9 +128,9 @@
 <path class="st30" d="M827,620h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C824,621.3,825.3,620,827,620z"/>
 <text transform="matrix(1 0 0 1 845 630)" class="st15 st8 st28">Router (2911)</text>
 <path class="st31" d="M827,642h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C824,643.3,825.3,642,827,642z"/>
-<text transform="matrix(1 0 0 1 845 652)" class="st15 st8 st28">Core — L3 transit</text>
+<text transform="matrix(1 0 0 1 845 652)" class="st15 st8 st28">Core - L3 transit</text>
 <path class="st21" d="M827,664h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C824,665.3,825.3,664,827,664z"/>
-<text transform="matrix(1 0 0 1 845 674)" class="st15 st8 st28">Distribution — HSRP</text>
+<text transform="matrix(1 0 0 1 845 674)" class="st15 st8 st28">Distribution - HSRP</text>
 <path class="st32" d="M827,686h7c1.7,0,3,1.3,3,3v7c0,1.7-1.3,3-3,3h-7c-1.7,0-3-1.3-3-3v-7C824,687.3,825.3,686,827,686z"/>
 <text transform="matrix(1 0 0 1 845 696)" class="st15 st8 st28">Access (2960)</text>
 </svg>
