@@ -256,7 +256,7 @@ write memory
 
 **Validation:** `show ip dhcp binding` → leases `.10-.14`.
 
-> 📷 **[P-04](#p-06)** leases `.10-.14`, WLC DHCP off.
+> 📷 **[P-04](#p-04)** leases `.10-.14`, WLC DHCP off.
 
 ---
 
@@ -390,17 +390,17 @@ ping 192.168.10.52      ! wired PC VLAN 10 (inter-VLAN routing, TTL 127 = 1 L3 h
 
 ## <a id="validation-de-bout-en-bout-gate-final"></a>End-to-end validation 
 
-| Domain | Check | Key command | Expected | Evidence |
-|---|---|---|---|---|
-| 🔌 Switching | Wi-Fi VLANs | `show vlan brief` | 300 everywhere, 301/310 on DIST | [P-01](#p-01), [P-02](#p-02), [P-03](#p-03) |
-| 🔌 Switching | Trunks (301/310 confined) | `show interfaces trunk` | full lists, 301/310 confined to inter-DIST | [P-07](#p-07), [P-08](#p-08), [P-09](#p-09) |
-| 🔁 High avail. | HSRPv2 (Vl30 intact) | `show standby brief` | DIST1 Active Vl300 + **Vl30 intact** | [P-12](#p-12), [P-13](#p-13) |
-| 🌳 STP | VLAN 300 root | `show spanning-tree vlan 300` | `This bridge is the root` (DIST1) | [P-15](#p-15) |
-| 📡 Services | Single-authority DHCP | DIST1 `show ip dhcp binding` | leases `.10-.14`, WLC DHCP off | [P-06](#p-06) |
-| 📶 Wi-Fi | WLC reachable | `ping 192.168.100.200` | 5/5 | [P-16](#p-16), [P-17](#p-17) |
-| 📶 Wi-Fi | CAPWAP + SSID | WLC AP Groups | **4 LAPs `Online`**, 2 WLANs | [P-18](#p-18) |
-| 📶 Wi-Fi | Autonomous AP (radio) | radio config | 2.4 GHz ch.6, WPA2-PSK | [P-19](#p-19) |
-| 📦 Connectivity | Client data plane | Laptop `ping .100.1` + `.10.52` | 4/4; **TTL 127** | [P-20](#p-20), [P-21](#p-21) |
+| Domain          | Check                     | Key command                     | Expected                                   | Evidence                                    |
+| --------------- | ------------------------- | ------------------------------- | ------------------------------------------ | ------------------------------------------- |
+| 🔌 Switching    | Wi-Fi VLANs               | `show vlan brief`               | 300 everywhere, 301/310 on DIST            | [P-01](#p-01), [P-02](#p-02), [P-03](#p-03) |
+| 🔌 Switching    | Trunks (301/310 confined) | `show interfaces trunk`         | full lists, 301/310 confined to inter-DIST | [P-07](#p-07), [P-08](#p-08), [P-09](#p-09) |
+| 🔁 High avail.  | HSRPv2 (Vl30 intact)      | `show standby brief`            | DIST1 Active Vl300 + **Vl30 intact**       | [P-12](#p-12), [P-13](#p-13)                |
+| 🌳 STP          | VLAN 300 root             | `show spanning-tree vlan 300`   | `This bridge is the root` (DIST1)          | [P-15](#p-15)                               |
+| 📡 Services     | Single-authority DHCP     | DIST1 `show ip dhcp binding`    | leases `.10-.14`, WLC DHCP off             | [P-04](#p-04)                               |
+| 📶 Wi-Fi        | WLC reachable             | `ping 192.168.100.200`          | 5/5                                        | [P-16](#p-16), [P-17](#p-17)                |
+| 📶 Wi-Fi        | CAPWAP + SSID             | WLC AP Groups                   | **4 LAPs `Online`**, 2 WLANs               | [P-18](#p-18)                               |
+| 📶 Wi-Fi        | Autonomous AP (radio)     | radio config                    | 2.4 GHz ch.6, WPA2-PSK                     | [P-19](#p-19)                               |
+| 📦 Connectivity | Client data plane         | Laptop `ping .100.1` + `.10.52` | 4/4; **TTL 127**                           | [P-20](#p-20), [P-21](#p-21)                |
 
 ## <a id="dépannage-incidents-de-session"></a>Troubleshooting (session incidents)
 
@@ -492,7 +492,7 @@ show ip route                      ping 192.168.100.200            ping 192.168.
 
 ![Capture P6-30](../assets/captures/P6/Capture_P6_30.png)
 
-**<a id="p-06"></a> [P-04] · Single-authority VLAN 300 DHCP**: DIST-SW1 `show ip dhcp binding`: `.10-.13` (LAP) + `.14` (laptop), all `Automatic`
+**<a id="p-04"></a> [P-04] · Single-authority VLAN 300 DHCP**: DIST-SW1 `show ip dhcp binding`: `.10-.13` (LAP) + `.14` (laptop), all `Automatic`
 
 ![Capture P6-12](../assets/captures/P6/Capture_P6_12.png)
 
