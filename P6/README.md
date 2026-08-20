@@ -1,68 +1,68 @@
-# Partie 6 : Wi-Fi  
+# Part 6: Wi-Fi
 
- **Concepts clés** : WLC · APs lightweight · CAPWAP · SSID WPA2 Corp/Guest · HSRPv2 VLAN 300
+ **Key concepts**: WLC · lightweight APs · CAPWAP · WPA2 Corp/Guest SSIDs · HSRPv2 VLAN 300
 
-- 💻**Outil** : Cisco Packet Tracer 9.0
-- 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
-- 📝 Progression étape par étape → [WORKFLOW P6](./WORKFLOW.md)
-- 🎓 **Certification :** CompTIA Network+
-## Topologie logique
+- 💻 **Tool**: Cisco Packet Tracer 9.0
+- 🏷️ Full addressing plan → [IPAM](../IPAM.md)
+- 📝 Step-by-step progression → [WORKFLOW P6](./WORKFLOW.md)
+- 🎓 **Certification:** CompTIA Network+
+## Logical topology
 
-![Topologie P6](../assets/topologies/topology_p6.svg)
+![P6 topology](../assets/topologies/topology_p6.svg)
 
-## Objectif
+## Objective
 
-Poser une couche Wi-Fi d'entreprise sur la fondation filaire P1–P5 : 
+Lay an enterprise Wi-Fi layer on top of the P1–P5 wired foundation:
 
-- architecture à contrôleur (WLC + APs lightweight)
-- segmentation SSID/VLAN, 
-- WPA2, 
-- et passerelle redondée par **HSRPv2 sur le VLAN 300** en **prouvant chaque maillon par un état ou un trafic réel**. 
+- a controller-based architecture (WLC + lightweight APs)
+- SSID/VLAN segmentation,
+- WPA2,
+- and a gateway made redundant by **HSRPv2 on VLAN 300**, **proving every link with a state or real traffic**.
 
-C'est cette partie qui introduit le VLAN 300 sur le réseau.
+This is the part that introduces VLAN 300 to the network.
 
-## Contrainte structurante
+## Structural constraint
 
-- Packet Tracer 9.0 **ne simule pas le data plane CAPWAP centralisé**. 
-- Le WLC enregistre bien les APs (control plane prouvé), mais ne sait pas ré-injecter le trafic client par son port access. 
-- D'où une **architecture hybride assumée** : le contrôle est prouvé par le WLC (4 APs `Online`), le data plane client par un **AP autonome** (pont direct, sans contrôleur dans le chemin). 
+- Packet Tracer 9.0 **does not simulate the centralized CAPWAP data plane**.
+- The WLC does register the APs (control plane proven), but it can't re-inject client traffic out its access port.
+- Hence a **deliberately hybrid architecture**: the control plane is proven by the WLC (4 APs `Online`), the client data plane by a **standalone AP** (a direct bridge, with no controller in the path).
 
-C'est le seul moyen honnête de démontrer les deux plans dans l'outil.
-
-
-## Décision de continuité (héritée de P5)
-
-- DIST-SW1 est déjà HSRP Active + root STP des VLANs 10/30
-- Le VLAN 300 suit cette logique. 
-- **On ne touche jamais au VLAN 30** : rejouer un side-fix qui basculerait son root vers DIST-SW2 casserait la co-localisation CME/Active de la décision A1. Vérifié après coup.
+That's the only honest way to demonstrate both planes in the tool.
 
 
-## Couverture CompTIA Network+
+## Continuity decision (inherited from P5)
 
-|Domaine|Concepts couverts|Statut|
+- DIST-SW1 is already the HSRP Active + STP root for VLANs 10/30
+- VLAN 300 follows the same logic.
+- **We never touch VLAN 30**: replaying a side-fix that flipped its root over to DIST-SW2 would break the CME/Active co-location from decision A1. Verified after the fact.
+
+
+## CompTIA Network+ coverage
+
+| Domain | Concepts covered | Status |
 |---|---|---|
-|📶 Sans fil : infra|AP/WLC · autonome vs lightweight · CAPWAP · AP groups|✅ 4 LAP + AP autonome + WLC · 4 APs `Online`|
-|📶 Sans fil : diffusion & sécu|SSID/BSSID/ESSID · WPA2-PSK (AES) · canal 2.4 GHz non-recouvrant|✅ Corp + Guest · canal 6|
-|🔌 Commutation|802.1Q trunking · STP/PortFast/BPDU Guard · segmentation VLAN Wi-Fi|✅ root VLAN 300 · ports AP durcis|
-|🧭 Routage|Inter-VLAN sans fil|✅ 300 → 10 via AP autonome|
-|🔁 Haute disponibilité|HSRPv2 passerelle Wi-Fi|✅ groupe 300, Active/Standby|
-|🌐 Services|DHCP pour APs|✅ baux `.10-.13`|
+| 📶 Wireless: infra | AP/WLC · standalone vs lightweight · CAPWAP · AP groups | ✅ 4 LAP + standalone AP + WLC · 4 APs `Online` |
+| 📶 Wireless: broadcast & security | SSID/BSSID/ESSID · WPA2-PSK (AES) · non-overlapping 2.4 GHz channel | ✅ Corp + Guest · channel 6 |
+| 🔌 Switching | 802.1Q trunking · STP/PortFast/BPDU Guard · Wi-Fi VLAN segmentation | ✅ root VLAN 300 · hardened AP ports |
+| 🧭 Routing | Wireless inter-VLAN | ✅ 300 → 10 via the standalone AP |
+| 🔁 High availability | HSRPv2 Wi-Fi gateway | ✅ group 300, Active/Standby |
+| 🌐 Services | DHCP for the APs | ✅ leases `.10-.13` |
 
-**Limites assumées & dette (contrainte outil, pas défaut de conception)**
+**Assumed limits & debt (a tool constraint, not a design flaw)**
 
-- 📋 WPA3 / 6 GHz / band steering · PSK-Enterprise (802.1X) : non supportés / non simulables en Packet Tracer, documentés comme référence prod.
-- ⚠️ Réseau Guest : configuré, isolation non vérifiable en data plane sous PT.
-- ⚠️ VLANs 301/310 : définis, pas exerçables sur le fil en PT (300 validé).
-- 🔧 Canal 6 (2.4 GHz) : downgrade assumé vs 5 GHz ch.36 : **dette L14**.
+- 📋 WPA3 / 6 GHz / band steering · PSK-Enterprise (802.1X): unsupported / not simulable in Packet Tracer, documented as a prod reference.
+- ⚠️ Guest network: configured, isolation not verifiable at the data plane under PT.
+- ⚠️ VLANs 301/310: defined, not exercisable on the wire in PT (300 validated).
+- 🔧 Channel 6 (2.4 GHz): assumed downgrade vs 5 GHz ch.36: **debt L14**.
 
 ## Conclusion
 
-Packet Tracer ne simule pas le data plane CAPWAP centralisé; et l'apprentissage n'est pas de le contourner en douce, mais de **nommer la limite honnêtement** : 
+Packet Tracer doesn't simulate the centralized CAPWAP data plane; and the lesson isn't to quietly work around it, it's to **name the limitation honestly**:
 
-Contrôle prouvé par le WLC (4 APs `Online`), data plane prouvé par un AP autonome. Reconnaître ce qu'un outil _ne peut pas_ démontrer, et le documenter comme tel, est une preuve de maturité, pas un aveu de faiblesse. 
+control proven by the WLC (4 APs `Online`), data plane proven by a standalone AP. Recognizing what a tool _cannot_ demonstrate, and documenting it as such, is a sign of maturity, not an admission of weakness.
 
-C'est aussi ce qui justifie la clôture du projet ici et le passage à un émulateur pour la suite. 
+It's also what justifies closing the project here and moving to an emulator for what comes next.
 
 ---
 
-⬅️ [Partie 5 : VoIP](../P5/README.md) · ⬆️ [Vue d'ensemble du projet](../README.md) · 🔁 [Workflow P6](./WORKFLOW.md) ·
+⬅️ [Part 5: VoIP](../P5/README.md) · ⬆️ [Project overview](../README.md) · 🔁 [Workflow P6](./WORKFLOW.md) ·
