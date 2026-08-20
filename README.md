@@ -7,12 +7,12 @@ This network lab simulates an enterprise infrastructure under Cisco Packet Trace
 
 | Part                 | Topic                      | **Key concepts**                                                                                |
 | -------------------- | -------------------------- | ----------------------------------------------------------------------------------------------- |
-| [P1](./P1/README.md) | 🏗️ 3-tier LAN foundations | Cisco 3-tier hierarchical model · VLANs · 802.1Q · STP · inter-VLAN routing · SVI · Rapid PVST+ |
-| [P2](./P2/README.md) | 🧭 routing & redundancy    | Routing · HSRP · DHCP · Relay Helper · OSPF P2P                                                 |
-| [P3](./P3/README.md) | 🛡️ DMZ & firewall         | ASA · DMZ · NAT/PAT · filtering · ACL · IDS/SPAN                                                |
-| [P4](./P4/README.md) | 🖥️ Datacenter             | Spine-Leaf · Border Leafs · E-W and N-S traffic · ECMP · server tiers · load balancer · storage |
-| [P5](./P5/README.md) | 📞 VoIP                    | VoIP · CME · TFTP · DHCP Option 150 · voice QoS                                                 |
-| [P6](./P6/README.md) | 📶 WiFi                    | WLC · lightweight APs · CAPWAP · WPA2 Corp/Guest SSID · HSRPv2 VLAN 300                         |
+| [P1](./P1/) | 🏗️ 3-tier LAN foundations | Cisco 3-tier hierarchical model · VLANs · 802.1Q · STP · inter-VLAN routing · SVI · Rapid PVST+ |
+| [P2](./P2/) | 🧭 routing & redundancy    | Routing · HSRP · DHCP · Relay Helper · OSPF P2P                                                 |
+| [P3](./P3/) | 🛡️ DMZ & firewall         | ASA · DMZ · NAT/PAT · filtering · ACL · IDS/SPAN                                                |
+| [P4](./P4/) | 🖥️ Datacenter             | Spine-Leaf · Border Leafs · E-W and N-S traffic · ECMP · server tiers · load balancer · storage |
+| [P5](./P5/) | 📞 VoIP                    | VoIP · CME · TFTP · DHCP Option 150 · voice QoS                                                 |
+| [P6](./P6/) | 📶 WiFi                    | WLC · lightweight APs · CAPWAP · WPA2 Corp/Guest SSID · HSRPv2 VLAN 300                         |
 
 The project is not intended to represent a turnkey production architecture. It is above all a **junior technical portfolio**; design mistakes are part of the learning process and are treated as opportunities for analysis and improvement.
 
