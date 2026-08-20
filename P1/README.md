@@ -1,54 +1,54 @@
-# Partie 1 : Fondations LAN 3 niveaux
+# Part 1: Three-Tier LAN Foundations
 
-**Concepts clés** : Modèle hiérarchique Cisco 3 niveaux · VLANs · 802.1Q · STP · routage inter-VLAN · SVI 
+**Key concepts**: Cisco three-tier hierarchical model · VLANs · 802.1Q · STP · inter-VLAN routing · SVI
 
-- 💻**Outil** : Cisco Packet Tracer 9.0
-- 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
-- 📝 Progression étape par étape → [WORKFLOW P1](./WORKFLOW.md)
-- 🎓 **Certification :** CompTIA Network+ 
-## Topologie logique
+- 💻 **Tool**: Cisco Packet Tracer 9.0  
+- 🏷️ Full addressing plan → [IPAM](../IPAM.md)
+- 📝 Step-by-step progression → [WORKFLOW P1](./WORKFLOW.md)
+- 🎓 **Certification:** CompTIA Network+
+## Logical topology
 
-![Topologie P1](../assets/topologies/topology_p1.svg)
-## Objectif
+![P1 topology](../assets/topologies/topology_p1.svg)
+## Objective
 
-Construire la fondation du LAN d'entreprise sur le modèle hiérarchique Cisco à trois niveaux comprenant : 
+Architect the enterprise LAN foundation on Cisco's three-tier hierarchical model, comprising:
 
-- Core, distributions et access
-- Segmentation VLAN
-- Plan de management dédié,
-- Stabilisation STP
-- Routage inter-VLAN *temporaire* sur le Core.
+- Core, distribution, and access layers
+- VLAN segmentation
+- a dedicated management plane,
+- STP stabilization
+- *temporary* inter-VLAN routing on the Core.
 
-Tout ce qui suit : HSRP, OSPF, DMZ, datacenter, voix, Wi-Fi, dépend de la propreté de cette base.
-## Contrainte structurante
+Everything that follows: HSRP, OSPF, DMZ, datacenter, voice, Wi-Fi, hangs on how clean this base is.
+## Structural constraint
 
-- Le root STP est positionné dès cette partie sur la **Distribution**, aligné sur le plan HSRP de P2 (DIST-SW1 root `{10,30}`, DIST-SW2 root `{20,99}`). 
-- Root L2 et passerelle L3 finiront ainsi sur le même switch par VLAN à partir de P2 : le principe *« le service suit l'Active »*, posé ici pour être hérité par toute la suite.
+- The STP root is placed on the **Distribution** layer from this part onward, aligned with the P2 HSRP plan (DIST-SW1 root `{10,30}`, DIST-SW2 root `{20,99}`).
+- The L2 root and L3 default gateway therefore land on the same switch per VLAN starting in P2: the *"the service follows the Active"* principle, established here so the rest of the build inherits it.
 
-**Pourquoi une base temporaire sur le core ?** 
+**Why a temporary base on the Core?**
 
-Une passerelle `.1` redondante sur deux switches de Distribution est **impossible sans FHRP** (même IP sur deux boîtiers = conflit). Livrer d'abord une base mono-boîtier qui fonctionne, puis la durcir avec HSRP + `/30` routé + OSPF en P2, de manière délibéré.
+A redundant `.1` default gateway across two Distribution switches is **impossible without an FHRP** (the same IP on two chassis = a conflict). The deliberate call: ship a working single-chassis base first, then harden it with HSRP + a routed `/30` + OSPF in P2.
 
-## Couverture CompTIA Network+
+## CompTIA Network+ coverage
 
-| Domaine                | Concepts couverts                                        | Statut                                               |
+| Domain                 | Concepts covered                                          | Status                                               |
 | ---------------------- | -------------------------------------------------------- | ---------------------------------------------------- |
-| 🗺️ Topologie          | Hiérarchique 3 niveaux · star / collapsed core (comparé) | ✅ 7 switches, 3 niveaux                              |
-| 🔌 Commutation         | VLANs · 802.1Q · VLAN natif durci · Rapid PVST+ · SVI    | ✅ 6 VLANs sur les 7 switches                         |
-| 🔌 Commutation         | Voice VLAN · speed/duplex                                | ⚠️ démonstratif (poste en P5) · uplinks access 100M  |
-| 🧭 Routage             | Inter-VLAN via SVI du Core                               | ✅ 4 SVIs · temporaire → durci en P2                  |
-| 🏷️ Adressage IPv4     | Classe C `/24` · subnetting · hôtes statiques            | ✅ 4× /24 · 8 hôtes                                   |
-| 🛡️ Sécurité           | Isolation de ports · durcissement bordure                | ✅ 998 + shutdown · BPDU Guard bordure only           |
-| 🔁 Haute disponibilité | Dual-homing L2 · failover STP                            | ✅ mécanisme prouvé · ⏳ timing sous-seconde à mesurer |
+| 🗺️ Topology           | Three-tier hierarchical · star / collapsed core (compared) | ✅ 7 switches, 3 tiers                                |
+| 🔌 Switching           | VLANs · 802.1Q · hardened native VLAN · Rapid PVST+ · SVI | ✅ 6 VLANs across the 7 switches                      |
+| 🔌 Switching           | Voice VLAN · speed/duplex                                | ⚠️ demonstrative (phone in P5) · access uplinks 100M |
+| 🧭 Routing             | Inter-VLAN via the Core's SVIs                           | ✅ 4 SVIs · temporary → hardened in P2                |
+| 🏷️ IPv4 addressing    | Class C `/24` · subnetting · static hosts               | ✅ 4× /24 · 8 hosts                                   |
+| 🛡️ Security           | Port isolation · edge hardening                          | ✅ 998 + shutdown · BPDU Guard edge only              |
+| 🔁 High availability   | L2 dual-homing · STP failover                            | ✅ mechanism proven · ⏳ sub-second timing to be measured |
 
-## Bilan pédagogique 
+## Lessons learned
 
-Une base propre n'est pas une étape « facile » qu'on expédie : c'est la dette de toutes les parties suivantes. Ici, on pose les fondations avant les murs porteurs : la base L2 doit être stable avant d'empiler la redondance.
+A clean foundation isn't the "easy" step you rush through: it's the technical debt every later part inherits. This is pouring the foundation before the load-bearing walls go up: the L2 base has to be stable before you stack redundancy on top of it.
 
-Deux incidents attrapés dès ce niveau : mismatch de VLAN natif, BPDU Guard sur un uplink, qui auraient contaminé HSRP, OSPF puis la voix s'ils étaient passés. 
+Two incidents caught this early: a native VLAN mismatch and BPDU Guard on an uplink, which would have contaminated HSRP, then OSPF, then voice had they slipped through.
 
-L'apprentissage central reste le principe de séquençage : positionner le root STP _avant_ que la redondance existe, aligné sur le futur Active HSRP, parce qu'une passerelle `.1` redondée sur deux switches est **impossible sans FHRP**. 
+The central takeaway remains the sequencing principle: place the STP root _before_ redundancy exists, aligned with the future HSRP Active, because a `.1` gateway made redundant across two switches is **impossible without an FHRP**.
 
 ---
 
-⬆️ [Vue d'ensemble du projet](../README.md) · 🔁 [Workflow P1](./WORKFLOW.md) · **Suivant : [Partie 2 : Routage & redondance](../P2/README.md)** : migration des SVIs sur la Distribution, HSRP, OSPF point-à-point, DHCP centralisé + relais.
+⬆️ [Project overview](../README.md) · 🔁 [Workflow P1](./WORKFLOW.md) · **Next: [Part 2: Routing & Redundancy](../P2/README.md)**: migrating the SVIs onto the Distribution layer, HSRP, point-to-point OSPF, centralized DHCP + relay.
