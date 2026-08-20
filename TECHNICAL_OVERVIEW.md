@@ -43,7 +43,7 @@ Three levels of documentation, with **one canonical home per content type**.
 
 ## What a reviewer will challenge
 
-###### **"Why Packet Tracer?"**
+**"Why Packet Tracer?"**
 
 Packet Tracer is used to practice and document Network+ level concepts in a coherent simulated topology. 
 
@@ -51,11 +51,11 @@ It was also the deliberate entry point for a self-taught path: the first tool I 
 
 Redoing this today I'd start on GNS3 / Cisco CML. Not because PT was the wrong choice then, but because the topology is now solid enough that emulating real IOS is the more useful next step than pushing a simulator further.
 
-###### **"Is it production-ready?"**
+**"Is it production-ready?"**
 
 No, and the gaps are tracked explicitly ([Production gaps](#production-gaps)). It is a junior portfolio lab; honesty about the limits is what earns credibility.
 
-###### **"What proves it isn't copy-paste?"**
+**"What proves it isn't copy-paste?"**
 
 Three things a copy-paste does not produce: 
 
