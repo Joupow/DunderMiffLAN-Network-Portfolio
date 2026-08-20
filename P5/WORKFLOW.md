@@ -1,82 +1,82 @@
-# Partie 5 : Workflow 
+# Part 5: Workflow 
 
- **Concepts clés** : VoIP · CME · TFTP · DHCP Option 150 · QoS voix
+ **Key concepts**: VoIP · CME · TFTP · DHCP Option 150 · voice QoS
 
-- 💻**Outil** : Cisco Packet Tracer 9.0
-- 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
-- 📄 Présentation de la partie 5 → [README P5](./README.md)
-- 🎓 **Certification :** CompTIA Network+
+- 💻 **Tool**: Cisco Packet Tracer 9.0
+- 🏷️ Full addressing plan → [IPAM](../IPAM.md)
+- 📄 Part 5 overview → [README P5](./README.md)
+- 🎓 **Certification:** CompTIA Network+
 
 ---
-## Sommaire
+## <a id="sommaire"></a>Contents
 
-**1. Cadrage**
+**1. Scope**
 
-- [Topologie As-Built](#topologie-as-built)
-- [Niveaux & équipements](#niveaux--équipements)
+- [As-Built Topology](#topologie-as-built)
+- [Tiers & equipment](#niveaux--équipements)
 
-**2. Étapes de configuration**
+**2. Configuration steps**
 
-- [Étape 0 : Vérifier le routage ASA](#step-0--vérifier-le-routage-asa-aucune-reconfiguration)
-- [Étape 1 : Rattacher le CME au VLAN 30](#step-1--rattacher-le-cme-au-vlan-30-sur-dist-sw1)
-- [Étape 2 : Config de base du CME](#step-2--config-de-base-du-cme-interface--route-par-défaut)
-- [Étape 3 : DHCP + Option 150](#step-3--dhcp--option-150-autorité-unique-du-vlan-30)
-- [Étape 4 : Call-control + numéros + boutons](#step-4--call-control--numéros--boutons-telephony-service)
-- [Étape 5 : Ports téléphones (data 10 + voice 30)](#step-5--ports-téléphones-sur-les-access-data-10--voice-30)
-- [Étape 6 : QoS : trust conditionnel](#step-6--qos--trust-conditionnel-frontière-liée-au-cdp)
-- [Séquence de boot d'un poste](#séquence-de-boot-dun-poste-où-lécran-lcd-bloque)
+- [Step 0: Verify ASA routing](#step-0--vérifier-le-routage-asa-aucune-reconfiguration)
+- [Step 1: Attach the CME to VLAN 30](#step-1--rattacher-le-cme-au-vlan-30-sur-dist-sw1)
+- [Step 2: CME base config](#step-2--config-de-base-du-cme-interface--route-par-défaut)
+- [Step 3: DHCP + Option 150](#step-3--dhcp--option-150-autorité-unique-du-vlan-30)
+- [Step 4: Call-control + numbers + buttons](#step-4--call-control--numéros--boutons-telephony-service)
+- [Step 5: Phone ports (data 10 + voice 30)](#step-5--ports-téléphones-sur-les-access-data-10--voice-30)
+- [Step 6: QoS: conditional trust](#step-6--qos--trust-conditionnel-frontière-liée-au-cdp)
+- [Phone boot sequence](#séquence-de-boot-dun-poste-où-lécran-lcd-bloque)
 
-**3. Preuves & clôtures**
+**3. Evidence & closure**
 
-- [Validation de bout en bout](#validation-de-bout-en-bout-gate-final)
-- [Dépannage (incidents de session)](#dépannage-incidents-de-session)
-- [Registre d'erreurs & dette technique](#registre-derreurs--dette-technique)
-- [Annexe : Captures de preuve](#annexe--captures-de-preuve)
-# 1. Cadrage
+- [End-to-end validation](#validation-de-bout-en-bout-gate-final)
+- [Troubleshooting (session incidents)](#dépannage-incidents-de-session)
+- [Error log & technical debt](#registre-derreurs--dette-technique)
+- [Appendix: Evidence captures](#annexe--captures-de-preuve)
+# 1. Scope
 
-## <a id="topologie-as-built"></a>Topologie As-Built
+## <a id="topologie-as-built"></a>As-Built Topology
 
-Schéma PT : téléphonie - CME, VLAN voix, IP phones
+PT diagram: telephony – CME, voice VLAN, IP phones
 
 ![Networ-overview-P5](../assets/network-overview/NO_P5.png)
 
-## <a id="niveaux--équipements"></a>Niveaux & équipements
+## <a id="niveaux--équipements"></a>Tiers & equipment
 
-| Rôle                           | Équipement                                   | Rôle dans la partie                                                                                                 |
+| Role                           | Equipment                                    | Role in this part                                                                                                   |
 | ------------------------------ | -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| Agent d'appel + DHCP + TFTP    | **CME-Router** (2811) - *nouveau*            | `telephony-service` (SCCP), pool DHCP VLAN 30, serveur TFTP (option 150) : un seul boîtier pour les trois fonctions |
-| Distribution (hôte du service) | **DIST-SW1** (3560-24PS)                     | Reçoit le CME sur `Fa0/10` (access VLAN 30). Déjà HSRP Active + root STP du VLAN 30. **Inchangé sinon.**            |
-| Access (postes)                | **ACC-SW1 / ACC-SW2**                        | Port `Fa0/5` en data VLAN 10 + voice VLAN 30 + QoS trust conditionnel                                               |
-| Postes                         | **IP Phone 1001 / 1002** (7960) - *nouveaux* | S'enregistrent en SCCP, un PC se branche derrière (un câble, deux VLAN)                                             |
-| Périmètre (contrôle)           | **ASA / HQ-Router**                          | Non reconfigurés : on **vérifie** seulement le résumé `/20` sûr et l'absence de pool VLAN 30 sur le HQ              |
+| Call agent + DHCP + TFTP       | **CME-Router** (2811) - *new*                | `telephony-service` (SCCP), VLAN 30 DHCP pool, TFTP server (option 150): a single box for all three functions       |
+| Distribution (service host)    | **DIST-SW1** (3560-24PS)                     | Hosts the CME on `Fa0/10` (access VLAN 30). Already HSRP Active + STP root for VLAN 30. **Otherwise unchanged.**    |
+| Access (endpoints)             | **ACC-SW1 / ACC-SW2**                        | Port `Fa0/5` in data VLAN 10 + voice VLAN 30 + conditional QoS trust                                                 |
+| Endpoints                      | **IP Phone 1001 / 1002** (7960) - *new*      | Register over SCCP, a PC plugs in behind (one cable, two VLANs)                                                      |
+| Perimeter (control)            | **ASA / HQ-Router**                          | Not reconfigured: we only **verify** the safe `/20` summary and the absence of a VLAN 30 pool on the HQ             |
 
-Tout le campus P1/P2, le périmètre P3 et le datacenter P4 sont **inchangés**, P5 n'ajoute que le CME, deux postes et la config voix des ports.
+The whole P1/P2 campus, the P3 perimeter and the P4 datacenter are **unchanged**; P5 only adds the CME, two phones and the ports' voice config.
 
-# 2. Étapes de configuration
+# 2. Configuration steps
 
-### <a id="step-0--vérifier-le-routage-asa-aucune-reconfiguration"></a>Étape 0 : Vérifier le routage ASA (aucune reconfiguration)
+### <a id="step-0--vérifier-le-routage-asa-aucune-reconfiguration"></a>Step 0: Verify ASA routing (no reconfiguration)
 
-**Intention :** confirmer que le résumé `/20` de P3 est toujours sûr. Vérification seule.
+**Intent:** confirm the P3 `/20` summary is still safe. Verification only.
 
 ```cisco
 ! ===== ASA =====
 
 show route | include inside
-! Attendu : S 10.0.0.0 255.255.240.0  (un seul résumé /20 ; PAS de /8, PAS de /16)
+! Expected: S 10.0.0.0 255.255.240.0  (a single /20 summary; NO /8, NO /16)
 
 ! ===== HQ-Router =====
 
 show run | include Null0
-! Attendu : ip route 10.0.0.0 255.255.240.0 Null0 254  (verrou des trous du /20)
+! Expected: ip route 10.0.0.0 255.255.240.0 Null0 254  (lock for the /20 holes)
 ```
 
-> 📷 **[P-09](#p-09)** ASA `show route` : `S 10.0.0.0 255.255.240.0`, aucun `/8`/`/16`.
+> 📷 **[P-09](#p-09)** ASA `show route`: `S 10.0.0.0 255.255.240.0`, no `/8`/`/16`.
 
 ---
 
-### <a id="step-1--rattacher-le-cme-au-vlan-30-sur-dist-sw1"></a>Étape 1 : Rattacher le CME au VLAN 30 (sur DIST-SW1)
+### <a id="step-1--rattacher-le-cme-au-vlan-30-sur-dist-sw1"></a>Step 1: Attach the CME to VLAN 30 (on DIST-SW1)
 
-**Intention :** brancher le CME sur le switch qui est root STP + HSRP Active du VLAN 30.
+**Intent:** plug the CME into the switch that is STP root + HSRP Active for VLAN 30.
 
 ```cisco
 ! ===== DIST-SW1 =====
@@ -95,17 +95,17 @@ end
 write memory
 ```
 
-> ⚠️ **Incident I-1 :** le port peut rester `Down` **malgré** cette config si l'interface d'en face (CME `Fa0/0`) est en `shutdown`. Configurer un port ne crée pas le lien physique.
+> ⚠️ **Incident I-1:** the port can stay `Down` **despite** this config if the far-end interface (CME `Fa0/0`) is in `shutdown`. Configuring a port does not create the physical link.
 
-**Vérif :** `show interfaces status Fa0/10` → `connected`, VLAN `30`. Placement confirmé par `show standby brief` → `Vl30 … Active` sur DIST-SW1.
+**Check:** `show interfaces status Fa0/10` → `connected`, VLAN `30`. Placement confirmed by `show standby brief` → `Vl30 … Active` on DIST-SW1.
 
-> 📷 **[P-08](#p-08)** DIST-SW1 `show standby brief` : `Vl30 30 110 P Active`.
+> 📷 **[P-08](#p-08)** DIST-SW1 `show standby brief`: `Vl30 30 110 P Active`.
 
 ---
 
-### <a id="step-2--config-de-base-du-cme-interface--route-par-défaut"></a>Étape 2 : Config de base du CME (interface + route par défaut)
+### <a id="step-2--config-de-base-du-cme-interface--route-par-défaut"></a>Step 2: CME base config (interface + default route)
 
-**Intention :** IP du service sur `Fa0/0`, route par défaut vers la VIP HSRP.
+**Intent:** service IP on `Fa0/0`, default route to the HSRP VIP.
 
 ```cisco
 ! ===== CME-Router =====
@@ -118,31 +118,31 @@ hostname CME-Router
 interface FastEthernet0/0
  description VLAN30_VoIP
  ip address 192.168.30.254 255.255.255.0
- no shutdown                              ! ← les interfaces routeur naissent 
+ no shutdown                              ! ← router interfaces are born 
 SHUTDOWN
 exit
 
-ip route 0.0.0.0 0.0.0.0 192.168.30.1     ! passerelle = VIP HSRP (survit au failover DIST1→DIST2)
+ip route 0.0.0.0 0.0.0.0 192.168.30.1     ! gateway = HSRP VIP (survives the DIST1→DIST2 failover)
 
 end
 write memory
 ```
 
-**Vérif :**
+**Check:**
 
 ```cisco
 show ip interface brief      ! Fa0/0 = 192.168.30.254 up/up
-ping 192.168.30.1            ! atteint la VIP HSRP (DIST-SW1 vivant)
-show arp                     ! .1 résolu = VLAN 30 présent sur la Distribution
+ping 192.168.30.1            ! reaches the HSRP VIP (DIST-SW1 alive)
+show arp                     ! .1 resolved = VLAN 30 present on the Distribution
 ```
 
-> 📷 **[P-12a](#p-12a)** `Fa0/0 .254 up/up` · **[P-12b](#p-12b)** `ping .1` = 5/5 · **[P-12c](#p-12c)** `show arp` (`.1` résolu).
+> 📷 **[P-12a](#p-12a)** `Fa0/0 .254 up/up` · **[P-12b](#p-12b)** `ping .1` = 5/5 · **[P-12c](#p-12c)** `show arp` (`.1` resolved).
 
 ---
 
-### <a id="step-3--dhcp--option-150-autorité-unique-du-vlan-30"></a>Étape 3 : DHCP + Option 150 (autorité UNIQUE du VLAN 30)
+### <a id="step-3--dhcp--option-150-autorité-unique-du-vlan-30"></a>Step 3: DHCP + Option 150 (SOLE authority for VLAN 30)
 
-**Intention :** pool voix confiné en `.50-.99`, option 150 = IP propre du CME.
+**Intent:** voice pool confined to `.50-.99`, option 150 = the CME's own IP.
 
 ```cisco
 ! ===== CME-Router =====
@@ -154,31 +154,31 @@ ip dhcp excluded-address 192.168.30.100 192.168.30.254
 
 ip dhcp pool VOIP_PHONES
  network 192.168.30.0 255.255.255.0
- default-router 192.168.30.1        ! = VIP HSRP (pas l'IP du CME) → passerelle des phones survit à un failover
- option 150 ip 192.168.30.254       ! adresse TFTP = IP PROPRE du CME
+ default-router 192.168.30.1        ! = HSRP VIP (not the CME's IP) → the phones' gateway survives a failover
+ option 150 ip 192.168.30.254       ! TFTP address = the CME's OWN IP
  
 end
 write memory
 ```
 
-> **Ce que je NE fais PAS** (garantit « une seule autorité DHCP sur le VLAN 30 ») : aucun `ip helper-address` sur le SVI 30 des DIST (le CME est **dans** le VLAN 30, broadcast direct) ; aucun `ip dhcp pool 192.168.30.x` sur le HQ-Router (sinon 2 serveurs sur le même domaine → conflit).
+> **What I do NOT do** (guarantees "a single DHCP authority on VLAN 30"): no `ip helper-address` on the DISTs' SVI 30 (the CME is **in** VLAN 30, direct broadcast); no `ip dhcp pool 192.168.30.x` on the HQ-Router (otherwise 2 servers on the same domain → conflict).
 
-**Vérif (une fois les phones bootés) :**
+**Check (once the phones have booted):**
 
 ```cisco
 show ip dhcp pool            ! pool VOIP_PHONES, exclusions
-show ip dhcp binding         ! baux .50 / .51, "Automatic", tous issus du CME
+show ip dhcp binding         ! leases .50 / .51, "Automatic", all from the CME
 ```
 
-Preuve d'absence de 2e serveur, côté HQ-Router : `show run | section dhcp` = pools `VLAN10`/`VLAN20` seulement, aucun `192.168.30.x`.
+Proof there's no 2nd server, on the HQ-Router side: `show run | section dhcp` = `VLAN10`/`VLAN20` pools only, no `192.168.30.x`.
 
-> 📷 **[P-06](#p-06)** baux `.50`/`.51` · **[P-06b](#p-06b)** pool `VOIP_PHONES` · **[P-07](#p-07)** HQ-Router : pools 10/20 seulement.
+> 📷 **[P-06](#p-06)** leases `.50`/`.51` · **[P-06b](#p-06b)** pool `VOIP_PHONES` · **[P-07](#p-07)** HQ-Router: pools 10/20 only.
 
 ---
 
-### <a id="step-4--call-control--numéros--boutons-telephony-service"></a>Étape 4 : Call-control + numéros + boutons (telephony-service)
+### <a id="step-4--call-control--numéros--boutons-telephony-service"></a>Step 4: Call-control + numbers + buttons (telephony-service)
 
-**Intention :** déclarer les DN, les ephones, et **lier** un bouton à un DN : l'étape dont l'oubli bloque le poste (Incident I-2).
+**Intent:** declare the DNs, the ephones, and **bind** a button to a DN: the step whose omission blocks the phone (Incident I-2).
 
 ```cisco
 ! ===== CME-Router =====
@@ -188,11 +188,11 @@ configure terminal
 telephony-service
  max-ephones 10
  max-dn 10
- ip source-address 192.168.30.254 port 2000    ! IP DU CME, jamais la VIP .1
- auto assign 1 to 10                            ! DOIT exister AVANT la 1re inscription des postes
+ ip source-address 192.168.30.254 port 2000    ! THE CME's IP, never the VIP .1
+ auto assign 1 to 10                            ! MUST exist BEFORE the phones' 1st registration
  exit
  
-! --- Directory numbers (les extensions) ---
+! --- Directory numbers (the extensions) ---
 ephone-dn 1
  number 1001
  exit
@@ -200,274 +200,274 @@ ephone-dn 2
  number 1002
  exit
  
-! --- ephones + LIAISON bouton→DN (l'étape oubliée) ---
+! --- ephones + button→DN BINDING (the forgotten step) ---
 ephone 1
  mac-address 0001.42BC.87D4
- button 1:1                                     ! bouton 1 du poste → ephone-dn 1 (1001)
+ button 1:1                                     ! phone button 1 → ephone-dn 1 (1001)
  exit
 ephone 2
  mac-address 0001.C925.A973
- button 1:2                                     ! bouton 1 du poste → ephone-dn 2 (1002)
+ button 1:2                                     ! phone button 1 → ephone-dn 2 (1002)
  exit
 telephony-service
- reset all                                      ! force les postes à se ré-enregistrer proprement
+ reset all                                      ! forces the phones to re-register cleanly
  
 end
 write memory
 ```
 
-> ⚠️ **Piège `ip source-address` :** le mettre sur la VIP `.1` → le poste ouvre TCP 2000 vers un switch de Distribution qui ne fait pas de SCCP → jamais enregistré. Le SCCP écoute sur l'IP réelle du CME (`.254`).
+> ⚠️ **`ip source-address` trap:** setting it to the VIP `.1` → the phone opens TCP 2000 to a Distribution switch that doesn't do SCCP → never registers. SCCP listens on the CME's real IP (`.254`).
 > 
-> ⚠️ **Piège `button` (I-2) :** sans `button 1:X`, `show ephone` affiche `UNREGISTERED / IP:0.0.0.0 / button 1: dn CH1 DOWN` et l'écran boucle sur « Configuring CM List ». `auto assign` ne rattrape **pas** des ephones déjà auto-créés sans bouton → assignation **explicite** obligatoire, puis `reset all`.
+> ⚠️ **`button` trap (I-2):** without `button 1:X`, `show ephone` shows `UNREGISTERED / IP:0.0.0.0 / button 1: dn CH1 DOWN` and the screen loops on "Configuring CM List". `auto assign` does **not** recover ephones already auto-created without a button → **explicit** assignment mandatory, then `reset all`.
 
-**Vérif :**
+**Check:**
 
 ```cisco
-show run | section ephone    ! ephone-dn 1001/1002 + ephone 1/2 avec "button 1:1" / "button 1:2"
+show run | section ephone    ! ephone-dn 1001/1002 + ephone 1/2 with "button 1:1" / "button 1:2"
 show ephone                  ! REGISTERED in SCCP, IP .50/.51, "button 1: dn 1 number 1001 ... IDLE"
 ```
 
-> 📷 **[P-05](#p-05)** `show run | section ephone` (button 1:1/1:2, corrige I-2) · **[P-04](#p-04)** `show ephone` (`REGISTERED in SCCP`).
+> 📷 **[P-05](#p-05)** `show run | section ephone` (button 1:1/1:2, fixes I-2) · **[P-04](#p-04)** `show ephone` (`REGISTERED in SCCP`).
 
 ---
 
-### <a id="step-5--ports-téléphones-sur-les-access-data-10--voice-30"></a>Étape 5 : Ports téléphones sur les Access (data 10 + voice 30)
+### <a id="step-5--ports-téléphones-sur-les-access-data-10--voice-30"></a>Step 5: Phone ports on the Access switches (data 10 + voice 30)
 
-**Intention :** un câble, deux VLAN : PC en data 10 (untagged), poste en voice 30 (tagué 802.1Q via CDP).
+**Intent:** one cable, two VLANs: PC in data 10 (untagged), phone in voice 30 (802.1Q-tagged via CDP).
 
-> **Note quarantaine (Incident I-3) :** `Fa0/5` a été trouvé en VLAN 998 + `shutdown` (quarantaine appliquée plus large que le plan `0/20-24`). Pas d'étape séparée : `switchport access vlan 10` **écrase** le 998 et `no shutdown` annule la quarantaine.
+> **Quarantine note (Incident I-3):** `Fa0/5` was found in VLAN 998 + `shutdown` (quarantine applied wider than the `0/20-24` plan). No separate step: `switchport access vlan 10` **overwrites** the 998 and `no shutdown` cancels the quarantine.
 
 ```cisco
-! ===== ACC-SW1 (idem ACC-SW2) =====
+! ===== ACC-SW1 (same as ACC-SW2) =====
 
 configure terminal
 
 interface FastEthernet0/5
  description IP-Phone
  switchport mode access
- switchport access vlan 10          ! data : REMPLACE le VLAN 998 (PC derrière le phone, untagged)
- switchport voice vlan 30           ! voix (phone, tagué 802.1Q 30 via CDP)
+ switchport access vlan 10          ! data: REPLACES VLAN 998 (PC behind the phone, untagged)
+ switchport voice vlan 30           ! voice (phone, 802.1Q 30-tagged via CDP)
  spanning-tree portfast
  spanning-tree bpduguard enable
- no shutdown                        ! réveille le port (était éteint en quarantaine)
+ no shutdown                        ! wakes the port (was shut in quarantine)
  
 end
 write memory
 ```
 
-> ⚠️ **Ne recopie PAS `no cdp enable` ici.** Un port **phone** a besoin du CDP **allumé** : c'est lui qui annonce le voice-VLAN au poste et arme `trust device cisco-phone` (Step 6). CDP coupé = poste bloqué sur « Configuring vlan ».
+> ⚠️ **Do NOT copy `no cdp enable` here.** A **phone** port needs CDP **on**: it's what advertises the voice-VLAN to the phone and arms `trust device cisco-phone` (Step 6). CDP off = phone stuck on "Configuring vlan".
 >
-> ⚠️ **Sans `switchport voice vlan 30`** : pas d'annonce voice-VLAN → écran bloqué sur « Configuring vlan », binding DHCP vide. Le symptôme apparaît **trois étapes après** la cause.
+> ⚠️ **Without `switchport voice vlan 30`**: no voice-VLAN advertisement → screen stuck on "Configuring vlan", empty DHCP binding. The symptom appears **three steps after** the cause.
 
-**Vérif :**
+**Check:**
 
 ```cisco
 show interfaces Fa0/5 switchport | include Access|Voice   ! Access VLAN 10, Voice VLAN 30
-show vlan brief                                           ! Fa0/5 en 10 et 30, plus en 998
+show vlan brief                                           ! Fa0/5 in 10 and 30, no longer in 998
 ```
 
-> 📷 **[P-10](#p-10)** ACC-SW1 `switchport` (Access 10 / Voice 30) · **[P-10b](#p-10b)** `vlan brief` (preuve D6) · **[P-10c](#p-10c)** symétrie ACC-SW2.
+> 📷 **[P-10](#p-10)** ACC-SW1 `switchport` (Access 10 / Voice 30) · **[P-10b](#p-10b)** `vlan brief` (D6 proof) · **[P-10c](#p-10c)** ACC-SW2 symmetry.
 
 ---
 
-### <a id="step-6--qos--trust-conditionnel-frontière-liée-au-cdp"></a>Étape 6 : QoS : trust conditionnel (frontière liée au CDP)
+### <a id="step-6--qos--trust-conditionnel-frontière-liée-au-cdp"></a>Step 6: QoS: conditional trust (CDP-bound boundary)
 
-**Intention :** ne croire le DSCP EF que si un vrai phone Cisco est détecté par CDP.
+**Intent:** trust the EF DSCP only if a real Cisco phone is detected via CDP.
 
 ```cisco
-! ===== ACC-SW1 (idem ACC-SW2) =====
+! ===== ACC-SW1 (same as ACC-SW2) =====
 
 configure terminal
 
-mls qos                              ! moteur QoS global : PRÉREQUIS souvent oublié
+mls qos                              ! global QoS engine: often-forgotten PREREQUISITE
 interface FastEthernet0/5
- mls qos trust dscp                  ! sans ceci : aucun type de trust à appliquer
- mls qos trust device cisco-phone    ! DSCP EF cru SEULEMENT si vrai phone Cisco détecté par CDP
+ mls qos trust dscp                  ! without this: no trust type to apply
+ mls qos trust device cisco-phone    ! EF DSCP trusted ONLY if a real Cisco phone is detected via CDP
  
 end
 write memory
 ```
 
-| Scénario | `trust dscp` seul | `trust dscp` + `trust device cisco-phone` |
+| Scenario | `trust dscp` alone | `trust dscp` + `trust device cisco-phone` |
 |---|---|---|
-| Vrai phone Cisco | Trust DSCP ✅ | Trust DSCP ✅ (après CDP) |
-| PC branché direct | Trust DSCP ❌ (falsifiable) | **Non trusté** ✅ |
-| PC derrière le phone | Trust DSCP ❌ (falsifiable) | **Non trusté** ✅ |
+| Real Cisco phone | Trust DSCP ✅ | Trust DSCP ✅ (after CDP) |
+| PC plugged in directly | Trust DSCP ❌ (spoofable) | **Not trusted** ✅ |
+| PC behind the phone | Trust DSCP ❌ (spoofable) | **Not trusted** ✅ |
 
-**Vérif :** `show mls qos interface Fa0/5` → `trust device: cisco-phone`, `trust state: trust dscp`.
+**Check:** `show mls qos interface Fa0/5` → `trust device: cisco-phone`, `trust state: trust dscp`.
 
-> 📷 **[P-11](#p-11)** ACC-SW1 `show mls qos interface Fa0/5` : `trust device: cisco-phone`.
+> 📷 **[P-11](#p-11)** ACC-SW1 `show mls qos interface Fa0/5`: `trust device: cisco-phone`.
 
-## <a id="séquence-de-boot-dun-poste-où-lécran-lcd-bloque"></a>Séquence de boot d'un poste (où l'écran LCD bloque)
+## <a id="séquence-de-boot-dun-poste-où-lécran-lcd-bloque"></a>Phone boot sequence (where the LCD screen gets stuck)
 
-| Écran LCD | Signification | Cause si bloqué ici |
+| LCD screen | Meaning | Cause if stuck here |
 |---|---|---|
-| `Configuring vlan` | Attend l'annonce voice-VLAN en CDP | `switchport voice vlan 30` manquant, ou CDP coupé (Step 5) |
-| `Configuring IP` | DHCP en cours | Pool / Option 150 (Step 3) ou joignabilité VLAN 30 |
-| `Updating` | Téléchargement config par TFTP | Option 150 mauvaise, ou asymétrie TFTP (dette D2, réf. prod) |
-| `Configuring CM List` | Ouverture session SCCP (TCP 2000) | `ip source-address` = VIP au lieu de l'IP CME **OU** `button` manquant (I-2) |
+| `Configuring vlan` | Waits for the voice-VLAN advertisement over CDP | `switchport voice vlan 30` missing, or CDP off (Step 5) |
+| `Configuring IP` | DHCP in progress | Pool / Option 150 (Step 3) or VLAN 30 reachability |
+| `Updating` | Config download over TFTP | Wrong Option 150, or TFTP asymmetry (debt D2, prod ref) |
+| `Configuring CM List` | SCCP session opening (TCP 2000) | `ip source-address` = VIP instead of the CME IP **OR** missing `button` (I-2) |
 
-# 3. Preuves & clôtures
+# 3. Evidence & closure
 
-## <a id="validation-de-bout-en-bout-gate-final"></a>Validation de bout en bout
+## <a id="validation-de-bout-en-bout-gate-final"></a>End-to-end validation
 
-| Domaine        | Vérification             | Commande clé                                            | Attendu                                           | Preuve                                            |
+| Domain         | Check                    | Key command                                             | Expected                                          | Evidence                                          |
 | -------------- | ------------------------ | ------------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- |
-| 🧭 Routage     | Héritage P3 (résumé sûr) | ASA `show route \| include inside`                      | `S 10.0.0.0/20`, aucun `/8`/`/16`                 | [P-09](#p-09)                                     |
-| 📞 Service CME | Placement du service     | DIST-SW1 `show standby brief`                           | `Vl30 … Active`                                   | [P-08](#p-08)                                     |
-| 📞 Service CME | Liaison CME              | CME `show ip int brief` + `ping .1` + `show arp`        | `Fa0/0 .254 up/up`, `.1` résolu                   | [P-12a](#p-12a), [P-12b](#p-12b), [P-12c](#p-12c) |
-| 📞 Service CME | DHCP mono-autorité       | CME `show ip dhcp binding` + HQ `show run \| sect dhcp` | baux `.50`/`.51` (CME seul), aucun pool 30 sur HQ | [P-06](#p-06), [P-07](#p-07)                      |
-| 🎚️ Voix & QoS | Voice VLAN + tag         | ACC `show int Fa0/5 switchport`                         | Access 10 / Voice 30                              | [P-10](#p-10), [P-10c](#p-10c)                    |
-| 🎚️ Voix & QoS | QoS trust conditionnel   | ACC `show mls qos interface Fa0/5`                      | `trust device: cisco-phone`                       | [P-11](#p-11)                                     |
-| 📞 Service CME | Enregistrement SCCP      | CME `show ephone` + `show run \| section ephone`        | `REGISTERED in SCCP`, `button 1:1`/`1:2`          | [P-04](#p-04), [P-05](#p-05)                      |
-| ☎️ Appel       | Bout-en-bout 1001 → 1002 | poste 1001 appelle 1002                                 | `Ring Out` → `ringing` → `Connected`              | [P-01](#p-01), [P-02](#p-02), [P-03](#p-03)       |
+| 🧭 Routing     | P3 inheritance (safe summary) | ASA `show route \| include inside`                 | `S 10.0.0.0/20`, no `/8`/`/16`                    | [P-09](#p-09)                                     |
+| 📞 CME service | Service placement        | DIST-SW1 `show standby brief`                           | `Vl30 … Active`                                   | [P-08](#p-08)                                     |
+| 📞 CME service | CME link                 | CME `show ip int brief` + `ping .1` + `show arp`        | `Fa0/0 .254 up/up`, `.1` resolved                 | [P-12a](#p-12a), [P-12b](#p-12b), [P-12c](#p-12c) |
+| 📞 CME service | Single-authority DHCP    | CME `show ip dhcp binding` + HQ `show run \| sect dhcp` | `.50`/`.51` leases (CME only), no pool 30 on HQ   | [P-06](#p-06), [P-07](#p-07)                      |
+| 🎚️ Voice & QoS | Voice VLAN + tag         | ACC `show int Fa0/5 switchport`                         | Access 10 / Voice 30                              | [P-10](#p-10), [P-10c](#p-10c)                    |
+| 🎚️ Voice & QoS | Conditional QoS trust    | ACC `show mls qos interface Fa0/5`                      | `trust device: cisco-phone`                       | [P-11](#p-11)                                     |
+| 📞 CME service | SCCP registration        | CME `show ephone` + `show run \| section ephone`        | `REGISTERED in SCCP`, `button 1:1`/`1:2`          | [P-04](#p-04), [P-05](#p-05)                      |
+| ☎️ Call       | End-to-end 1001 → 1002   | phone 1001 calls 1002                                   | `Ring Out` → `ringing` → `Connected`              | [P-01](#p-01), [P-02](#p-02), [P-03](#p-03)       |
 
-## <a id="dépannage-incidents-de-session"></a>Dépannage (incidents de session)
+## <a id="dépannage-incidents-de-session"></a>Troubleshooting (session incidents)
 
-> Incidents réellement rencontrés, avec le diagnostic qui a attrapé chacun. **Pas** des dettes ; chacun corrigé le jour même.
+> Incidents actually encountered, with the diagnostic that caught each one. **Not** debts; each fixed the same day.
 
-| # | Symptôme | Cause racine | Diagnostic | Correctif |
+| # | Symptom | Root cause | Diagnosis | Fix |
 |---|---|---|---|---|
-| **I-1** | DIST-SW1 `Fa0/10` reste `Down` alors que la CLI a été tapée | Interface `Fa0/0` du CME laissée en `shutdown` (les interfaces **routeur** naissent éteintes) | `show ip interface brief` sur le CME | `no shutdown` sur CME `Fa0/0` : le lien monte des deux côtés |
-| **I-2** | Postes bloqués sur « Configuring CM List » [P-14](#p-14) ; `show ephone` = `UNREGISTERED`, `IP:0.0.0.0` [P-13](#p-13) | ephones auto-créés **sans ligne `button`** [P-15](#p-15) → aucun DN présenté | `show run \| section ephone` → pas de `button 1:X` | Ajouter `button 1:1` / `1:2` explicites, puis `reset all` : corrigé = [P-05](#p-05) |
-| **I-3** | `Fa0/5` trouvé en VLAN 998 + `shutdown` | Quarantaine appliquée plus large (`0/5-24`) que le plan (`0/20-24`) | `show vlan brief` → `Fa0/5` sous 998 | Réaffecté en `access 10` + `voice 30` ; sans impact : voir dette **D6** |
+| **I-1** | DIST-SW1 `Fa0/10` stays `Down` even though the CLI was typed | CME's `Fa0/0` interface left in `shutdown` (**router** interfaces are born shut) | `show ip interface brief` on the CME | `no shutdown` on CME `Fa0/0`: the link comes up on both sides |
+| **I-2** | Phones stuck on "Configuring CM List" [P-14](#p-14); `show ephone` = `UNREGISTERED`, `IP:0.0.0.0` [P-13](#p-13) | ephones auto-created **with no `button` line** [P-15](#p-15) → no DN presented | `show run \| section ephone` → no `button 1:X` | Add explicit `button 1:1` / `1:2`, then `reset all`: fixed = [P-05](#p-05) |
+| **I-3** | `Fa0/5` found in VLAN 998 + `shutdown` | Quarantine applied wider (`0/5-24`) than the plan (`0/20-24`) | `show vlan brief` → `Fa0/5` under 998 | Reassigned to `access 10` + `voice 30`; no impact: see debt **D6** |
 
-> **Point de conception clarifié (pas un incident) :** « tout centraliser sur un seul DHCP au HQ-Router » écarté. Un DHCP global = SPOF de tout l'adressage (data + voix) sur le boîtier le plus exposé. La voix reste locale au CME pour booter sans dépendre du routage campus. Décision : **une autorité par domaine**.
+> **Design point clarified (not an incident):** "centralize everything on a single DHCP at the HQ-Router" ruled out. A global DHCP = SPOF for all addressing (data + voice) on the most exposed box. Voice stays local to the CME so it can boot without depending on campus routing. Decision: **one authority per domain**.
 
-**Commandes de référence :**
+**Reference commands:**
 
 ```cisco
 ! CME       : show ip interface brief · show ip dhcp binding · show ip dhcp pool
 !             show run | section telephony-service · show run | section ephone · show ephone
 ! Access    : show interfaces Fa0/5 switchport · show vlan brief · show mls qos interface Fa0/5
 ! Dist      : show standby brief          (VLAN 30 = DIST-SW1 Active)
-! ASA / HQ  : show route | include inside · show run | section dhcp  (pools 10/20 seulement)
+! ASA / HQ  : show route | include inside · show run | section dhcp  (pools 10/20 only)
 ```
 
 ---
 
-## <a id="registre-derreurs--dette-technique"></a>Registre d'erreurs & dette technique
+## <a id="registre-derreurs--dette-technique"></a>Error log & technical debt
 
-**Décisions de conception & pièges navigués**
+**Design decisions & pitfalls navigated**
 
-| Réf. | Décision retenue (et le piège qu'elle évite)                                                         | Statut |
+| Ref. | Decision taken (and the pitfall it avoids)                                                           | Status |
 | ---- | ---------------------------------------------------------------------------------------------------- | ------ |
-| A1   | CME sur DIST-SW1 (Active + root VLAN 30), pas sur un Access → évite le SPOF matériel                 | ✅      |
-| A2   | Trust QoS conditionnel : `trust device cisco-phone` → DSCP EF cru seulement pour un vrai phone Cisco | ✅      |
-| B1   | Résumé ASA `/20` audité sûr : aucun `/8`/`/16`, verrou Null0 posé en P3                              | ✅      |
-| B2   | Pool DHCP restreint à `.50-.99` (exclusions `.1-.49` et `.100-.254`)                                 | ✅      |
-| B3   | PortFast = port access uniquement (pas un anti-flap de trunk)                                        | ✅      |
-| B4   | Aucun `ip helper-address` sur le VLAN 30 : le CME est dans le VLAN, broadcast direct                 | ✅      |
+| A1   | CME on DIST-SW1 (Active + VLAN 30 root), not on an Access → avoids the hardware SPOF                 | ✅      |
+| A2   | Conditional QoS trust: `trust device cisco-phone` → EF DSCP trusted only for a real Cisco phone      | ✅      |
+| B1   | ASA `/20` summary audited safe: no `/8`/`/16`, Null0 lock set in P3                                  | ✅      |
+| B2   | DHCP pool restricted to `.50-.99` (exclusions `.1-.49` and `.100-.254`)                              | ✅      |
+| B3   | PortFast = access port only (not a trunk anti-flap)                                                  | ✅      |
+| B4   | No `ip helper-address` on VLAN 30: the CME is in the VLAN, direct broadcast                          | ✅      |
 
-**Incidents de session : résolus**
+**Session incidents: resolved**
 
-| Réf. | Description                                                          | Gravité | Domaine  | Statut                               |
-| ---- | -------------------------------------------------------------------- | ------- | -------- | ------------------------------------ |
-| I-1  | CME `Fa0/0` laissé en `shutdown` → lien down                         | 🟠      | Physique | ✅ `no shutdown`                      |
-| I-2  | `button` bouton→DN manquant → postes UNREGISTERED (le piège central) | 🟠      | SCCP     | ✅ `button 1:1` / `1:2` + `reset all` |
-| I-3  | `Fa0/5` parqué en 998 (quarantaine trop large)                       | 🟢      | Plan     | ✅ Réaffecté ; débordement noté en D6 |
+| Ref. | Description                                                          | Severity | Domain   | Status                               |
+| ---- | -------------------------------------------------------------------- | -------- | -------- | ------------------------------------ |
+| I-1  | CME `Fa0/0` left in `shutdown` → link down                          | 🟠       | Physical | ✅ `no shutdown`                      |
+| I-2  | Missing `button` (button→DN) → phones UNREGISTERED (the central pitfall) | 🟠  | SCCP     | ✅ `button 1:1` / `1:2` + `reset all` |
+| I-3  | `Fa0/5` parked in 998 (quarantine too wide)                         | 🟢       | Plan     | ✅ Reassigned; overreach noted in D6  |
 
-**Dettes assumées : documentées, non corrigées**
+**Accepted debts: documented, not fixed**
 
-| Réf. | Dette                                                                                                  | Gravité | Domaine             | Statut                                                     |
-| ---- | ------------------------------------------------------------------------------------------------------ | ------- | ------------------- | ---------------------------------------------------------- |
-| D1   | CME sur DIST-SW1 = SPOF résiduel (Loopback + `ip tftp source-interface Loopback0` non supportés en PT) | 🟠      | Haute disponibilité | 📋 Dette PT : prod = service sur Loopback                  |
-| D2   | Service TFTP unique, pas de backup                                                                     | 🟢      | Services            | 📋 Documenté                                               |
-| D3   | VLAN 30 étendu en L2 → flap de trunk (hors périmètre PortFast)                                         | 🟢      | STP                 | 📋 Atténué par RSTP                                        |
-| D4   | Postes 1003/1004 non déployés (2 sur 4)                                                                | 🟢      | Scope               | 🔜 Extension possible                                      |
-| D5   | Résumés `192.168.0.0/16` et `172.16.0.0/20` = exposition résiduelle                                    | 🟠      | Routage             | 📋 OSPF sur l'ASA = correctif définitif                    |
-| D6   | Quarantaine 998 appliquée à `Fa0/5-24` au lieu de `0/20-24`                                            | 🟢      | Plan                | 📋 Écart : auditer `show interfaces status \| include 998` |
+| Ref. | Debt                                                                                                   | Severity | Domain              | Status                                                     |
+| ---- | ------------------------------------------------------------------------------------------------------ | -------- | ------------------- | ---------------------------------------------------------- |
+| D1   | CME on DIST-SW1 = residual SPOF (Loopback + `ip tftp source-interface Loopback0` unsupported in PT)     | 🟠       | High availability   | 📋 PT debt: prod = service on Loopback                     |
+| D2   | Single TFTP service, no backup                                                                         | 🟢       | Services            | 📋 Documented                                              |
+| D3   | VLAN 30 extended in L2 → trunk flap (outside the PortFast scope)                                        | 🟢       | STP                 | 📋 Mitigated by RSTP                                       |
+| D4   | Phones 1003/1004 not deployed (2 of 4)                                                                 | 🟢       | Scope               | 🔜 Extension possible                                      |
+| D5   | Summaries `192.168.0.0/16` and `172.16.0.0/20` = residual exposure                                      | 🟠       | Routing             | 📋 OSPF on the ASA = definitive fix                        |
+| D6   | Quarantine 998 applied to `Fa0/5-24` instead of `0/20-24`                                               | 🟢       | Plan                | 📋 Deviation: audit `show interfaces status \| include 998` |
 
-> **Réf. prod (le piège « Updating » hors PT) :** IP du service CME sur `Loopback0` + `ip tftp source-interface Loopback0`. 
+> **Prod ref (the "Updating" pitfall outside PT):** CME service IP on `Loopback0` + `ip tftp source-interface Loopback0`. 
 > 
-> Sans ça, le routeur peut répondre au TFTP depuis l'IP de son interface physique de sortie ; un poste qui attend `.254` rejette le paquet asymétrique et reste bloqué sur « Updating ».
+> Without it, the router may answer TFTP from its egress physical interface's IP; a phone expecting `.254` rejects the asymmetric packet and stays stuck on "Updating".
 
-## <a id="annexe--captures-de-preuve"></a>Annexe : Captures de preuve
+## <a id="annexe--captures-de-preuve"></a>Appendix: Evidence captures
 
-**<a id="p-01"></a> [P-01] · Appel émis** : Phone 1001 `To: 1002 / Ring Out`
+**<a id="p-01"></a> [P-01] · Call placed**: Phone 1001 `To: 1002 / Ring Out`
 
 ![Capture P5-07](../assets/captures/P5/Capture_P5_07.png)
 
-**<a id="p-02"></a> [P-02] · Appel reçu (SCCP)** : Phone 1002 `From: 1001 / ringing`
+**<a id="p-02"></a> [P-02] · Call received (SCCP)**: Phone 1002 `From: 1001 / ringing`
 
 ![Capture P5-06](../assets/captures/P5/Capture_P5_06.png)
 
-**<a id="p-03"></a> [P-03] · Média établi** : Phone 1002 `Connected`
+**<a id="p-03"></a> [P-03] · Media established**: Phone 1002 `Connected`
 
 ![Capture P5-05](../assets/captures/P5/Capture_P5_05.png)
 
-**<a id="p-04"></a> [P-04] · Enregistrement SCCP** : CME `show ephone` : `REGISTERED in SCCP`, IP `.50`/`.51`, `button 1: dn 1/2 … IDLE`
+**<a id="p-04"></a> [P-04] · SCCP registration**: CME `show ephone`: `REGISTERED in SCCP`, IP `.50`/`.51`, `button 1: dn 1/2 … IDLE`
 
 ![Capture P5-04](../assets/captures/P5/Capture_P5_04.png)
 
-**<a id="p-05"></a> [P-05] · button→DN (corrige I-2) + telephony-service** : CME `show run | section ephone` : `ip source-address .254`, `max 10`, `ephone 1/2` avec `button 1:1`/`1:2`, `type 7960`
+**<a id="p-05"></a> [P-05] · button→DN (fixes I-2) + telephony-service**: CME `show run | section ephone`: `ip source-address .254`, `max 10`, `ephone 1/2` with `button 1:1`/`1:2`, `type 7960`
 
 ![Capture P5-27](../assets/captures/P5/Capture_P5_27.png)
 
-**<a id="p-06"></a> [P-06] · DHCP baux** : CME `show ip dhcp binding` : `.50`/`.51` `Automatic`
+**<a id="p-06"></a> [P-06] · DHCP leases**: CME `show ip dhcp binding`: `.50`/`.51` `Automatic`
 
 ![Capture P5-18](../assets/captures/P5/Capture_P5_18.png)
 
-**<a id="p-06b"></a> [P-06b] · DHCP pool** : CME `show ip dhcp pool` : `VOIP_PHONES`
+**<a id="p-06b"></a> [P-06b] · DHCP pool**: CME `show ip dhcp pool`: `VOIP_PHONES`
 
 ![Capture P5-19](../assets/captures/P5/Capture_P5_19.png)
 
-**<a id="p-07"></a> [P-07] · Absence de 2e serveur DHCP** : HQ-Router `show run | section dhcp` : `VLAN10`/`VLAN20` seulement
+**<a id="p-07"></a> [P-07] · No 2nd DHCP server**: HQ-Router `show run | section dhcp`: `VLAN10`/`VLAN20` only
 
 ![Capture P5-03](../assets/captures/P5/Capture_P5_03.png)
 
-**<a id="p-08"></a> [P-08] · Placement du service** : DIST-SW1 `show standby brief` : `Vl30 30 110 P Active`
+**<a id="p-08"></a> [P-08] · Service placement**: DIST-SW1 `show standby brief`: `Vl30 30 110 P Active`
 
 ![Capture P5-01](../assets/captures/P5/Capture_P5_01.png)
 
-**<a id="p-09"></a> [P-09] · Audit résumé clos** : ASA `show route` : `S 10.0.0.0 255.255.240.0`, aucun `/8`/`/16`
+**<a id="p-09"></a> [P-09] · Summary audit closed**: ASA `show route`: `S 10.0.0.0 255.255.240.0`, no `/8`/`/16`
 
 ![Capture P5-02](../assets/captures/P5/Capture_P5_02.png)
 
-**<a id="p-10"></a> [P-10] · Voice VLAN (ACC-SW1)** : `show interfaces Fa0/5 switchport` : `Access 10 / Voice 30`
+**<a id="p-10"></a> [P-10] · Voice VLAN (ACC-SW1)**: `show interfaces Fa0/5 switchport`: `Access 10 / Voice 30`
 
 ![Capture P5-21](../assets/captures/P5/Capture_P5_21.png)
 
-**<a id="p-10b"></a> [P-10b] · VLAN brief + preuve D6** : ACC-SW1 `show vlan brief` : `Fa0/5` en 10 et 30
+**<a id="p-10b"></a> [P-10b] · VLAN brief + D6 proof**: ACC-SW1 `show vlan brief`: `Fa0/5` in 10 and 30
 
 ![Capture P5-15](../assets/captures/P5/Capture_P5_15.png)
 
-**<a id="p-10c"></a> [P-10c] · Symétrie 2e poste (ACC-SW2)** : `show interfaces Fa0/5 switchport` : `Access 10 / Voice 30`
+**<a id="p-10c"></a> [P-10c] · 2nd phone symmetry (ACC-SW2)**: `show interfaces Fa0/5 switchport`: `Access 10 / Voice 30`
 
 ![Capture P5-20](../assets/captures/P5/Capture_P5_20.png)
 
-**<a id="p-11"></a> [P-11] · QoS trust conditionnel** : ACC-SW1 `show mls qos interface Fa0/5` : `trust device: cisco-phone`
+**<a id="p-11"></a> [P-11] · Conditional QoS trust**: ACC-SW1 `show mls qos interface Fa0/5`: `trust device: cisco-phone`
 
 ![Capture P5-14](../assets/captures/P5/Capture_P5_14.png)
 
-**<a id="p-12a"></a> [P-12a] · Liaison CME (interface)** : CME `show ip interface brief` : `Fa0/0 .254 up/up`
+**<a id="p-12a"></a> [P-12a] · CME link (interface)**: CME `show ip interface brief`: `Fa0/0 .254 up/up`
 
 ![Capture P5-25](../assets/captures/P5/Capture_P5_25.png)
 
-**<a id="p-12b"></a> [P-12b] · Liaison CME (ping)** : CME `ping 192.168.30.1` = 5/5
+**<a id="p-12b"></a> [P-12b] · CME link (ping)**: CME `ping 192.168.30.1` = 5/5
 
 ![Capture P5-23](../assets/captures/P5/Capture_P5_23.png)
 
-**<a id="p-12c"></a> [P-12c] · Liaison CME (ARP)** : CME `show arp` : `.1` et `.254` résolus
+**<a id="p-12c"></a> [P-12c] · CME link (ARP)**: CME `show arp`: `.1` and `.254` resolved
 
 ![Capture P5-22](../assets/captures/P5/Capture_P5_22.png)
 
-**Incidents (état *avant* correction : jamais en validation)**
+**Incidents (state *before* fix: never in validation)**
 
-**<a id="p-13"></a> [P-13] · I-2 symptôme (SCCP)** : CME `show ephone` : `UNREGISTERED`, `IP:0.0.0.0`, `button 1: dn CH1 DOWN`
+**<a id="p-13"></a> [P-13] · I-2 symptom (SCCP)**: CME `show ephone`: `UNREGISTERED`, `IP:0.0.0.0`, `button 1: dn CH1 DOWN`
 
 ![Capture P5-11](../assets/captures/P5/Capture_P5_11.png)
 
-**<a id="p-14"></a> [P-14] · I-2 symptôme (LCD)** : Phone bloqué sur `Configuring CM List`
+**<a id="p-14"></a> [P-14] · I-2 symptom (LCD)**: Phone stuck on `Configuring CM List`
 
 ![Capture P5-13](../assets/captures/P5/Capture_P5_13.png)
 
-**<a id="p-15"></a> [P-15] · I-2 cause** : CME `show run | section ephone` **sans** ligne `button`
+**<a id="p-15"></a> [P-15] · I-2 cause**: CME `show run | section ephone` **without** a `button` line
 
 ![Capture P5-10](../assets/captures/P5/Capture_P5_10.png)
 
-> **Écartées au triage :** `Captures_P5_26` (doublon de 27), `_17` (doublon de 10), `_24` (ping 4/5 dégradé), `_16` (redondant avec 21), `_12` (telephony-service tronqué), `_8`/`_9` (postes au repos).
+> **Dropped at triage:** `Captures_P5_26` (duplicate of 27), `_17` (duplicate of 10), `_24` (degraded 4/5 ping), `_16` (redundant with 21), `_12` (truncated telephony-service), `_8`/`_9` (idle phones).
 
 ---
 
-⬅️ [Workflow P4](../P4/WORKFLOW.md) · ⬆️ [Sommaire](#sommaire) · [README de la partie](./README.md) · [Vue d'ensemble du projet](../README.md) · **Suivant : [Workflow P6](../P6/WORKFLOW.md)** - Wi-Fi - WLC, APs, HSRPv2 VLAN 300, DHCP 300 sur DIST-SW1.
+⬅️ [Workflow P4](../P4/WORKFLOW.md) · ⬆️ [Contents](#sommaire) · [Part README](./README.md) · [Project overview](../README.md) · **Next: [Workflow P6](../P6/WORKFLOW.md)** – Wi-Fi – WLC, APs, HSRPv2 VLAN 300, DHCP 300 on DIST-SW1.

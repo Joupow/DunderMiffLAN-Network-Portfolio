@@ -1,56 +1,56 @@
-# Partie 5 : VoIP 
+# Part 5: VoIP
 
- **Concepts clés** : VoIP · CME · TFTP · DHCP Option 150 · QoS voix
+ **Key concepts**: VoIP · CME · TFTP · DHCP Option 150 · voice QoS
 
-- 💻**Outil** : Cisco Packet Tracer 9.0
-- 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
-- 📝 Progression étape par étape → [WORKFLOW P5](./WORKFLOW.md)
-- 🎓 **Certification :** CompTIA Network+
+- 💻 **Tool**: Cisco Packet Tracer 9.0
+- 🏷️ Full addressing plan → [IPAM](../IPAM.md)
+- 📝 Step-by-step progression → [WORKFLOW P5](./WORKFLOW.md)
+- 🎓 **Certification:** CompTIA Network+
 
-## Topologie logique
+## Logical topology
 
-![Topologie P5](../assets/topologies/topology_p5.svg)
+![P5 topology](../assets/topologies/topology_p5.svg)
 
-## Objectif
+## Objective
 
-Déployer la téléphonie IP sur le **VLAN 30 (voix)** avec **Cisco CallManager Express**, en couvrant le cycle de vie complet d'un poste : 
+Deploy IP telephony on the **VLAN 30 (voice)** with **Cisco CallManager Express**, covering a phone's full lifecycle:
 
-- Provisioning DHCP
-- Config par TFTP (Option 150)
-- Enregistrement SCCP
-- Priorisation QoS
+- DHCP provisioning
+- config over TFTP (Option 150)
+- SCCP registration
+- QoS prioritization
 
-Chaque maillon **prouvé par une commande d'état ou un appel réel**, pas par un écran. 
+Every link **proven by a state command or a real call**, not by a screen.
 
-Le fil directeur est une **chaîne** : DHCP → TFTP → SCCP → registration ; un maillon manquant casse tout, et le symptôme apparaît souvent trois étapes après la cause.
-## Contrainte structurante 
+The through-line is a **chain**: DHCP → TFTP → SCCP → registration; a single missing link breaks everything, and the symptom often surfaces three steps after the cause.
+## Structural constraint
 
-- Le CME vit sur **DIST-SW1**, déjà HSRP Active + root STP du VLAN 30. Le service suit son Active. 
-- Depuis que P4 a passé le Core en full-L3, **le VLAN 30 n'existe plus sur le Core** : la voix est ancrée sur la Distribution, ce qui rend ce placement non négociable. 
-- Second pilier : **une seule autorité DHCP par domaine**. HQ-Router pour VLAN 10/20, **CME pour VLAN 30**. La preuve n'est pas que le CME distribue des baux, c'est qu'**aucun autre serveur** ne répond sur le VLAN 30.
-## Décision de continuité (héritée de P3)
+- CME lives on **DIST-SW1**, already the HSRP Active + STP root for VLAN 30. The service follows its Active.
+- Since P4 took the Core fully L3, **VLAN 30 no longer exists on the Core**: voice is anchored on the Distribution layer, which makes this placement non-negotiable.
+- Second pillar: **a single DHCP authority per domain**. HQ-Router for VLAN 10/20, **CME for VLAN 30**. The proof isn't that CME hands out leases, it's that **no other server** answers on VLAN 30.
+## Continuity decision (inherited from P3)
 
-- La boucle ASA est déjà tuée en P3 (résumé `/20` + Null0). 
-- P5 **vérifie**, ne reconfigure pas.
-## Couverture CompTIA Network+
+- The ASA loop was already killed in P3 (`/20` summary + Null0).
+- P5 **verifies**, it doesn't reconfigure.
+## CompTIA Network+ coverage
 
-|Domaine|Concepts couverts|Statut|
+| Domain | Concepts covered | Status |
 |---|---|---|
-|🌐 Services réseau|VoIP inter-switch · DHCP option 150 (TFTP) · autorité DHCP unique par domaine de broadcast · segmentation du pool (IPAM)|✅ 1001↔1002 `Connected` · HQ (10/20) / CME (30)|
-|🔌 Commutation|Voice VLAN + annonce CDP · 802.1Q voix / data untagged sur un câble|✅ `Voice VLAN: 30` sur ACC|
-|🎚️ QoS|Marquage DSCP EF (46) · frontière de confiance conditionnelle|✅ `trust device cisco-phone`|
-|📜 Protocoles|SCCP (Skinny) TCP 2000 · TFTP · CDP|✅ `REGISTERED in SCCP`|
-|🧭 Routage|Routes alignées sur l'espace alloué|✅ résumé `/20`|
-|🛡️ Sécurité|`ip tftp source-interface` (asymétrie TFTP)|📋 documenté : réf. prod, non testable en PT|
+| 🌐 Network services | inter-switch VoIP · DHCP option 150 (TFTP) · single DHCP authority per broadcast domain · pool segmentation (IPAM) | ✅ 1001↔1002 `Connected` · HQ (10/20) / CME (30) |
+| 🔌 Switching | Voice VLAN + CDP advertisement · 802.1Q voice / untagged data on one cable | ✅ `Voice VLAN: 30` on ACC |
+| 🎚️ QoS | DSCP EF (46) marking · conditional trust boundary | ✅ `trust device cisco-phone` |
+| 📜 Protocols | SCCP (Skinny) TCP 2000 · TFTP · CDP | ✅ `REGISTERED in SCCP` |
+| 🧭 Routing | Routes aligned with the allocated space | ✅ `/20` summary |
+| 🛡️ Security | `ip tftp source-interface` (TFTP asymmetry) | 📋 documented: prod reference, not testable in PT |
 
 ## Conclusion
 
-La VoIP m'a appris le raisonnement en chaîne de dépendances : DHCP → Option 150 → TFTP → SCCP est une chaîne où un seul maillon manquant casse tout le poste/.
+VoIP taught me to reason in dependency chains: DHCP → Option 150 → TFTP → SCCP is a chain where a single missing link breaks the whole phone.
 
-Comprendre cet ordre, c'est ~90 % du dépannage VoIP. 
+Understanding that order is ~90% of VoIP troubleshooting.
 
-Second acquis, plus large que la voix : « une seule autorité DHCP » ne veut pas dire _un_ serveur pour tout le réseau (ce serait un SPOF), mais **une autorité par domaine de broadcast**, et la preuve n'est pas que le serveur distribue des baux, c'est qu'**aucun autre** ne répond sur le segment
+Second takeaway, broader than voice: "a single DHCP authority" doesn't mean _one_ server for the whole network (that would be a SPOF), it means **one authority per broadcast domain**, and the proof isn't that the server hands out leases, it's that **no other one** answers on the segment.
 
 ---
 
-⬅️ [Partie 4 : Datacenter](../P4/README.md) · ⬆️ [Vue d'ensemble du projet](../README.md) · 🔁 [Workflow P5](./WORKFLOW.md) · **Suivant : [Partie 6 : Wi-Fi](../P6/README.md)** : WLC + APs lightweight (CAPWAP), SSID WPA2 Corp/Guest, HSRPv2 VLAN 300, architecture hybride assumée (data plane par AP autonome).
+⬅️ [Part 4: Datacenter](../P4/README.md) · ⬆️ [Project overview](../README.md) · 🔁 [Workflow P5](./WORKFLOW.md) · **Next: [Part 6: Wi-Fi](../P6/README.md)**: WLC + lightweight APs (CAPWAP), WPA2 Corp/Guest SSIDs, HSRPv2 VLAN 300, a deliberately hybrid architecture (data plane via a standalone AP).
