@@ -45,9 +45,11 @@ Three levels of documentation, with **one canonical home per content type**.
 
 **"Why Packet Tracer?"**
 
-PT is used to practice and document Network+-level concepts in a coherent simulated topology. It demonstrates configuration logic but does not model advanced features. 
+Packet Tracer is used to practice and document Network+-level concepts in a coherent simulated topology. 
 
-The project stops at Part 6 because beyond it, each topic would require GNS3 / Cisco CML or physical equipment to validate real behavior. This limit is **documented, not hidden**.
+It was also the deliberate entry point for a self-taught path: the first tool I worked with, chosen because tutorials, write-ups and small labs are abundant, which let me learn each concept as I built the next part on top of the last. 
+
+Redoing this today I'd start on GNS3 / Cisco CML. Not because PT was the wrong choice then, but because the topology is now solid enough that emulating real IOS is the more useful next step than pushing a simulator further.
 
 **"Is it production-ready?"**
 
