@@ -1,105 +1,105 @@
-# Partie 3 : Workflow 
+# Part 3: Workflow 
 
-**Concepts clés** : ASA, DMZ, NAT/PAT & filtrage
+**Key concepts**: ASA, DMZ, NAT/PAT & filtering
 
-- 💻**Outil** : Cisco Packet Tracer 9.0
-- 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
-- 📄 Présentation de la partie 3 → [README P3](./README.md)
-- 🎓 **Certification :** CompTIA Network+
-## Sommaire
+- 💻 **Tool**: Cisco Packet Tracer 9.0
+- 🏷️ Full addressing plan → [IPAM](../IPAM.md)
+- 📄 Part 3 overview → [README P3](./README.md)
+- 🎓 **Certification:** CompTIA Network+
+## <a id="sommaire"></a>Contents
 
-**1. Cadrage**
+**1. Scope**
 
-- [Topologie As-Built](#topologie-as-built)
-- [Niveaux & équipements](#niveaux--équipements)
-- [Limites de commande PT / ASA 9.6](#limites-de-commande-pt--asa-96-source-unique)
+- [As-Built Topology](#topologie-as-built)
+- [Tiers & equipment](#niveaux--équipements)
+- [PT / ASA 9.6 command limits](#limites-de-commande-pt--asa-96-source-unique)
 
-**2. Étapes de configuration**
+**2. Configuration steps**
 
-- [Étape 1 : Équipements & câblage](#étape-1--équipements--câblage)
-- [Étape 2 : Interfaces ASA + security-levels](#étape-2--interfaces-asa--security-levels)
-- [Étape 3 : HQ-Router : origination du défaut](#étape-3--hq-router--lien-inside--origination-du-défaut-le-déblocage)
-- [Étape 4 : ISP-Router : Internet + test externe](#étape-4--isp-router--internet--segment-de-test-externe)
-- [Étape 5 : Routage ASA](#étape-5--routage-asa-prouver-la-joignabilité-avant-toute-acl)
-- [Étape 6 : NAT / PAT](#étape-6--nat--pat)
-- [Étape 7 : Inspection ICMP stateful](#étape-7--inspection-icmp-stateful)
-- [Étape 8 : ACL OUTSIDE-IN](#étape-8--acl-outside-in-deny-par-défaut-exceptions-chirurgicales)
-- [Étape 9 : ACL INSIDE-FORCED-PROXY](#étape-9--acl-inside-forced-proxy-le-permit-final-est-obligatoire)
-- [Étape 10 : ACL DMZ-RESTRICT](#étape-10--acl-dmz-restrict-deny-implicite--pas-de-permit-final)
-- [Étape 11 : Durcissement : port-security + SPAN](#étape-11--durcissement--port-security-access--span-core)
+- [Step 1: Equipment & cabling](#étape-1--équipements--câblage)
+- [Step 2: ASA interfaces + security-levels](#étape-2--interfaces-asa--security-levels)
+- [Step 3: HQ-Router: default origination](#étape-3--hq-router--lien-inside--origination-du-défaut-le-déblocage)
+- [Step 4: ISP-Router: Internet + external test](#étape-4--isp-router--internet--segment-de-test-externe)
+- [Step 5: ASA routing](#étape-5--routage-asa-prouver-la-joignabilité-avant-toute-acl)
+- [Step 6: NAT / PAT](#étape-6--nat--pat)
+- [Step 7: Stateful ICMP inspection](#étape-7--inspection-icmp-stateful)
+- [Step 8: OUTSIDE-IN ACL](#étape-8--acl-outside-in-deny-par-défaut-exceptions-chirurgicales)
+- [Step 9: INSIDE-FORCED-PROXY ACL](#étape-9--acl-inside-forced-proxy-le-permit-final-est-obligatoire)
+- [Step 10: DMZ-RESTRICT ACL](#étape-10--acl-dmz-restrict-deny-implicite--pas-de-permit-final)
+- [Step 11: Hardening: port-security + SPAN](#étape-11--durcissement--port-security-access--span-core)
 
-**3. Preuves & clôtures**
+**3. Evidence & closure**
 
-- [Validation de bout en bout](#validation-de-bout-en-bout-gate-final)
-- [Dépannage (incidents de session)](#dépannage-incidents-de-session)
-- [Registre d'erreurs & dette technique](#registre-derreurs--dette-technique)
-- [Annexe : Captures de preuve](#annexe--captures-de-preuve)
+- [End-to-end validation](#validation-de-bout-en-bout-gate-final)
+- [Troubleshooting (session incidents)](#dépannage-incidents-de-session)
+- [Error log & technical debt](#registre-derreurs--dette-technique)
+- [Appendix: Evidence captures](#annexe--captures-de-preuve)
 
-# 1. Cadrage
+# 1. Scope
 
-## <a id="topologie-as-built"></a>Topologie As-Built
+## <a id="topologie-as-built"></a>As-Built Topology
 
-Schéma PT : périmètre & sécurité - ASA, DMZ, peering ISP, IDS
+PT diagram: perimeter & security – ASA, DMZ, ISP peering, IDS
 
 ![Networ-overview-P3](../assets/network-overview/NO_P3.png)
 
-## <a id="niveaux--équipements"></a>Niveaux & équipements
+## <a id="niveaux--équipements"></a>Tiers & equipment
 
-| Rôle               | Équipement                                          | Rôle dans la partie                                                                                  |
+| Role               | Equipment                                           | Role in this part                                                                                    |
 | ------------------ | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Pare-feu edge      | **ASA-EDGE** (ASA 5506-X) : *nouveau*               | 3 zones (outside 0 / dmz 50 / inside 100) ; NAT/PAT ; 3 ACL ; inspection ICMP stateful               |
-| Internet           | **ISP-Router** (2911) - *nouveau*                   | Internet simulé : loopback `8.8.8.8` ; outside `/30` ; porte le PC de test externe                   |
-| Services (routage) | **HQ-Router** (ISR 2911)                            | Gagne le `/30` ASA-inside, la route par défaut, et **origine `0.0.0.0/0` dans OSPF** ; verrous Null0 |
-| Switch DMZ         | **DMZ-SW** (2960) - *nouveau*                       | L2 pour les deux serveurs DMZ                                                                        |
-| Serveurs DMZ       | **WEB-PUBLIC** `.10` / **PROXY** `.20` - *nouveaux* | Front publié / point de sortie proxy forcé                                                           |
-| Détection          | **IDS-Sensor** (`.99.20`) - *nouveau*               | Destination SPAN de l'uplink edge du Core (passif)                                                   |
-| Access             | 4× Catalyst **2960**                                | **Port-security fermée** : sticky, `maximum 2`, `violation restrict`                                 |
+| Edge firewall      | **ASA-EDGE** (ASA 5506-X): *new*                    | 3 zones (outside 0 / dmz 50 / inside 100); NAT/PAT; 3 ACLs; stateful ICMP inspection                 |
+| Internet           | **ISP-Router** (2911) - *new*                       | Simulated Internet: loopback `8.8.8.8`; outside `/30`; carries the external test PC                  |
+| Services (routing) | **HQ-Router** (ISR 2911)                            | Gains the ASA-inside `/30`, the default route, and **originates `0.0.0.0/0` into OSPF**; Null0 locks |
+| DMZ switch         | **DMZ-SW** (2960) - *new*                           | L2 for the two DMZ servers                                                                           |
+| DMZ servers        | **WEB-PUBLIC** `.10` / **PROXY** `.20` - *new*      | Published front / forced-proxy egress point                                                          |
+| Detection          | **IDS-Sensor** (`.99.20`) - *new*                   | SPAN destination for the Core's edge uplink (passive)                                                |
+| Access             | 4× Catalyst **2960**                                | **Port-security closed**: sticky, `maximum 2`, `violation restrict`                                  |
 
-Tout le campus P1/P2 est **inchangé** : P3 ne fait que bouler le périmètre sur le HQ-Router existant (qui garde `Gi0/0`=Core ; l'ASA arrive sur `Gi0/1`, libre).
+The whole P1/P2 campus is **unchanged**: P3 only bolts the perimeter onto the existing HQ-Router (which keeps `Gi0/0`=Core; the ASA lands on `Gi0/1`, which was free).
 
-### <a id="limites-de-commande-pt--asa-96-source-unique"></a>Limites de commande PT / ASA 9.6 
+### <a id="limites-de-commande-pt--asa-96-source-unique"></a>PT / ASA 9.6 command limits 
 
-| Commande standard | Comportement PT | À utiliser à la place |
+| Standard command | PT behavior | Use instead |
 |---|---|---|
-| `show nameif` | ✗ invalide | `show running-config` (lire nameif dans les blocs interface) |
-| `show access-list NAME` | ✗ invalide | `show access-list` (scroller jusqu'à l'ACL) |
-| `show service-policy` | ✗ invalide | `show running-config policy-map` |
-| `no access-list NAME` (ACL entière) | ✗ incomplet | retirer ligne par ligne : `no access-list NAME extended <règle complète>` |
-| `nat … static X service tcp 80 80` | ✗ invalide à `service` | NAT statique 1:1 + ACL filtre à `:80` |
-| `access-list … log` | ✗ invalide à `log` | omettre : SIEM = item P8 |
-| `… time-exceeded` | ✗ non supporté | omettre : traceroute seul ; PMTUD préservé par `unreachable` |
-| `! commentaire` inline après une commande | ✗ invalide à `!` | commentaires sur leur propre ligne uniquement |
+| `show nameif` | ✗ invalid | `show running-config` (read nameif in the interface blocks) |
+| `show access-list NAME` | ✗ invalid | `show access-list` (scroll to the ACL) |
+| `show service-policy` | ✗ invalid | `show running-config policy-map` |
+| `no access-list NAME` (whole ACL) | ✗ incomplete | remove line by line: `no access-list NAME extended <full rule>` |
+| `nat … static X service tcp 80 80` | ✗ invalid at `service` | 1:1 static NAT + ACL filter at `:80` |
+| `access-list … log` | ✗ invalid at `log` | omit: SIEM = P8 item |
+| `… time-exceeded` | ✗ unsupported | omit: traceroute only; PMTUD preserved by `unreachable` |
+| inline `! comment` after a command | ✗ invalid at `!` | comments on their own line only |
 
-# 2. Étapes de configuration
+# 2. Configuration steps
 
-Le pare-feu se construit de l'intérieur vers l'extérieur : joignabilité, puis traduction, puis filtrage. L'étape 3 (origination du défaut) est le vrai déblocage, à faire avant les routes de l'ASA, sinon l'ASA a un next-hop qu'aucun hôte n'atteint.
+The firewall is built inside-out: reachability, then translation, then filtering. Step 3 (default origination) is the real unlock, to be done before the ASA's routes, otherwise the ASA has a next-hop that no host reaches.
 
 
 ---
-### <a id="étape-1--équipements--câblage"></a>Étape 1 : Équipements & câblage
+### <a id="étape-1--équipements--câblage"></a>Step 1: Equipment & cabling
 
-**Intention :** ajouter le périmètre ; le campus est intouché.
+**Intent:** add the perimeter; the campus is untouched.
 
 - **ASA `Gi1/1`** ↔ **ISP `Gi0/0`** (`203.0.113.0/30`)
-- **ASA `Gi1/2`** ↔ **HQ `Gi0/1`** (`192.168.200.0/30`) : HQ `Gi0/0` reste sur le Core
-- **ASA `Gi1/3`** ↔ **DMZ-SW `Gi0/1`** ; DMZ-SW `Fa0/1`/`Fa0/2` → WEB-PUBLIC / PROXY
+- **ASA `Gi1/2`** ↔ **HQ `Gi0/1`** (`192.168.200.0/30`): HQ `Gi0/0` stays on the Core
+- **ASA `Gi1/3`** ↔ **DMZ-SW `Gi0/1`**; DMZ-SW `Fa0/1`/`Fa0/2` → WEB-PUBLIC / PROXY
 - **ISP `Gi0/1`** ↔ **PC-EXTERIEUR** (`198.51.100.0/24`)
-- **CORE `Gi1/0/5`** ↔ **IDS-Sensor** (destination SPAN, VLAN 99)
+- **CORE `Gi1/0/5`** ↔ **IDS-Sensor** (SPAN destination, VLAN 99)
 
-Serveurs (Desktop → IP Configuration) : 
+Servers (Desktop → IP Configuration): 
 
 - WEB-PUBLIC `172.16.0.10/24` GW `.1` 
 - PROXY `172.16.0.20/24` GW `.1` 
 - IDS-Sensor `192.168.99.20/24` GW `192.168.99.1`
 - PC-EXTERIEUR `198.51.100.10/24` GW `198.51.100.1`.
 
-> ⚠️ Sur WEB-PUBLIC et PROXY : **Services → HTTP → On** (pour distinguer un flux autorisé qui rend une page d'un flux refusé).
+> ⚠️ On WEB-PUBLIC and PROXY: **Services → HTTP → On** (to tell an allowed flow that renders a page apart from a denied one).
 
 ---
 
-### <a id="étape-2--interfaces-asa--security-levels"></a>Étape 2 : Interfaces ASA + security-levels
+### <a id="étape-2--interfaces-asa--security-levels"></a>Step 2: ASA interfaces + security-levels
 
-**Intention :** sans `nameif`, l'ASA traite un port comme inexistant : aucune ACL ni NAT ne peut le référencer.
+**Intent:** without `nameif`, the ASA treats a port as nonexistent: no ACL or NAT can reference it.
 
 ```cisco
 enable
@@ -127,15 +127,15 @@ end
 write memory
 ```
 
-> **Règle d'asymétrie :** supérieur→inférieur passe par défaut (inside→outside OK) ; inférieur→supérieur est bloqué par défaut (outside→inside nécessite une ACL explicite).
+> **Asymmetry rule:** higher→lower passes by default (inside→outside OK); lower→higher is blocked by default (outside→inside needs an explicit ACL).
 
-**Validation :** `show running-config` → lire nameif/security-level dans chaque bloc interface (`show nameif` invalide en PT). `show interface ip brief` → `Gi1/1`, `Gi1/2`, `Gi1/3` tous `up up`.
+**Validation:** `show running-config` → read nameif/security-level in each interface block (`show nameif` invalid in PT). `show interface ip brief` → `Gi1/1`, `Gi1/2`, `Gi1/3` all `up up`.
 
 ---
 
-### <a id="étape-3--hq-router--lien-inside--origination-du-défaut-le-déblocage"></a>Étape 3 : HQ-Router : lien inside + origination du défaut (LE déblocage)
+### <a id="étape-3--hq-router--lien-inside--origination-du-défaut-le-déblocage"></a>Step 3: HQ-Router: inside link + default origination (THE unlock)
 
-**Intention :** pousser la route par défaut dans OSPF et verrouiller l'espace résumé vide.
+**Intent:** push the default route into OSPF and lock the empty summarized space.
 
 ```cisco
 enable
@@ -156,30 +156,30 @@ end
 write memory
 ```
 
-> **Pourquoi les deux verrous Null0.**
+> **Why the two Null0 locks.**
 > 
-> - L'ASA résume l'inside en `10.0.0.0/20` **et** `192.168.0.0/16`. 
-> - Un résumé n'est sûr que si chaque bloc vide qu'il couvre a un trou noir flottant (AD 254). 
+> - The ASA summarizes the inside as `10.0.0.0/20` **and** `192.168.0.0/16`. 
+> - A summary is only safe if every empty block it covers has a floating black hole (AD 254). 
 > 
-> Sans le verrou `/16`, un paquet vers `192.168.150.1` (VLAN vide) rebondit ASA↔HQ jusqu'à expiration du TTL ; 
+> Without the `/16` lock, a packet to `192.168.150.1` (empty VLAN) bounces ASA↔HQ until the TTL expires; 
 > 
-> sans le `/20`, idem sur `10.0.14.x`. Le LPM (Longest Prefix Match) fait qu'un vrai préfixe OSPF gagne toujours ; Null0 n'attrape que les trous.
+> without the `/20`, same on `10.0.14.x`. LPM (Longest Prefix Match) means a real OSPF prefix always wins; Null0 only catches the holes.
 
-**Validation :**
+**Validation:**
 
 ```cisco
 show ip route static | include 0.0.0.0    ! S* 0.0.0.0/0 via 192.168.200.1
 ```
 
-Puis sur **DIST-SW1** et **CORE-SW** : `show ip route ospf | include 0.0.0.0` → `O*E2 0.0.0.0/0`. **C'est la preuve que l'origination fonctionne.**
+Then on **DIST-SW1** and **CORE-SW**: `show ip route ospf | include 0.0.0.0` → `O*E2 0.0.0.0/0`. **This is the proof that origination works.**
 
-> 📷 Preuve du défaut originé consolidée dans la matrice (groupe A). Voir annexe.
+> 📷 Proof of the originated default is consolidated in the matrix (group A). See appendix.
 
 ---
 
-### <a id="étape-4--isp-router--internet--segment-de-test-externe"></a>Étape 4 : ISP-Router : Internet + segment de test externe
+### <a id="étape-4--isp-router--internet--segment-de-test-externe"></a>Step 4: ISP-Router: Internet + external test segment
 
-**Intention :** simuler Internet (loopback `8.8.8.8`) et le PC externe.
+**Intent:** simulate the Internet (loopback `8.8.8.8`) and the external PC.
 
 ```cisco
 enable
@@ -202,13 +202,13 @@ end
 write memory
 ```
 
-> Aucune route de retour nécessaire pour le trafic NAT'é : les hôtes internes sortent en `203.0.113.2` (connecté à l'ISP). PC-EXTERIEUR atteint le serveur publié sur `203.0.113.2`, l'interface outside de l'ASA.
+> No return route needed for NAT'd traffic: internal hosts egress as `203.0.113.2` (connected to the ISP). PC-EXTERIEUR reaches the server published on `203.0.113.2`, the ASA's outside interface.
 
 ---
 
-### <a id="étape-5--routage-asa-prouver-la-joignabilité-avant-toute-acl"></a>Étape 5 : Routage ASA (prouver la joignabilité AVANT toute ACL)
+### <a id="étape-5--routage-asa-prouver-la-joignabilité-avant-toute-acl"></a>Step 5: ASA routing (prove reachability BEFORE any ACL)
 
-**Intention :** l'ASA utilise `route <nameif>`, jamais `ip route`. Transits contigus → un seul résumé `/20`, verrouillé par le Null0 de l'étape 3.
+**Intent:** the ASA uses `route <nameif>`, never `ip route`. Contiguous transits → a single `/20` summary, locked by the Null0 from step 3.
 
 ```cisco
 configure terminal
@@ -221,7 +221,7 @@ end
 write memory
 ```
 
-**Validation (fenêtre sans ACL : tout doit passer) :**
+**Validation (no-ACL window: everything must pass):**
 
 ```cisco
 show route                       ! Gateway of last resort = 203.0.113.1 ; S* 0.0.0.0/0
@@ -229,13 +229,13 @@ ping 172.16.0.10                 ! WEB-PUBLIC -> !!!!!
 ping 172.16.0.20                 ! PROXY      -> !!!!!
 ```
 
-Puis depuis **PC1** : `ping 8.8.8.8` → réponse après une perte ARP. Si PC1 échoue encore ici, la faute est aux étapes 3–5, pas au NAT.
+Then from **PC1**: `ping 8.8.8.8` → reply after one ARP loss. If PC1 still fails here, the fault is in steps 3–5, not NAT.
 
 ---
 
-### <a id="étape-6--nat--pat"></a>Étape 6 : NAT / PAT
+### <a id="étape-6--nat--pat"></a>Step 6: NAT / PAT
 
-**Intention :** deux PAT dynamiques (inside, dmz) + une publication statique 1:1.
+**Intent:** two dynamic PATs (inside, dmz) + one 1:1 static publication.
 
 ```cisco
 configure terminal
@@ -256,21 +256,21 @@ end
 write memory
 ```
 
-> Sur un `/30` outside nu, aucune IP publique de rechange : WEB-PUBLIC est publié sur l'adresse d'interface `.2`, la même que PAT overload. 
+> On a bare outside `/30`, no spare public IP: WEB-PUBLIC is published on the interface address `.2`, the same one as PAT overload. 
 > 
-> Cette publication sur adresse partagée est la racine de la limitation de rendu entrant (dette #22). `service tcp 80 80` étant non supporté, OUTSIDE-IN (étape 8) filtre l'entrant à `:80`.
+> This shared-address publication is the root of the inbound-rendering limitation (debt #22). Since `service tcp 80 80` is unsupported, OUTSIDE-IN (step 8) filters the inbound at `:80`.
 
-**Validation :** depuis **PC1** `ping 8.8.8.8`, puis sur l'ASA `show xlate` → une entrée **dynamique** : `ICMP PAT from inside:192.168.10.50 to outside:203.0.113.2 flags i`. L'entrée statique s'affiche en permanence et ne prouve rien seule : l'entrée **dynamique** est la preuve.
+**Validation:** from **PC1** `ping 8.8.8.8`, then on the ASA `show xlate` → a **dynamic** entry: `ICMP PAT from inside:192.168.10.50 to outside:203.0.113.2 flags i`. The static entry shows permanently and proves nothing on its own: the **dynamic** entry is the proof.
 
-> ⚠️ Si tu changes un mapping NAT, lance `clear xlate` : l'ancienne traduction est en cache.
+> ⚠️ If you change a NAT mapping, run `clear xlate`: the old translation is cached.
 > 
-> 📷 **[P-05](#p-05)** `show xlate` (dynamique `flags i` + statique `flags s`).
+> 📷 **[P-05](#p-05)** `show xlate` (dynamic `flags i` + static `flags s`).
 
 ---
 
-### <a id="étape-7--inspection-icmp-stateful"></a>Étape 7 : Inspection ICMP stateful
+### <a id="étape-7--inspection-icmp-stateful"></a>Step 7: Stateful ICMP inspection
 
-**Intention :** TCP/UDP sont suivis par défaut ; l'ICMP non. Sans inspection, un echo-reply sur outside (niveau 0) est un entrant non sollicité, jeté.
+**Intent:** TCP/UDP are tracked by default; ICMP is not. Without inspection, an echo-reply on outside (level 0) is an unsolicited inbound, dropped.
 
 ```cisco
 configure terminal
@@ -288,13 +288,13 @@ end
 write memory
 ```
 
-**Validation :** `show running-config policy-map` → `inspect icmp` sous `policy-map global_policy` (`show service-policy` invalide en PT). Cette étape est ce qui crée le xlate ICMP de l'étape 6.
+**Validation:** `show running-config policy-map` → `inspect icmp` under `policy-map global_policy` (`show service-policy` invalid in PT). This step is what creates the ICMP xlate from step 6.
 
 ---
 
-### <a id="étape-8--acl-outside-in-deny-par-défaut-exceptions-chirurgicales"></a>Étape 8 : ACL OUTSIDE-IN (deny par défaut, exceptions chirurgicales)
+### <a id="étape-8--acl-outside-in-deny-par-défaut-exceptions-chirurgicales"></a>Step 8: OUTSIDE-IN ACL (deny by default, surgical exceptions)
 
-**Intention :** zone non fiable : tout deny, n'ouvrir que HTTP→WEB-PUBLIC et l'ICMP nécessaire.
+**Intent:** untrusted zone: deny everything, open only HTTP→WEB-PUBLIC and the necessary ICMP.
 
 ```cisco
 configure terminal
@@ -312,17 +312,17 @@ end
 write memory
 ```
 
-> **ICMP chirurgical :** `deny icmp any any` casserait le PMTUD (bloque le Type-3). Bloquer echo (stoppe les ping sweeps), garder echo-reply et unreachable. 
+> **Surgical ICMP:** `deny icmp any any` would break PMTUD (blocks Type-3). Block echo (stops ping sweeps), keep echo-reply and unreachable. 
 > 
-> Le permit HTTP référence l'IP **réelle** post-NAT (`172.16.0.10`), jamais la publique. `time-exceeded` (Type 11) non supporté en PT → omis (dette #24).
+> The HTTP permit references the **real** post-NAT IP (`172.16.0.10`), never the public one. `time-exceeded` (Type 11) unsupported in PT → omitted (debt #24).
 
-**Validation : non-régression d'abord :** re-lancer PC1 `ping 8.8.8.8`. Il doit **survivre** (compteur `permit … echo-reply` monte). S'il casse maintenant, c'est **cette** ligne echo-reply qui manque, pas une ajoutée plus tard.
+**Validation: non-regression first:** re-run PC1 `ping 8.8.8.8`. It must **survive** (the `permit … echo-reply` counter climbs). If it breaks now, it's **this** echo-reply line that's missing, not one added later.
 
 ---
 
-### <a id="étape-9--acl-inside-forced-proxy-le-permit-final-est-obligatoire"></a>Étape 9 : ACL INSIDE-FORCED-PROXY (le permit final est OBLIGATOIRE)
+### <a id="étape-9--acl-inside-forced-proxy-le-permit-final-est-obligatoire"></a>Step 9: INSIDE-FORCED-PROXY ACL (the final permit is MANDATORY)
 
-**Intention :** permit proxy d'abord, puis deny 80/443 direct, DNS autorisé, `permit ip any any` final.
+**Intent:** permit proxy first, then deny direct 80/443, DNS allowed, final `permit ip any any`.
 
 ```cisco
 configure terminal
@@ -339,15 +339,15 @@ end
 write memory
 ```
 
-> **Deux absolus.** Ordre : le `permit` proxy doit précéder le `deny` 80/443, sinon le deny attrape d'abord le trafic vers le proxy. 
+> **Two absolutes.** Order: the proxy `permit` must precede the 80/443 `deny`, otherwise the deny catches the traffic to the proxy first. 
 > 
-> Ligne finale : `permit ip any any` **obligatoire** : sans lui, le deny implicite tue OSPF, le mgmt, l'ICMP, tout. Le DNS sur **TCP/53** est ajouté à côté de l'UDP/53 (réponses > 512 o).
+> Final line: `permit ip any any` **mandatory**: without it, the implicit deny kills OSPF, mgmt, ICMP, everything. DNS over **TCP/53** is added alongside UDP/53 (responses > 512 B).
 
 ---
 
-### <a id="étape-10--acl-dmz-restrict-deny-implicite--pas-de-permit-final"></a>Étape 10 : ACL DMZ-RESTRICT (deny implicite : PAS de permit final)
+### <a id="étape-10--acl-dmz-restrict-deny-implicite--pas-de-permit-final"></a>Step 10: DMZ-RESTRICT ACL (implicit deny: NO final permit)
 
-**Intention :** zone hostile : seul PROXY sort ; WEB-PUBLIC ne peut rien initier (anti reverse-shell).
+**Intent:** hostile zone: only PROXY egresses; WEB-PUBLIC can initiate nothing (anti reverse-shell).
 
 ```cisco
 configure terminal
@@ -364,9 +364,9 @@ end
 write memory
 ```
 
-> La DMZ est hostile-par-défaut : le deny implicite **est** la protection, ne jamais terminer par `permit ip any any`. `deny ip host 172.16.0.10 any` (noter `ip`, couvre TCP/UDP/ICMP) empêche WEB-PUBLIC d'**initier** quoi que ce soit ; les réponses aux requêtes entrantes légitimes passent via la table de connexions. 
+> The DMZ is hostile-by-default: the implicit deny **is** the protection, never end with `permit ip any any`. `deny ip host 172.16.0.10 any` (note `ip`, covers TCP/UDP/ICMP) stops WEB-PUBLIC from **initiating** anything; replies to legitimate inbound requests pass via the connection table. 
 > 
-> **Ordre :** `permit icmp any host 172.16.0.1` doit précéder le `deny host .10`, sinon le self-ping de l'ASA vers le serveur web est jeté. Si tu ajoutes dans le désordre, retirer et re-ajouter :
+> **Order:** `permit icmp any host 172.16.0.1` must precede the `deny host .10`, otherwise the ASA's self-ping to the web server is dropped. If you add them out of order, remove and re-add:
 > ```cisco
 > no access-list DMZ-RESTRICT extended deny ip host 172.16.0.10 any
 > no access-list DMZ-RESTRICT extended permit icmp any host 172.16.0.1
@@ -376,12 +376,12 @@ write memory
 
 ---
 
-### <a id="étape-11--durcissement--port-security-access--span-core"></a>Étape 11 : Durcissement : port-security (Access) + SPAN (Core)
+### <a id="étape-11--durcissement--port-security-access--span-core"></a>Step 11: Hardening: port-security (Access) + SPAN (Core)
 
-**Intention :** fermer la couche d'accès (clôt P2 #8) et poser la sonde IDS passive.
+**Intent:** close the access layer (closes P2 #8) and place the passive IDS probe.
 
 ```cisco
-! Chaque switch d'accès, ports utilisateur Fa0/3 et Fa0/4
+! Each access switch, user ports Fa0/3 and Fa0/4
 
 configure terminal
 
@@ -396,10 +396,10 @@ end
 write memory
 ```
 
-> `maximum 2`, pas 1 : un port de bureau VoIP voit deux MAC (téléphone en Voice VLAN 30 + PC data).
+> `maximum 2`, not 1: a VoIP desk port sees two MACs (phone in Voice VLAN 30 + data PC).
 
 ```cisco
-! CORE-SW : destination SPAN vers l'IDS
+! CORE-SW: SPAN destination toward the IDS
 
 configure terminal
 
@@ -417,160 +417,160 @@ end
 write memory
 ```
 
-> ⚠️ **Limite PT (#23) :** la ligne `source` est silencieusement ignorée : `show monitor session 1` ne montre que la destination. IDS = passif hors-chemin ; le blocage inline est l'IPS *simulé* par les deny OUTSIDE-IN.
+> ⚠️ **PT limit (#23):** the `source` line is silently ignored: `show monitor session 1` shows only the destination. IDS = passive off-path; inline blocking is the IPS *simulated* by the OUTSIDE-IN denies.
 
-**Validation :** sur un switch d'accès : `show port-security address` (2 MAC `SecureSticky`, V10 `Fa0/3` / V20 `Fa0/4`), `show port-security interface fa0/3` (`Secure-up`, `maximum 2`, `Restrict`). Sur CORE-SW : `show monitor session 1` (destination `Gi1/0/5` ; source absente, attendu).
+**Validation:** on an access switch: `show port-security address` (2 `SecureSticky` MACs, V10 `Fa0/3` / V20 `Fa0/4`), `show port-security interface fa0/3` (`Secure-up`, `maximum 2`, `Restrict`). On CORE-SW: `show monitor session 1` (destination `Gi1/0/5`; source absent, as expected).
 
 > 📷 **[P-11](#p-11)** port-security · **[P-12](#p-12)** SPAN/IDS.
-# 3. Preuves & clôtures
+# 3. Evidence & closure
 
-## <a id="validation-de-bout-en-bout-gate-final"></a>Validation de bout en bout
+## <a id="validation-de-bout-en-bout-gate-final"></a>End-to-end validation
 
-Le **protocole du groupe B** : noter le hitcnt de la ligne cible, lancer le flux une fois, relire `show access-list`, confirmer que **cette ligne précise** a incrémenté. Un timeout a dix causes ; un compteur qui monte n'en a qu'une.
+The **group B protocol**: note the target line's hitcnt, run the flow once, re-read `show access-list`, confirm that **that precise line** incremented. A timeout has ten causes; a climbing counter has only one.
 
-**✅ Groupe A : flux qui doivent passer**
+**✅ Group A: flows that must pass**
 
-| # | Depuis | Action | Attendu | Preuve |
+| # | From | Action | Expected | Evidence |
 |---|---|---|---|---|
-| A1 | PC1 | `ping 8.8.8.8` | réponse 4/4 (TTL=251) | OUTSIDE-IN `echo-reply` hitcnt monte : survit à l'ACL : [P-01](#p-01), [P-06](#p-06) |
-| A2 | PC1 | `http://172.16.0.20` | page (via proxy) | INSIDE ligne 1 permit hit : [P-02](#p-02) |
-| A4 | ASA | `ping 172.16.0.10` / `.20` | 5/5 | DMZ `permit icmp any host .1` hit : ordre OK : [P-03](#p-03), [P-06](#p-06) |
-| A5 | PROXY | `ping 8.8.8.8` | 4/4 | DMZ `permit icmp host .20` hit : [P-04](#p-04) |
-| A6 | PC1 | `ping 8.8.8.8` puis `show xlate` | `ICMP PAT … flags i` dynamique + statique `flags s` | l'entrée dynamique est la preuve NAT : [P-05](#p-05) |
+| A1 | PC1 | `ping 8.8.8.8` | 4/4 reply (TTL=251) | OUTSIDE-IN `echo-reply` hitcnt climbs: survives the ACL: [P-01](#p-01), [P-06](#p-06) |
+| A2 | PC1 | `http://172.16.0.20` | page (via proxy) | INSIDE line 1 permit hit: [P-02](#p-02) |
+| A4 | ASA | `ping 172.16.0.10` / `.20` | 5/5 | DMZ `permit icmp any host .1` hit: order OK: [P-03](#p-03), [P-06](#p-06) |
+| A5 | PROXY | `ping 8.8.8.8` | 4/4 | DMZ `permit icmp host .20` hit: [P-04](#p-04) |
+| A6 | PC1 | `ping 8.8.8.8` then `show xlate` | `ICMP PAT … flags i` dynamic + static `flags s` | the dynamic entry is the NAT proof: [P-05](#p-05) |
 
-> **A3 reclassé, bloqué par conception, pas un échec.** PC1 → `http://172.16.0.10` (WEB-PUBLIC direct) timeout : la réponse est jetée par DMZ-RESTRICT `deny host .10`. Cohérent avec le proxy forcé : les hôtes internes atteignent le web via `.20` (A2), jamais le serveur DMZ. A3 prouve une seconde fois que `deny host .10` fonctionne. [P-13](#p-13)
+> **A3 reclassified, blocked by design, not a failure.** PC1 → `http://172.16.0.10` (WEB-PUBLIC direct) times out: the reply is dropped by DMZ-RESTRICT `deny host .10`. Consistent with the forced proxy: internal hosts reach the web via `.20` (A2), never the DMZ server. A3 proves a second time that `deny host .10` works. [P-13](#p-13)
 
-**⛔ Groupe B : flux qui doivent échouer (prouvés par compteur)**
+**⛔ Group B: flows that must fail (proven by counter)**
 
-| # | Depuis | Action | Règle qui doit incrémenter | Preuve |
+| # | From | Action | Rule that must increment | Evidence |
 |---|---|---|---|---|
-| B1 | PC1 | `http://8.8.8.8` | INSIDE `deny … eq www` | hitcnt 24 : [P-06](#p-06) ; visuel [P-07](#p-07) |
-| B2 | PC1 | `https://8.8.8.8` | INSIDE `deny … eq 443` | hitcnt 12 : [P-08](#p-08) ; visuel [P-07](#p-07) |
-| B3 | PC-EXTERIEUR | `telnet 203.0.113.2` | OUTSIDE-IN `deny … eq 23` | hitcnt 12 : [P-08](#p-08) ; visuel [P-09](#p-09) |
-| B4 | PC-EXTERIEUR | `ping 203.0.113.2` | OUTSIDE-IN `deny icmp echo` | hitcnt 9 : [P-06](#p-06) ; visuel [P-09](#p-09) |
-| B5 | WEB-PUBLIC | `ping 8.8.8.8` | DMZ `deny ip host .10` | hitcnt 80 : [P-06](#p-06), [P-10](#p-10) |
+| B1 | PC1 | `http://8.8.8.8` | INSIDE `deny … eq www` | hitcnt 24: [P-06](#p-06); visual [P-07](#p-07) |
+| B2 | PC1 | `https://8.8.8.8` | INSIDE `deny … eq 443` | hitcnt 12: [P-08](#p-08); visual [P-07](#p-07) |
+| B3 | PC-EXTERIEUR | `telnet 203.0.113.2` | OUTSIDE-IN `deny … eq 23` | hitcnt 12: [P-08](#p-08); visual [P-09](#p-09) |
+| B4 | PC-EXTERIEUR | `ping 203.0.113.2` | OUTSIDE-IN `deny icmp echo` | hitcnt 9: [P-06](#p-06); visual [P-09](#p-09) |
+| B5 | WEB-PUBLIC | `ping 8.8.8.8` | DMZ `deny ip host .10` | hitcnt 80: [P-06](#p-06), [P-10](#p-10) |
 
-**🔒 Groupe C : durcissement**
+**🔒 Group C: hardening**
 
-| # | Où | Commande | Attendu | Preuve |
+| # | Where | Command | Expected | Evidence |
 |---|---|---|---|---|
-| C1 | Switch Access | `show port-security address` | 2 MAC sticky, `maximum 2`, `Secure-up` | V10 `Fa0/3` / V20 `Fa0/4` : [P-11](#p-11) |
-| C2 | CORE-SW | `show monitor session 1` | dest `Gi1/0/5` ; source absente (limite PT) | [P-12](#p-12) |
+| C1 | Access switch | `show port-security address` | 2 sticky MACs, `maximum 2`, `Secure-up` | V10 `Fa0/3` / V20 `Fa0/4`: [P-11](#p-11) |
+| C2 | CORE-SW | `show monitor session 1` | dest `Gi1/0/5`; source absent (PT limit) | [P-12](#p-12) |
 
 ---
 
-## <a id="dépannage-incidents-de-session"></a>Dépannage (incidents de session)
+## <a id="dépannage-incidents-de-session"></a>Troubleshooting (session incidents)
 
-### 3a : Incidents de build
+### 3a: Build incidents
 
-> Incidents rencontrés pendant le build, avec le diagnostic qui a attrapé chacun. Historiques de session, **pas** des dettes ; chacun corrigé le jour même.
+> Incidents encountered during the build, with the diagnostic that caught each one. Session history, **not** debts; each fixed the same day.
 
-| # | Symptôme | Cause | Diagnostic | Correctif |
+| # | Symptom | Cause | Diagnosis | Fix |
 |---|---|---|---|---|
-| 1 | PC1 `ping 8.8.8.8` → `Destination host unreachable` | DIST-SW1 sans `0.0.0.0/0` ; HQ montrait `Gateway of last resort is not set` | `show ip route` sur HQ + `show ip route ospf` sur DIST | `ip route 0.0.0.0/0` **et** `default-information originate` sur HQ : **le vrai blocage** |
-| 2 | `show xlate` ne montre que la statique ; PC1 timeout | `inspect icmp` pas encore appliqué → aucun xlate ICMP | `show run policy-map` | appliquer la policy d'inspection globale (étape 7) |
-| 3 | Ping ASA→`8.8.8.8` = 0/5 malgré route | ping control-plane depuis l'ASA + l'ASA ignore l'echo sur outside : test trompeur | `ping 203.0.113.2` depuis l'ISP ; L2 OK | tester dans le **sens du flux** (PC1 → xlate), pas device-to-device |
-| 4 | `http://203.0.113.2` depuis PC-EXTERIEUR timeout malgré SYN arrivé | Server-PT ne complète pas l'HTTP à travers un NAT statique entrant en PT | OUTSIDE-IN ligne 7 hitcnt monte pendant que le navigateur timeout | laissé en dette #22 ; mécanisme prouvé par le compteur |
-| 5 | CDP vide ASA↔ISP, lien up/up, 100 Mb/s sur Gigabit | auto-câblage crossover + CDP off sur l'ASA : deux fausses pistes ; L2 sain (ARP résolu) | `show arp` sur l'ISP + compteurs `show interface` | aucun : L2 sain ; le blocage était l'incident #1 |
+| 1 | PC1 `ping 8.8.8.8` → `Destination host unreachable` | DIST-SW1 without `0.0.0.0/0`; HQ showed `Gateway of last resort is not set` | `show ip route` on HQ + `show ip route ospf` on DIST | `ip route 0.0.0.0/0` **and** `default-information originate` on HQ: **the real blocker** |
+| 2 | `show xlate` shows only the static; PC1 timeout | `inspect icmp` not applied yet → no ICMP xlate | `show run policy-map` | apply the global inspection policy (step 7) |
+| 3 | Ping ASA→`8.8.8.8` = 0/5 despite route | control-plane ping from the ASA + the ASA ignores echo on outside: misleading test | `ping 203.0.113.2` from the ISP; L2 OK | test in the **flow direction** (PC1 → xlate), not device-to-device |
+| 4 | `http://203.0.113.2` from PC-EXTERIEUR times out despite SYN arriving | Server-PT doesn't complete HTTP through an inbound static NAT in PT | OUTSIDE-IN line 7 hitcnt climbs while the browser times out | left as debt #22; mechanism proven by the counter |
+| 5 | CDP empty ASA↔ISP, link up/up, 100 Mb/s on Gigabit | crossover auto-cabling + CDP off on the ASA: two red herrings; L2 healthy (ARP resolved) | `show arp` on the ISP + `show interface` counters | none: L2 healthy; the blocker was incident #1 |
 
-> **Leçon :** un flux NAT'é se juge par `show xlate` et le compteur de hits d'ACL, **jamais** par un ping vers/depuis un équipement intermédiaire.
+> **Lesson:** a NAT'd flow is judged by `show xlate` and the ACL hit counter, **never** by a ping to/from an intermediate device.
 
-### 3b : Commandes de référence (compatibles ASA 9.6)
+### 3b: Reference commands (ASA 9.6 compatible)
 
 ```cisco
 show running-config            ! zones, nameif, security-levels
-show route                     ! table ASA + gateway of last resort
-show nat                       ! règles NAT
-show run object network        ! sous-réseaux/hôtes des objets
-show xlate                     ! traductions actives (l'entrée dynamique = la preuve)
-show access-list               ! TOUTES les ACL + compteurs
-show running-config policy-map ! statut inspect icmp
-clear xlate                    ! purger le cache après un changement NAT
-show port-security address     ! MAC sticky
-show monitor session 1         ! dest SPAN
-show ip route ospf             ! DIST/Core : O*E2 0.0.0.0/0 = défaut originé
+show route                     ! ASA table + gateway of last resort
+show nat                       ! NAT rules
+show run object network        ! object subnets/hosts
+show xlate                     ! active translations (the dynamic entry = the proof)
+show access-list               ! ALL ACLs + counters
+show running-config policy-map ! inspect icmp status
+clear xlate                    ! flush the cache after a NAT change
+show port-security address     ! sticky MACs
+show monitor session 1         ! SPAN dest
+show ip route ospf             ! DIST/Core: O*E2 0.0.0.0/0 = originated default
 ```
 
 ---
 
-## <a id="registre-derreurs--dette-technique"></a>Registre d'erreurs & dette technique
+## <a id="registre-derreurs--dette-technique"></a>Error log & technical debt
 
-> État final de chaque point (clos / porté / différé). Le dépannage de session est ci-dessus. 
-> ⚠️ **Numérotation inter-parties.** Ces numéros sont des identifiants cités par d'autres docs
+> Final state of each item (closed / carried / deferred). Session troubleshooting is above. 
+> ⚠️ **Cross-part numbering.** These numbers are identifiers referenced by other docs
 
-| #   | Point                                            | Gravité | Domaine             | Statut                                                               |
-| --- | ------------------------------------------------ | ------- | ------------------- | -------------------------------------------------------------------- |
-| 8   | Port Security absente sur la couche d'accès      | 🟠      | Sécurité            | ✅ **Close** (sticky, `maximum 2`, restrict)                          |
-| 22  | Rendu HTTP entrant via NAT statique échoue en PT | 🟠      | Services            | 📋 Dette PT : SYN prouvé (ligne 7 hitcnt) ; ASA physique uniquement  |
-| 23  | Source de la session SPAN ignorée                | 🟠      | Détection           | 📋 Dette PT : concept prouvé ; Catalyst physique                     |
-| 24  | ACL `log` / `time-exceeded` non supportés en PT  | 🟢      | Observabilité       | 📋 Dette PT : `log` → SIEM (P8) ; PMTUD préservé via `unreachable`.  |
-| 25  | Proxying HTTPS non fonctionnel                   | 🟠      | Services            | 📋 Dette PT : Squid `:3128` + `deny … eq 443` en prod                |
-| 26  | `service tcp 80 80` non supporté                 | 🟢      | Services            | 📋 Dette PT : NAT statique + ACL `:80`                               |
-| 15  | Core = transit L3 nord-sud unique                | 🟠      | Haute disponibilité | 📋 Dette portée                                                      |
-| 9   | Voice VLAN 30 sans poste IP                      | 🟢      | Démonstratif        | 🔜 P5                                                                |
-| L4  | 802.1X manquant (port-security basique seule)    | 🟠      | Sécurité            | 🔜 P9 (RADIUS + 802.1X)                                              |
+| #   | Item                                             | Severity | Domain              | Status                                                               |
+| --- | ------------------------------------------------ | -------- | ------------------- | -------------------------------------------------------------------- |
+| 8   | Port Security absent on the access layer         | 🟠       | Security            | ✅ **Closed** (sticky, `maximum 2`, restrict)                         |
+| 22  | Inbound HTTP rendering via static NAT fails in PT| 🟠       | Services            | 📋 PT debt: SYN proven (line 7 hitcnt); physical ASA only            |
+| 23  | SPAN session source ignored                      | 🟠       | Detection           | 📋 PT debt: concept proven; physical Catalyst                        |
+| 24  | ACL `log` / `time-exceeded` unsupported in PT    | 🟢       | Observability       | 📋 PT debt: `log` → SIEM (P8); PMTUD preserved via `unreachable`.    |
+| 25  | HTTPS proxying non-functional                    | 🟠       | Services            | 📋 PT debt: Squid `:3128` + `deny … eq 443` in prod                  |
+| 26  | `service tcp 80 80` unsupported                  | 🟢       | Services            | 📋 PT debt: static NAT + ACL `:80`                                   |
+| 15  | Core = single north-south L3 transit             | 🟠       | High availability   | 📋 Carried debt                                                      |
+| 9   | Voice VLAN 30 with no IP phone                   | 🟢       | Demonstrative       | 🔜 P5                                                                |
+| L4  | 802.1X missing (basic port-security only)        | 🟠       | Security            | 🔜 P9 (RADIUS + 802.1X)                                              |
 
 
 ---
 
-## <a id="annexe--captures-de-preuve"></a>Annexe : Captures de preuve
+## <a id="annexe--captures-de-preuve"></a>Appendix: Evidence captures
 
-**<a id="p-01"></a> [P-01] · A1 campus → Internet** : PC1 `ping 8.8.8.8` = 4/4, `TTL=251`
+**<a id="p-01"></a> [P-01] · A1 campus → Internet**: PC1 `ping 8.8.8.8` = 4/4, `TTL=251`
 
 ![Capture P3-12](../assets/captures/P3/Capture_P3_12.png)
 
-**<a id="p-02"></a> [P-02] · A2 sortie proxy forcé** : PC1 `http://172.16.0.20` = page servie
+**<a id="p-02"></a> [P-02] · A2 forced-proxy egress**: PC1 `http://172.16.0.20` = page served
 
 ![Capture P3-11](../assets/captures/P3/Capture_P3_11.png)
 
-**<a id="p-03"></a> [P-03] · A4 ASA → DMZ** : ASA `ping 172.16.0.10` + `.20` = 5/5 chacun
+**<a id="p-03"></a> [P-03] · A4 ASA → DMZ**: ASA `ping 172.16.0.10` + `.20` = 5/5 each
 
 ![Capture P3-07](../assets/captures/P3/Capture_P3_07.png)
 
-**<a id="p-04"></a> [P-04] · A5 sortie proxy** : PROXY-SERVER `ping 8.8.8.8` = 4/4
+**<a id="p-04"></a> [P-04] · A5 proxy egress**: PROXY-SERVER `ping 8.8.8.8` = 4/4
 
 ![Capture P3-09](../assets/captures/P3/Capture_P3_09.png)
 
-**<a id="p-05"></a> [P-05] · A6 preuve NAT (la durable)** : ASA `show xlate` : dynamique `ICMP PAT inside:192.168.10.50 → outside:203.0.113.2 flags i` + statique `dmz:172.16.0.10 → 203.0.113.2 flags s`
+**<a id="p-05"></a> [P-05] · A6 NAT proof (the durable one)**: ASA `show xlate`: dynamic `ICMP PAT inside:192.168.10.50 → outside:203.0.113.2 flags i` + static `dmz:172.16.0.10 → 203.0.113.2 flags s`
 
 ![Capture P3-14](../assets/captures/P3/Capture_P3_14.png)
 
-**<a id="p-06"></a> [P-06] · compteurs maîtres** : ASA `show access-list` : OUTSIDE-IN `echo-reply`=16 / ligne 7 `www`=5 / `echo`=9 ; INSIDE `deny www`=24 / `permit ip`=8 ; DMZ `deny host .10`=80 / `permit icmp .1`=10
+**<a id="p-06"></a> [P-06] · master counters**: ASA `show access-list`: OUTSIDE-IN `echo-reply`=16 / line 7 `www`=5 / `echo`=9; INSIDE `deny www`=24 / `permit ip`=8; DMZ `deny host .10`=80 / `permit icmp .1`=10
 
 ![Capture P3-06](../assets/captures/P3/Capture_P3_06.png)
 
-**<a id="p-07"></a> [P-07] · B1+B2 web direct bloqué (visuel)** : PC1 `http://8.8.8.8:80 / :443` = Request Timeout (forcé au proxy)
+**<a id="p-07"></a> [P-07] · B1+B2 direct web blocked (visual)**: PC1 `http://8.8.8.8:80 / :443` = Request Timeout (forced to proxy)
 
 ![Capture P3-10](../assets/captures/P3/Capture_P3_10.png)
 
-**<a id="p-08"></a> [P-08] · B2+B3 compteurs** : ASA `show access-list` : INSIDE `deny 443`=12 ; OUTSIDE-IN `deny telnet`=12
+**<a id="p-08"></a> [P-08] · B2+B3 counters**: ASA `show access-list`: INSIDE `deny 443`=12; OUTSIDE-IN `deny telnet`=12
 
 ![Capture P3-03](../assets/captures/P3/Capture_P3_03.png)
 
-**<a id="p-09"></a> [P-09] · B3+B4 tentatives externes (visuel)** : PC-EXTERIEUR `ping 203.0.113.2` = 100 % loss + `telnet 203.0.113.2` = Connection timed out
+**<a id="p-09"></a> [P-09] · B3+B4 external attempts (visual)**: PC-EXTERIEUR `ping 203.0.113.2` = 100 % loss + `telnet 203.0.113.2` = Connection timed out
 
 ![Capture P3-04](../assets/captures/P3/Capture_P3_04.png)
 
-**<a id="p-10"></a> [P-10] · B5 blocage reverse-shell** : WEB-PUBLIC `ping 8.8.8.8` = 100 % loss (ne peut pas initier de sortie)
+**<a id="p-10"></a> [P-10] · B5 reverse-shell block**: WEB-PUBLIC `ping 8.8.8.8` = 100 % loss (cannot initiate egress)
 
 ![Capture P3-08](../assets/captures/P3/Capture_P3_08.png)
 
-**<a id="p-11"></a> [P-11] · C1 port-security** : ACC-SW1 `show port-security address` : 2× `SecureSticky` (V10 `Fa0/3`, V20 `Fa0/4`), `maximum 2`, `Secure-up`, `Restrict`
+**<a id="p-11"></a> [P-11] · C1 port-security**: ACC-SW1 `show port-security address`: 2× `SecureSticky` (V10 `Fa0/3`, V20 `Fa0/4`), `maximum 2`, `Secure-up`, `Restrict`
 
 ![Capture P3-02](../assets/captures/P3/Capture_P3_02.png)
 
-**<a id="p-12"></a> [P-12] · C2 SPAN / IDS** : CORE-SW `show monitor session 1` : destination `Gi1/0/5` ; source silencieusement absente (dette #23)
+**<a id="p-12"></a> [P-12] · C2 SPAN / IDS**: CORE-SW `show monitor session 1`: destination `Gi1/0/5`; source silently absent (debt #23)
 
 ![Capture P3-01](../assets/captures/P3/Capture_P3_01.png)
 
-**<a id="p-13"></a> [P-13] · A3 bloqué-par-conception** : PC1 `http://172.16.0.10` = Request Timeout : réponse jetée par DMZ-RESTRICT `deny host .10` (pas une faute)
+**<a id="p-13"></a> [P-13] · A3 blocked-by-design**: PC1 `http://172.16.0.10` = Request Timeout: reply dropped by DMZ-RESTRICT `deny host .10` (not a fault)
 
 ![Capture P3-13](../assets/captures/P3/Capture_P3_13.png)
 
-**<a id="p-14"></a> [P-14] · dette #22 : rendu HTTP entrant** : PC-EXTERIEUR `http://203.0.113.2` = Request Timeout ; le SYN atteint le serveur (OUTSIDE-IN ligne 7 hitcnt, [P-06]), rendu bloqué par PT. Fonctionne sur un ASA physique
+**<a id="p-14"></a> [P-14] · debt #22: inbound HTTP rendering**: PC-EXTERIEUR `http://203.0.113.2` = Request Timeout; the SYN reaches the server (OUTSIDE-IN line 7 hitcnt, [P-06]), rendering blocked by PT. Works on a physical ASA
 
 ![Capture P3-05](../assets/captures/P3/Capture_P3_05.png)
 
 ---
 
-⬅️ [Workflow P2](../P2/WORKFLOW.md) · ⬆️ [Sommaire](#sommaire) · [README de la partie](./README.md) · [Vue d'ensemble du projet](../README.md) · **Suivant : [Workflow P4](../P4/WORKFLOW.md)** - Datacenter Spine-Leaf, Border Leafs, fabric routée, tiers serveurs.
+⬅️ [Workflow P2](../P2/WORKFLOW.md) · ⬆️ [Contents](#sommaire) · [Part README](./README.md) · [Project overview](../README.md) · **Next: [Workflow P4](../P4/WORKFLOW.md)** – Spine-Leaf datacenter, Border Leafs, routed fabric, server tiers.

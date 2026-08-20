@@ -1,57 +1,57 @@
-# Partie 3 : DMZ & Pare-feu
+# Part 3: DMZ & Firewall
 
-**Concepts clés** : ASA, DMZ, NAT/PAT & filtrage
+**Key concepts**: ASA, DMZ, NAT/PAT & filtering
 
-- 💻**Outil** : Cisco Packet Tracer 9.0
-- 🏷️ Plan d'adressage complet → [IPAM](../IPAM.md)
-- 📝 Progression étape par étape → [WORKFLOW P3](./WORKFLOW.md)
-- 🎓 **Certification :** CompTIA Network+
+- 💻 **Tool**: Cisco Packet Tracer 9.0
+- 🏷️ Full addressing plan → [IPAM](../IPAM.md)
+- 📝 Step-by-step progression → [WORKFLOW P3](./WORKFLOW.md)
+- 🎓 **Certification:** CompTIA Network+
 
-## Topologie logique
+## Logical topology
 
 
-![Topologie P3](../assets/topologies/topology_p3.svg)
+![P3 topology](../assets/topologies/topology_p3.svg)
 
-## Objectif
+## Objective
 
-Construire la frontière entre le réseau interne et Internet : 
+Build the border between the internal network and the Internet:
 
-- pare-feu ASA à trois zones, DMZ hébergeant les services exposés + un proxy, politique de sortie qui force le web interne par le proxy, 
-- confinement reverse-shell sur le serveur publié, 
-- sonde IDS passive. 
+- a 3-zone ASA firewall, a DMZ hosting the exposed services + a proxy, an egress policy that forces internal web traffic through the proxy,
+- reverse-shell containment on the published server,
+- a passive IDS sensor.
 
-Le but n'est **pas** « faire passer du trafic » (c'était P2) , ici c'est définir **ce qui a le droit de traverser, et dans quel sens**, et de prouver chaque règle par un **compteur**, pas par une capture.
+The goal is **not** "make traffic flow" (that was P2); here it's to define **what is allowed to cross, and in which direction**, and to prove every rule with a **counter**, not a capture.
 
-## Contrainte structurante : l'ordre de build. 
+## Structural constraint: build order.
 
-- Routage et NAT sont vérifiés sur un ASA **sans ACL** (les security-levels autorisent déjà inside→outside) *avant* toute ACL. 
-- Déboguer un problème de routage à travers trois ACL à la fois est le gouffre de temps classique. 
-- Les trois ACL portent trois philosophies opposées : le `permit ip any any` final est **obligatoire sur inside** et **interdit sur DMZ**.
+- Routing and NAT are verified on an ASA **with no ACLs** (the security-levels already permit inside→outside) *before* any ACL goes on.
+- Debugging a routing problem through three ACLs at once is the classic time sink.
+- The three ACLs carry three opposing philosophies: the trailing `permit ip any any` is **mandatory on inside** and **forbidden on the DMZ**.
 
-## Décision de continuité (héritée de P2)  
+## Continuity decision (inherited from P2)
 
-- À la fin de P2, le campus n'atteignait Internet par personne. 
-- P3 l'introduit via le lien HQ-Router → ASA inside. 
-- Une route par défaut statique **ne suffit pas** : elle doit être poussée dans OSPF par `default-information originate`, même classe de piège « chemin de retour » que l'OFFER DHCP de P2.
+- At the end of P2, the campus could reach the Internet through nobody.
+- P3 introduces it via the HQ-Router → ASA inside link.
+- A static default route **isn't enough**: it has to be pushed into OSPF with `default-information originate`, the same "return-path" trap class as P2's DHCP OFFER.
 
-## Couverture CompTIA Network+
+## CompTIA Network+ coverage
 
-| Domaine      | Concepts couverts                                                                                                                                             | Statut                            |
+| Domain       | Concepts covered                                                                                                                                             | Status                            |
 | ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
-| 🛡️ Sécurité | Pare-feu 3 zones + security-levels · DMZ trusted/untrusted · ACL étendues + deny implicite · proxy de sortie forcé · prévention reverse-shell · port-security | ✅ 3 zones (0/50/100) · 3 ACL      |
-| 📡 Détection | IDS passif (SPAN) · IPS simulé par signatures ACL · IDS vs IPS                                                                                                | ✅ · ⚠️ source SPAN limitée par PT |
-| 🌐 Services  | NAT/PAT · DNS TCP/53 · inspection ICMP stateful                                                                                                               | ✅ PAT ×2 + statique 1:1           |
-| 🧭 Routage   | Route par défaut OSPF · LPM vs AD · résumé + verrou trou noir                                                                                                 | ✅ résumés /20 + /16 · Null0       |
+| 🛡️ Security | 3-zone firewall + security-levels · trusted/untrusted DMZ · extended ACLs + implicit deny · forced egress proxy · reverse-shell prevention · port-security | ✅ 3 zones (0/50/100) · 3 ACLs     |
+| 📡 Detection | passive IDS (SPAN) · IPS simulated via ACL signatures · IDS vs IPS                                                                                          | ✅ · ⚠️ SPAN source limited by PT  |
+| 🌐 Services  | NAT/PAT · DNS TCP/53 · stateful ICMP inspection                                                                                                             | ✅ PAT ×2 + static 1:1             |
+| 🧭 Routing   | OSPF default route · LPM vs AD · summary + black-hole lock                                                                                                  | ✅ /20 + /16 summaries · Null0     |
 
 
 ## Conclusion
 
-Le vrai apprentissage : l'ASA ne raisonne pas en ports mais en niveaux de confiance. Un changement de modèle mental qui ne s'intériorise pas dans la théorie, seulement en le vivant. 
+The real takeaway: the ASA doesn't reason in ports, it reasons in trust levels. That's a mental-model shift you can't internalize from theory, only by living it.
 
-Le reste en découle, à mes dépens : route par défaut injectée dans OSPF, `deny` ICMP nuancé pour préserver le PMTUD, agrégation verrouillée par Null0, règles prouvées au compteur de hits et non à la capture qui « a l'air de marcher ». 
+The rest follows from it, learned the hard way: default route injected into OSPF, a nuanced ICMP `deny` to preserve PMTUD, aggregation locked down with Null0, rules proven by hit counters rather than a capture that "looks like it works."
 
-Le moindre privilège est un scalpel, pas un mur où trop bloquer devient aussi une erreur de configuration.
+Least privilege is a scalpel, not a wall where over-blocking is just as much a misconfiguration as under-blocking.
 
 ---
 
-⬅️ [Partie 2 : Routage & redondance](../P2/README.md) · ⬆️ [Vue d'ensemble du projet](../README.md) · 🔁 [Workflow P3](./WORKFLOW.md) · **Suivant : [Partie 4 : Datacenter](../P4/README.md)** : fabric routée, 2 Border Leafs sur le Core (ECMP N-S), tiers applicatif + stockage, VIP de load balancer.
+⬅️ [Part 2: Routing & Redundancy](../P2/README.md) · ⬆️ [Project overview](../README.md) · 🔁 [Workflow P3](./WORKFLOW.md) · **Next: [Part 4: Datacenter](../P4/README.md)**: a routed fabric, 2 Border Leafs on the Core (N-S ECMP), an application tier + storage, a load-balancer VIP.
