@@ -1,122 +1,122 @@
-# TheBigOffice : Vue d'ensemble technique
+# TheBigOffice: Technical overview
 
-## Sommaire
+## Contents
 
-- [Objectif et intention](#objectif-et-intention)
-- [Comment lire ce dépôt](#comment-lire-ce-dépôt)
-- [Ce qu'un reviewer challengera](#ce-quun-reviewer-challengera)
-- [Résumé technique par partie](#résumé-technique-par-partie)
-- [Décisions de conception structurantes](#décisions-de-conception-structurantes)
-- [Écarts de production](#écarts-de-production)
-- [Preuve anti-copier-coller](#preuve-anti-copier-coller)
+- [Objective and intent](#objective-and-intent)
+- [How to read this repository](#how-to-read-this-repository)
+- [What a reviewer will challenge](#what-a-reviewer-will-challenge)
+- [Technical summary by part](#technical-summary-by-part)
+- [Defining design decisions](#defining-design-decisions)
+- [Production gaps](#production-gaps)
+- [Anti-copy-paste proof](#anti-copy-paste-proof)
 
-## Objectif et intention
+## Objective and intent
 
-Le lab simule un petit réseau d'entreprise en six blocs fonctionnels, chacun s'appuyant sur une base validée par le précédent :
+The lab simulates a small enterprise network in six functional blocks, each building on a base validated by the previous one:
 
-- **P1 : LAN siège** : fondations de commutation.
-- **P2 : Routage & redondance** : HSRP, OSPF, DHCP.
-- **P3 : Périmètre** : pare-feu ASA, DMZ, NAT.
-- **P4 : Datacenter** : fabric Spine-Leaf routée.
-- **P5 : Voix** : téléphonie CME.
-- **P6 : Wi-Fi** : contrôleur WLC et APs.
+- **P1: HQ LAN**: switching foundations.
+- **P2: Routing & redundancy**: HSRP, OSPF, DHCP.
+- **P3: Perimeter**: ASA firewall, DMZ, NAT.
+- **P4: Datacenter**: routed Spine-Leaf fabric.
+- **P5: Voice**: CME telephony.
+- **P6: Wi-Fi**: WLC controller and APs.
 
-L'objectif est de démontrer comment **commutation, routage, sécurité, services, haute disponibilité et dépannage** interagissent dans un environnement cohérent unique. 
+The objective is to demonstrate how **switching, routing, security, services, high availability and troubleshooting** interact in a single coherent environment. 
 
-L'état décrit est l'état **as-built** : chaque partie livre une base propre validée avant la suivante, et les décisions structurantes sont justifiées, pas seulement appliquées.
+The described state is the **as-built** state: each part delivers a clean base validated before the next, and the defining decisions are justified, not merely applied.
 
-## Comment lire ce dépôt
+## How to read this repository
 
-Trois niveaux de documentation, avec **un domicile canonique par type de contenu**. 
+Three levels of documentation, with **one canonical home per content type**. 
 
-| Type de contenu                                     | Domicile canonique                                                                  |
+| Content type                                        | Canonical home                                                                      |
 | --------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| Décisions + *pourquoi* d'une partie                 | `README_PX` : Objectif, Contrainte structurante, Décision de continuité, Conclusion |
-| Couverture CompTIA Network+ + statut ✅/⚠️/❌         | `README_PX` : Couverture CompTIA Network+                                           |
-| Plan d'adressage complet                            | [`IPAM.md`](./IPAM.md)                                                              |
-| Cadrage (topologie as-built, niveaux & équipements) | `WORKFLOW_PX` §1                                                                    |
-| CLI pas-à-pas d'une partie                          | `WORKFLOW_PX` §2 : Étapes de configuration                                          |
-| Preuves de validation + dépannage                   | `WORKFLOW_PX` §3 : Validation de bout en bout, Dépannage                            |
-| Registre corrections + dette + limites PT           | `WORKFLOW_PX` §3 : Registre d'erreurs & dette technique                             |
-| Écarts de production consolidés                     | **cet overview** : [Écarts de production](#écarts-de-production)                    |
+| Decisions + the *why* of a part                     | `README_PX`: Objective, Defining constraint, Continuity decision, Conclusion     |
+| CompTIA Network+ coverage + status ✅/⚠️/❌          | `README_PX`: CompTIA Network+ coverage                                              |
+| Full addressing plan                                | [`IPAM.md`](./IPAM.md)                                                              |
+| Framing (as-built topology, tiers & equipment)      | `WORKFLOW_PX` §1                                                                    |
+| Step-by-step CLI of a part                          | `WORKFLOW_PX` §2: Configuration steps                                              |
+| Validation proofs + troubleshooting                 | `WORKFLOW_PX` §3: End-to-end validation, Troubleshooting                            |
+| Corrections register + debt + PT limits             | `WORKFLOW_PX` §3: Error register & technical debt                                   |
+| Consolidated production gaps                        | **this overview**: [Production gaps](#production-gaps)                              |
 
 
-## Ce qu'un reviewer challengera
+## What a reviewer will challenge
 
-**« Pourquoi Packet Tracer ? »**
+**"Why Packet Tracer?"**
 
-PT sert à pratiquer et documenter des concepts de niveau Network+ dans une topologie simulée cohérente. Il démontre la logique de configuration mais ne modélise pas les fonctionnalités avancées. 
+PT is used to practice and document Network+-level concepts in a coherent simulated topology. It demonstrates configuration logic but does not model advanced features. 
 
-Le projet s'arrête à la Partie 6 parce qu'au-delà, chaque sujet demanderait GNS3 / Cisco CML ou de l'équipement physique pour valider un comportement réel. Cette limite est **documentée, pas cachée**.
+The project stops at Part 6 because beyond it, each topic would require GNS3 / Cisco CML or physical equipment to validate real behavior. This limit is **documented, not hidden**.
 
-**« Est-ce prêt pour la production ? »**
+**"Is it production-ready?"**
 
-Non, et les écarts sont suivis explicitement ([Écarts de production](#écarts-de-production)). C'est un lab de portfolio junior ; l'honnêteté sur les limites est le levier de crédibilité.
+No, and the gaps are tracked explicitly ([Production gaps](#production-gaps)). It is a junior portfolio lab; honesty about the limits is what earns credibility.
 
-**« Qu'est-ce qui prouve que ce n'est pas du copier-coller ? »**
+**"What proves it isn't copy-paste?"**
 
-Trois choses qu'un copier-coller ne produit pas : 
+Three things a copy-paste does not produce: 
 
-- Le raisonnement de conception est **justifié** ([Décisions de conception structurantes](#décisions-de-conception-structurantes)) ; 
-- Les **incidents de build sont documentés** comme apprentissages ([Preuve anti-copier-coller](#preuve-anti-copier-coller)) ; 
-- Les **matrices de validation sont honnêtes**. Chaque partie distingue ✅ prouvé / ⚠️ configuré non prouvé / ❌ non simulable, et un flux bloqué se prouve par le **compteur d'ACL**, jamais par un timeout.
+- The design reasoning is **justified** ([Defining design decisions](#defining-design-decisions)); 
+- The **build incidents are documented** as learnings ([Anti-copy-paste proof](#anti-copy-paste-proof)); 
+- The **validation matrices are honest**. Each part distinguishes ✅ proven / ⚠️ configured not proven / ❌ not simulable, and a blocked flow is proven by the **ACL counter**, never by a timeout.
 
-## Résumé technique par partie
+## Technical summary by part
 
-Index du portfolio. Le détail vit dans le `README_PX` et le `WORKFLOW_PX` de chaque ligne.
+Portfolio index. The detail lives in the `README_PX` and `WORKFLOW_PX` of each row.
 
-| #                    | Bloc                 | Équipements principaux                          | Concepts principaux                                                 | Point notable                                                                                                |
+| #                    | Block                | Main equipment                                  | Main concepts                                                       | Notable point                                                                                                |
 | -------------------- | -------------------- | ----------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| [P1](./P1/README.md) | LAN 3 niveaux        | Core 3650, 2× Distribution 3560, 4× Access 2960 | VLANs, trunks, Rapid PVST+, VLAN de management, natif 999 trou noir | Roots STP sur la Distribution, alignés sur le plan HSRP de P2 ; aucun Access n'est root                      |
-| [P2](./P2/README.md) | Routage & redondance | Core, Distribution, HQ-Router                   | HSRP réparti, OSPF `/30`, DHCP par domaine + relais unique          | Relais DHCP pointant le HQ-Router (`10.0.1.2`), pas le Core ; Active HSRP réparti par VLAN                   |
-| [P3](./P3/README.md) | DMZ & Pare-feu       | ASA 5506-X, routeur FAI, services DMZ           | Security-levels, 3 ACL opposées, NAT/PAT, IDS/SPAN, port-security   | Route par défaut originée dans OSPF ; résumés internes verrouillés par Null0 AD 254 (côté HQ-Router)         |
-| [P4](./P4/README.md) | Datacenter           | Spines / Leafs / Border Leafs : tous 3650       | Spine-Leaf routée, fabric OSPF, tiers app + stockage, VIP LB        | Deux Border Leafs sur le Core (ECMP) ; fabric entrée dans le `/20` sans renumérotation                       |
-| [P5](./P5/README.md) | VoIP                 | CME, postes IP, switches d'accès                | DHCP Option 150, SCCP, TFTP, frontière QoS                          | CME sur DIST-SW1 (Active + root du VLAN 30) ; héritage P3 vérifié — résumé `/20` audité sûr, aucune reconfig |
-| [P6](./P6/README.md) | WiFi                 | WLC, APs lightweight, AP autonome               | CAPWAP, SSID Corp 301 / Guest 310, WPA2, HSRPv2 VLAN 300            | VLAN 300 consolidé sur DIST-SW1 (Active + root + DHCP + WLC) ; contrôle et data plane prouvés séparément     |
+| [P1](./P1/README.md) | 3-tier LAN           | Core 3650, 2× Distribution 3560, 4× Access 2960 | VLANs, trunks, Rapid PVST+, management VLAN, native 999 black hole  | STP roots on the Distribution, aligned with the P2 HSRP plan; no Access is root                             |
+| [P2](./P2/README.md) | Routing & redundancy | Core, Distribution, HQ-Router                   | Distributed HSRP, OSPF `/30`, DHCP per domain + single relay        | DHCP relay pointing to the HQ-Router (`10.0.1.2`), not the Core; HSRP Active distributed per VLAN            |
+| [P3](./P3/README.md) | DMZ & Firewall       | ASA 5506-X, ISP router, DMZ services            | Security-levels, 3 opposed ACLs, NAT/PAT, IDS/SPAN, port-security   | Default route originated into OSPF; internal summaries locked by Null0 AD 254 (on the HQ-Router)             |
+| [P4](./P4/README.md) | Datacenter           | Spines / Leafs / Border Leafs: all 3650         | Routed Spine-Leaf, OSPF fabric, app + storage tiers, LB VIP         | Two Border Leafs on the Core (ECMP); fabric entered into the `/20` without renumbering                       |
+| [P5](./P5/README.md) | VoIP                 | CME, IP phones, access switches                 | DHCP Option 150, SCCP, TFTP, QoS boundary                           | CME on DIST-SW1 (Active + root of VLAN 30); P3 inheritance verified — `/20` summary audited safe, no reconfig |
+| [P6](./P6/README.md) | WiFi                 | WLC, lightweight APs, autonomous AP             | CAPWAP, SSID Corp 301 / Guest 310, WPA2, HSRPv2 VLAN 300            | VLAN 300 consolidated on DIST-SW1 (Active + root + DHCP + WLC); control and data plane proven separately     |
 
-## Décisions de conception structurantes
+## Defining design decisions
 
-Carte des choix qui traversent le lab. Chaque ligne est développée dans le `README_PX` correspondant.
+Map of the choices that run through the lab. Each row is developed in the corresponding `README_PX`.
 
-| Domaine | Décision | Pourquoi elle compte |
+| Domain | Decision | Why it matters |
 |---|---|---|
-| 🧭 Routage | Router-ID OSPF codés en dur | Évite un comportement d'adjacence instable |
-| 🧭 Routage / 🔒 Sécurité | OSPF tenu hors du VLAN de management | Réduit l'exposition du plan de contrôle |
-| 🧭 Routage / 🏷️ IPAM | Transit planifié en un `/20` contigu | La fabric datacenter entre dans le plan sans renumérotation de bout en bout |
-| 🧭 Routage / 🔒 Sécurité | Résumés inside de l'ASA (`/16` + `/20`) verrouillés par des rejets Null0 (AD 254) sur le HQ-Router | Neutralise la boucle vers l'espace non alloué sans énumérer chaque `/30` ; le LPM fait toujours gagner une vraie route OSPF, Null0 n'attrape que les trous (voir [Fils transversaux](#fils-transversaux)) |
-| 🔁 Haute disponibilité / 🧭 Routage | Passerelles HSRP réparties sur la Distribution | Supprime le SPOF de passerelle et étale la charge (VLANs lourds sur des switches différents) |
-| 🔁 Haute disponibilité / 🌐 Services | Root STP + Active HSRP + service critique co-localisés par VLAN | Supprime le hairpin sur le lien inter-Distribution ; un service critique suit son Active |
-| 🌐 Services | Une autorité DHCP par domaine de broadcast | Supprime les réponses DHCP dupliquées ou ambiguës |
-| 🖥️ Datacenter | Deux Border Leafs sur le Core (fabric tout en 3650) | Sépare N-S de E-O et fournit l'ECMP ; le 3650 apporte 4 downlinks par Spine |
-| 📶 Wi-Fi | Séparation plan de contrôle / plan de données au WLC | Évite de revendiquer une validation que PT ne peut pas prouver |
+| 🧭 Routing | Hardcoded OSPF Router-IDs | Avoids unstable adjacency behavior |
+| 🧭 Routing / 🔒 Security | OSPF kept out of the management VLAN | Reduces control-plane exposure |
+| 🧭 Routing / 🏷️ IPAM | Transit planned as one contiguous `/20` | The datacenter fabric enters the plan without end-to-end renumbering |
+| 🧭 Routing / 🔒 Security | ASA inside summaries (`/16` + `/20`) locked by Null0 rejects (AD 254) on the HQ-Router | Neutralizes the loop toward unallocated space without enumerating each `/30`; LPM always makes a real OSPF route win, Null0 only catches the holes (see [Cross-cutting threads](#cross-cutting-threads)) |
+| 🔁 High availability / 🧭 Routing | HSRP gateways distributed across the Distribution | Removes the gateway SPOF and spreads the load (heavy VLANs on different switches) |
+| 🔁 High availability / 🌐 Services | STP root + HSRP Active + critical service co-located per VLAN | Removes the hairpin on the inter-Distribution link; a critical service follows its Active |
+| 🌐 Services | One DHCP authority per broadcast domain | Removes duplicated or ambiguous DHCP replies |
+| 🖥️ Datacenter | Two Border Leafs on the Core (all-3650 fabric) | Separates N-S from E-W and provides ECMP; the 3650 brings 4 downlinks per Spine |
+| 📶 Wi-Fi | Control plane / data plane separation at the WLC | Avoids claiming a validation PT cannot prove |
 
-## Écarts de production
+## Production gaps
 
-| Écart                      | État actuel (lab, as-built)                                                                                                       | Direction production                                                 |
+| Gap                        | Current state (lab, as-built)                                                                                                     | Production direction                                                 |
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| Authentification OSPF      | Non implémentée                                                                                                                   | Authentification des adjacences sur les liens routés                 |
-| Plan de management         | SSH/AAA partiels ; pas d'IP de management dédiée (managé in-band, Loopback0 différé)                                              | SSHv2, AAA, ACL de management, journalisation centralisée, Loopback0 |
-| Redondance DHCP            | Une autorité par domaine ; relais mono-chemin (helper côté Active seul), pool sur l'Active, pas de nouveau bail si l'Active tombe | Split-scope / HA, miroir sur le Standby                              |
-| Routage ASA                | Résumés statiques inside (`/16` + `/20`) + verrous Null0 (AD 254) sur le HQ-Router ; audités sûrs (P5)                            | Routage dynamique (OSPF) sur le pare-feu                             |
-| Data plane Wi-Fi           | Chemin client CAPWAP non simulé (prouvé par AP autonome)                                                                          | Vrai WLC, Cisco CML, GNS3 ou lab physique                            |
-| Isolation Guest (VLAN 310) | Configurée, non prouvée en data plane (pas de portail captif PT)                                                                  | Guest anchor WLC + portail captif                                    |
-| Load balancer datacenter   | VIP présentée, round-robin conceptuel (pas de moteur LB en PT)                                                                    | LB fonctionnel (HAProxy / F5), health-checks                         |
-| Contrôle VoIP              | Point CME/TFTP unique                                                                                                             | Contrôle d'appel + services TFTP redondants (Loopback)               |
-| Passerelle datacenter      | Un SVI par Leaf (SPOF par tier)                                                                                                   | Anycast Gateway via VXLAN EVPN                                       |
+| OSPF authentication        | Not implemented                                                                                                                   | Authentication of adjacencies on the routed links                    |
+| Management plane           | Partial SSH/AAA; no dedicated management IP (managed in-band, Loopback0 deferred)                                                | SSHv2, AAA, management ACL, centralized logging, Loopback0          |
+| DHCP redundancy            | One authority per domain; single-path relay (helper on the Active side only), pool on the Active, no new lease if the Active goes down | Split-scope / HA, mirror on the Standby                             |
+| ASA routing                | Static inside summaries (`/16` + `/20`) + Null0 locks (AD 254) on the HQ-Router; audited safe (P5)                               | Dynamic routing (OSPF) on the firewall                              |
+| Wi-Fi data plane           | CAPWAP client path not simulated (proven by autonomous AP)                                                                       | Real WLC, Cisco CML, GNS3 or physical lab                          |
+| Guest isolation (VLAN 310) | Configured, not proven in data plane (no PT captive portal)                                                                      | Guest anchor WLC + captive portal                                   |
+| Datacenter load balancer   | VIP presented, conceptual round-robin (no LB engine in PT)                                                                       | Functional LB (HAProxy / F5), health-checks                        |
+| VoIP control               | Single CME/TFTP point                                                                                                            | Redundant call control + TFTP services (Loopback)                  |
+| Datacenter gateway         | One SVI per Leaf (SPOF per tier)                                                                                                 | Anycast Gateway via VXLAN EVPN                                     |
 
 
-## Preuve anti-copier-coller
+## Anti-copy-paste proof
 
-Incidents de build documentés comme apprentissages. Registres détaillés dans les `WORKFLOW_PX` (§3) ; cette table est l'agrégat transversal.
+Build incidents documented as learnings. Detailed registers in the `WORKFLOW_PX` (§3); this table is the cross-cutting aggregate.
 
-| Incident (partie)                                    | Impact                                            | Diagnostic / conception retenue                                                                                                    |
+| Incident (part)                                      | Impact                                            | Diagnosis / retained design                                                                                                        |
 | ---------------------------------------------------- | ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| Downlinks Distribution laissés en access VLAN 1 (P1) | `%CDP-4-NATIVE_VLAN_MISMATCH`, VLANs taggés jetés | Repéré par `show interfaces trunk` ; trunk natif 999 appliqué aux `Fa0/1-4`                                                        |
-| BPDU Guard posé sur un uplink inter-switch (P1)      | Port err-disable à la 1ʳᵉ BPDU légitime           | BPDU Guard réservé aux ports hôtes ; la protection de boucle sur uplinks est le travail de STP (`Altn BLK`)                        |
-| Résumés ASA vers de l'espace non alloué (P3)         | Boucle ASA ↔ HQ jusqu'au TTL                      | Un verrou Null0 (AD 254) par bloc résumé sur le HQ-Router ; le LPM fait gagner une vraie route OSPF, Null0 n'attrape que les trous |
-| Réponses DHCP dupliquées possibles (P5)              | Conflits de baux                                  | Une autorité DHCP par domaine de broadcast, prouvée par l'**absence** de tout second serveur sur le segment                        |
-| Data plane client CAPWAP non simulable en PT (P6)    | Forwarding client invalidable                     | Plans de contrôle et de données prouvés **séparément** : WLC (4 APs `Online`) + AP autonome (client réel, TTL 127)                 |
+| Distribution downlinks left in access VLAN 1 (P1)    | `%CDP-4-NATIVE_VLAN_MISMATCH`, tagged VLANs dropped | Spotted via `show interfaces trunk`; native 999 trunk applied to `Fa0/1-4`                                                        |
+| BPDU Guard placed on an inter-switch uplink (P1)     | Port err-disable at the 1st legitimate BPDU       | BPDU Guard reserved for host ports; loop protection on uplinks is STP's job (`Altn BLK`)                                           |
+| ASA summaries toward unallocated space (P3)          | ASA ↔ HQ loop until TTL                            | One Null0 lock (AD 254) per summarized block on the HQ-Router; LPM makes a real OSPF route win, Null0 only catches the holes       |
+| Possible duplicated DHCP replies (P5)                | Lease conflicts                                    | One DHCP authority per broadcast domain, proven by the **absence** of any second server on the segment                            |
+| Non-simulable CAPWAP client data plane in PT (P6)    | Client forwarding unverifiable                    | Control and data planes proven **separately**: WLC (4 APs `Online`) + autonomous AP (real client, TTL 127)                        |
 
 ---
 
-⬆️ [Sommaire](#sommaire)
+⬆️ [Contents](#contents)

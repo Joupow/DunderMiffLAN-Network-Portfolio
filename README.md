@@ -1,101 +1,100 @@
 # TheBigOffice · Network Portfolio
-## 📓 Home lab Packet Tracer pour la CompTIA Network+ (et au-delà)
+## 📓 Packet Tracer home lab for CompTIA Network+ (and beyond)
+
+This repository presents **TheBigOffice**, a self-taught lab I built to put into practice the skills covered by **CompTIA Network+**, while exploring more advanced concepts. 
+
+This network lab simulates an enterprise infrastructure under Cisco Packet Tracer in six parts, built progressively, each building on and extending the last.
+
+| Part                 | Topic                      | **Key concepts**                                                                                |
+| -------------------- | -------------------------- | ----------------------------------------------------------------------------------------------- |
+| [P1](./P1/README.md) | 🏗️ 3-tier LAN foundations | Cisco 3-tier hierarchical model · VLANs · 802.1Q · STP · inter-VLAN routing · SVI · Rapid PVST+ |
+| [P2](./P2/README.md) | 🧭 routing & redundancy    | Routing · HSRP · DHCP · Relay Helper · OSPF P2P                                                 |
+| [P3](./P3/README.md) | 🛡️ DMZ & firewall         | ASA · DMZ · NAT/PAT · filtering · ACL · IDS/SPAN                                                |
+| [P4](./P4/README.md) | 🖥️ Datacenter             | Spine-Leaf · Border Leafs · E-W and N-S traffic · ECMP · server tiers · load balancer · storage |
+| [P5](./P5/README.md) | 📞 VoIP                    | VoIP · CME · TFTP · DHCP Option 150 · voice QoS                                                 |
+| [P6](./P6/README.md) | 📶 WiFi                    | WLC · lightweight APs · CAPWAP · WPA2 Corp/Guest SSID · HSRPv2 VLAN 300                         |
+
+The project is not intended to represent a turnkey production architecture. It is above all a **junior technical portfolio**; design mistakes are part of the learning process and are treated as opportunities for analysis and improvement.
+
+## Project topology
 
 
-Ce dépôt présente **TheBigOffice**, un laboratoire réseau construit de manière autodidacte pour mettre en pratique les compétences couvertes par la **CompTIA Network+**, tout en explorant des notions plus avancées. 
+![Global topology](./assets/topologies/topology-global.svg)
 
-Ce laboratoire réseau simule une infrastructure d'entreprise sous Cisco Packet Tracer en six parties, construites de manière progressive, chacune venant enrichir et compléter la précédente.
+## The defining technical choices
 
-| Partie               | Sujet                        | **Concepts clés**                                                                                   |
-| -------------------- | ---------------------------- | --------------------------------------------------------------------------------------------------- |
-| [P1](./P1/README.md) | 🏗️ Fondations LAN 3 niveaux | Modèle hiérarchique Cisco 3 niveaux · VLANs · 802.1Q · STP · routage inter-VLAN · SVI · Rapid PVST+ |
-| [P2](./P2/README.md) | 🧭 routage & redondance      | Routage · HSRP · DHCP · Relay Helper · OSPF P2P                                                     |
-| [P3](./P3/README.md) | 🛡️DMZ & pare-feu            | ASA · DMZ · NAT/PAT · filtrage · ACL · IDS/SPAN                                                     |
-| [P4](./P4/README.md) | 🖥️ Datacenter               | Spine-Leaf · Border Leafs · trafic E-O et N-S · ECMP · tiers serveurs · load balancer · stockage    |
-| [P5](./P5/README.md) | 📞VoIP                       | VoIP · CME · TFTP · DHCP Option 150 · QoS voix                                                      |
-| [P6](./P6/README.md) | 📶 WiFi                      | WLC · APs lightweight · CAPWAP · SSID WPA2 Corp/Guest · HSRPv2 VLAN 300                             |
+- **learning a discipline of sequencing, not only the protocols configured.** The build order mattered to prevent failures _before_ they existed: STP root laid before redundancy (P1), Core routed and SVIs removed before raising the VIPs so as never to cause split-brain (P2), routing and NAT proven _without ACL_ before adding filtering (P3), datacenter fabric proven before wiring NAT (P4).
 
-Le projet n'a pas vocation à représenter une architecture de production clé en main. Il s'agit avant tout d'un **portfolio technique junior,** les erreurs de conception font partie du processus d'apprentissage et sont traitées comme des opportunités d'analyse et d'amélioration.
+- **A single through-line: "the service follows the Active."** Per VLAN, HSRP Active = STP root = service hosted on the same box. A principle laid in P1 and inherited through to the CME (P5) and Wi-Fi (P6). Each part explicitly settles the debts of the previous one: the lab reads as **a single continuous engineering story**, not six isolated exercises.
 
-## Topologie du projet
+- **Prove by a real state or traffic, never by a screen.** A blocked flow is proven at the ACL counter, a host by `REGISTERED in SCCP`, a DHCP authority by the fact that _no other server_ answers on the segment, never by a timeout or a capture that "looks like it works."
 
+- **Debugging as the core of the learning.** The recurring pattern of the **return path** - the DHCP OFFER that doesn't know how to come back (P2), the default route that has to be injected into OSPF (P3), plus Router-ID collision and TFTP asymmetry: traps that are only understood by solving them.
 
-![Topologie Global](./assets/topologies/topology-global.svg)
+- **Name the tool's limits, never hide them.** With the CAPWAP data plane not simulated, control (WLC, 4 APs `Online`) and data (autonomous AP) are proven separately. This is also what justifies closing at P6.
 
-## Les choix techniques structurants
-
-- **l'apprentissage d'une discipline de séquençage, pas seulement des protocoles configurés.** L'ordre de build a été important pour éviter les pannes _avant_ qu'elles existent : root STP posé avant la redondance (P1), Core routé et SVIs retirés avant de lever les VIP pour ne jamais provoquer de split-brain (P2), routage et NAT prouvés _sans ACL_ avant d'ajouter le filtrage (P3), fabric datacenter prouvée avant de brancher NAT (P4).
-
-- **Un fil rouge unique : « le service suit l'Active ».** Par VLAN, Active HSRP = root STP = service hébergé sur le même boîtier. Principe posé en P1 et hérité jusqu'au CME (P5) et au Wi-Fi (P6). Chaque partie solde explicitement les dettes de la précédente : le lab se lit comme **une seule histoire d'ingénierie continue**, pas six exercices isolés.
-
-- **Prouver par un état ou un trafic réel, jamais par un écran.** Un flux bloqué se prouve au compteur d'ACL, un poste par `REGISTERED in SCCP`, une autorité DHCP par le fait qu'_aucun autre serveur_ ne répond sur le segment, jamais par un timeout ni une capture « qui a l'air de marcher ».
-
-- **Le débogage comme cœur de l'apprentissage.** Le motif récurrent du **chemin de retour** - l'OFFER DHCP qui ne sait pas revenir (P2), la route par défaut qu'il faut injecter dans OSPF (P3), plus collision de Router-ID et asymétrie TFTP : des pièges qui ne se comprennent qu'en les résolvant.
-
-- **Nommer les limites de l'outil, jamais les cacher.** Le data plane CAPWAP n'étant pas simulé, contrôle (WLC, 4 APs `Online`) et données (AP autonome) sont prouvés séparément. C'est aussi ce qui justifie la clôture à P6.
-
-- **IA en supervision, pas en autorité** :  L'IA a été utilisée comme un outil d'apprentissage, de relecture et d'aide à la conception, sans jamais remplacer la compréhension des concepts réseau.  Elle m'a permis de clarifier la syntaxe Cisco, d'identifier des incohérences et de vérifier les configurations tout au long de la réalisation du laboratoire. 
+- **AI in supervision, not in authority**: AI was used as a tool for learning, review and design assistance, without ever replacing the understanding of networking concepts. It let me clarify Cisco syntax, identify inconsistencies and verify configurations throughout the build. 
 
 ## Documentation
 
-La documentation du laboratoire est structurée autour de ressources globales :
+The lab documentation is structured around global resources:
 
 - 🏷️ [IPAM](./IPAM.md)
 - 📘 [TECHNICAL_OVERVIEW](./TECHNICAL_OVERVIEW.md) 
 
-Chaque partie du laboratoire dispose ensuite de son propre espace documentaire contenant : 
+Each part of the lab then has its own documentary space containing: 
 
 - 📄 **README**
 - 🪜 **WORKFLOW** 
-- 🧪 **Fichier Cisco Packet Tracer (.pkt)**
+- 🧪 **Cisco Packet Tracer file (.pkt)**
 
 ```
 TheBigOffice - Packet Tracer Portfolio /
 │
-├── README.md               ← Vitrine : projet, compétences, périmètre, carte du dépôt
-├── TECHNICAL_OVERVIEW.md   ← Architecture, prod, décisions, apprentissages  
-├── IPAM.md                 ← Plan d'adressage, VLAN/zones, Router-IDs, autorité DHCP 
+├── README.md               ← Showcase: project, skills, scope, repo map
+├── TECHNICAL_OVERVIEW.md   ← Architecture, prod, decisions, learnings  
+├── IPAM.md                 ← Addressing plan, VLAN/zones, Router-IDs, DHCP authority 
 │
-├── P1/ … P6/               ← Une partie par dossier
-│   ├── README.md           ← Cadre : objectif, périmètre, compétences, matrice de validation   
-│   ├── WORKFLOW.md         ← reproduit : CLI annotée, validation par étape, 
-│   └── TBO-Part_X.pkt/     ← fichiers .pkt du lab
+├── P1/ … P6/               ← One part per folder
+│   ├── README.md           ← Frame: objective, scope, skills, validation matrix   
+│   ├── WORKFLOW.md         ← reproduced: annotated CLI, step-by-step validation, 
+│   └── TBO-Part_X.pkt/     ← lab .pkt files
 │ 
 ├── assets/
 │   ├── topologies/           ← topology_pX.svg + topology_global.svg
-│   ├── network-overview/     ← Captures topologie dans Packet Tracer : N0_pX.png
-│   └── captures/  P1/ … P6/  ← captures de preuve : Capture_PX_NN.png 
+│   ├── network-overview/     ← Topology captures in Packet Tracer: N0_pX.png
+│   └── captures/  P1/ … P6/  ← proof captures: Capture_PX_NN.png 
 └──
 ```
 
-Cette organisation permet de suivre l'ensemble du cycle de vie d'une implémentation réseau :
+This organization lets you follow the entire lifecycle of a network implementation:
 
-- 🏛️ Conception de l'architecture réseau 
-- 🧩 Segmentation et organisation logique du réseau
-- ⚙️ Configuration des équipements 
-- ✅ Validation du fonctionnement
-- 🔎 Diagnostic et résolution d'incidents
-- 📈 Analyse des limites de conception et amélioration de l'architecture
+- 🏛️ Network architecture design 
+- 🧩 Segmentation and logical organization of the network
+- ⚙️ Equipment configuration 
+- ✅ Operation validation
+- 🔎 Diagnosis and incident resolution
+- 📈 Analysis of design limits and architecture improvement
 
-## Plan initial
+## Initial plan
 
-Le plan initial incluait 11 parties avec d'avantages de sujets pour couvrir la majorité des objectifs de la CompTIA Network+ comme :  IPv6, monitoring, PKI/RADIUS, notions de cloud, simulation d'attaques. 
+The initial plan included 11 parts with more topics to cover the majority of the CompTIA Network+ objectives, such as: IPv6, monitoring, PKI/RADIUS, cloud notions, attack simulation. 
 
-Le projet s'arrête à la Partie 6 parce que **Packet Tracer devient le facteur limitant**. 
+The project stops at Part 6 because **Packet Tracer becomes the limiting factor**. 
 
-Au-delà d'un certain niveau, contourner les limites du simulateur (CAPWAP, VXLAN, iSCSI, SNAT…) coûte plus de temps que produire de la configuration représentative.
+Beyond a certain level, working around the simulator's limits (CAPWAP, VXLAN, iSCSI, SNAT…) costs more time than producing representative configuration.
 
-Excellent outil d'apprentissage, Packet Tracer reste un simulateur : il modélise les protocoles sans exécuter un vrai IOS. 
+An excellent learning tool, Packet Tracer remains a simulator: it models protocols without running a real IOS. 
 
-**La suite se fera peut-être sur GNS3 / Cisco CML**, ou un autre logiciel de virtualisation, qui émulent de vraies images IOS et permettent de tester réellement ce que Packet Tracer ne peut que représenter, tout en continuant de monter en compétence sur des outils professionnels.
+**The continuation will perhaps be on GNS3 / Cisco CML**, or another virtualization software, which emulate real IOS images and make it possible to actually test what Packet Tracer can only represent, while continuing to build skills on professional tools.
 
 ## 🏁 Conclusion
 
 
-L'objectif initial de l'apprentissage est largement dépassé. 
+The project went far beyond its original learning goal. 
 
-Au-delà de la théorie CompTIA Network+, ce projet a imposé une pratique de terrain : concevoir une architecture cohérente, la mettre en œuvre et, surtout, la déboguer. 
+Beyond CompTIA Network+ theory, this project demanded hands-on practice: designing a coherent architecture, implementing it and, above all, debugging it. 
 
-Le débogage a produit l'apprentissage le plus réel : boucles de routage, conflits d'adressage, asymétries TFTP et collisions de Router-ID ne s'apprennent pas dans un cours ; ils se comprennent en les résolvant. 
+Debugging produced the most real learning: routing loops, addressing conflicts, TFTP asymmetries and Router-ID collisions are not learned in a course; they are understood by solving them. 
 
-Le pari de l'apprentissage par la pratique a payé, et il dépasse la simple préparation à la certification obtenue à ce jour avec succès. 
+The bet on learning by doing paid off, and it goes beyond mere preparation for the certification I've since earned. 
