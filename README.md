@@ -1,3 +1,4 @@
+# Dunder MiffLAN · Network Portfolio
 ## 📓 Packet Tracer home lab for CompTIA Network+ (and beyond)
 
 This repository presents **Dunder MiffLAN**, a hands-on lab I built on my own to apply the skills covered by CompTIA Network+, while exploring more advanced concepts.
