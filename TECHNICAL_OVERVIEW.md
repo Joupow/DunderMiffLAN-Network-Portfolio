@@ -1,4 +1,4 @@
-# TheBigOffice: Technical overview
+# Dunder MiffLAN: Technical overview
 
 ## Contents
 

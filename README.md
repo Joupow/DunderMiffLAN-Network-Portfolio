@@ -1,7 +1,6 @@
-# TheBigOffice · Network Portfolio
 ## 📓 Packet Tracer home lab for CompTIA Network+ (and beyond)
 
-This repository presents **TheBigOffice**, a self-taught lab I built to put into practice the skills covered by **CompTIA Network+**, while exploring more advanced concepts. 
+This repository presents **Dunder MiffLAN**, a hands-on lab I built on my own to apply the skills covered by CompTIA Network+, while exploring more advanced concepts.
 
 This network lab simulates an enterprise infrastructure under Cisco Packet Tracer in six parts, built progressively, each building on and extending the last.
 
@@ -49,7 +48,7 @@ Each part of the lab then has its own documentary space containing:
 - 🧪 **Cisco Packet Tracer file (.pkt)**
 
 ```
-TheBigOffice - Packet Tracer Portfolio /
+Dunder MiffLAN - Packet Tracer Portfolio /
 │
 ├── README.md               ← Showcase: project, skills, scope, repo map
 ├── TECHNICAL_OVERVIEW.md   ← Architecture, prod, decisions, learnings  
@@ -58,7 +57,7 @@ TheBigOffice - Packet Tracer Portfolio /
 ├── P1/ … P6/               ← One part per folder
 │   ├── README.md           ← Frame: objective, scope, skills, validation matrix   
 │   ├── WORKFLOW.md         ← reproduced: annotated CLI, step-by-step validation, 
-│   └── TBO-Part_X.pkt/     ← lab .pkt files
+│   └── Part_X.pkt/         ← lab .pkt files
 │ 
 ├── assets/
 │   ├── topologies/           ← topology_pX.svg + topology_global.svg

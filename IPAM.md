@@ -1,4 +1,4 @@
-# TheBigOffice: IPAM
+# Dunder MiffLan: IPAM
 ## Contents
 
 - [IP addressing plan](#ip-addressing-plan)
@@ -23,20 +23,20 @@ The plan is **stable from P1 to P6**: each part *adds* a segment, none re-addres
 
 ## 1. VLAN plan / zones
 
-| Zone / VLAN                 | Subnet                      | Role                                          | Gateway                             |
-| --------------------------- | --------------------------- | --------------------------------------------- | ----------------------------------- |
-| VLAN 10: HR                 | `192.168.10.0/24`           | HR users                                      | `.1` (HSRP VIP: DIST-SW1 Active)    |
-| VLAN 20: IT                 | `192.168.20.0/24`           | IT users                                      | `.1` (HSRP VIP: DIST-SW2 Active)    |
-| VLAN 30: VOIP               | `192.168.30.0/24`           | IP telephony                                  | `.1` (HSRP VIP: DIST-SW1 Active)    |
-| VLAN 99: MGMT               | `192.168.99.0/24`           | Equipment administration                      | `.1` (HSRP VIP: DIST-SW2 Active)    |
-| VLAN 210: App DC            | `172.16.2.0/24`             | Application tier (APP-WEB1/2 + LB)            | `172.16.2.1` (DC-Leaf1 SVI)         |
-| VLAN 220: Data DC           | `172.16.3.0/24`             | Data tier (SAN)                               | `172.16.3.1` (DC-Leaf2 SVI)         |
-| VLAN 300: Wi-Fi mgmt        | `192.168.100.0/24`          | Wi-Fi management (WLC + LAP)                  | `.1` (HSRPv2 VIP: DIST-SW1 Active)  |
-| VLAN 301: Corp              | (no IP on the wire in PT)   | SSID `TheBigOffice-Corp`                      | ⚠️ defined, not carried in PT       |
-| VLAN 310: Guest             | (no IP on the wire in PT)   | SSID `TheBigOffice-Guest`                     | ⚠️ defined, not carried in PT       |
-| DMZ zone                    | `172.16.0.0/24`             | Exposed servers (WEB-PUBLIC, PROXY)           | `172.16.0.1` (ASA dmz)              |
-| VLAN 998: QUARANTINE        | -                           | Unused ports isolated + `shutdown`            | -                                   |
-| VLAN 999: NATIVE_BLACKHOLE  | -                           | Native VLAN of all trunks: untagged dropped   | -                                   |
+| Zone / VLAN                | Subnet                    | Role                                        | Gateway                            |
+| -------------------------- | ------------------------- | ------------------------------------------- | ---------------------------------- |
+| VLAN 10: HR                | `192.168.10.0/24`         | HR users                                    | `.1` (HSRP VIP: DIST-SW1 Active)   |
+| VLAN 20: IT                | `192.168.20.0/24`         | IT users                                    | `.1` (HSRP VIP: DIST-SW2 Active)   |
+| VLAN 30: VOIP              | `192.168.30.0/24`         | IP telephony                                | `.1` (HSRP VIP: DIST-SW1 Active)   |
+| VLAN 99: MGMT              | `192.168.99.0/24`         | Equipment administration                    | `.1` (HSRP VIP: DIST-SW2 Active)   |
+| VLAN 210: App DC           | `172.16.2.0/24`           | Application tier (APP-WEB1/2 + LB)          | `172.16.2.1` (DC-Leaf1 SVI)        |
+| VLAN 220: Data DC          | `172.16.3.0/24`           | Data tier (SAN)                             | `172.16.3.1` (DC-Leaf2 SVI)        |
+| VLAN 300: Wi-Fi mgmt       | `192.168.100.0/24`        | Wi-Fi management (WLC + LAP)                | `.1` (HSRPv2 VIP: DIST-SW1 Active) |
+| VLAN 301: Corp             | (no IP on the wire in PT) | SSID `DunderWiflin-Corp`                    | ⚠️ defined, not carried in PT      |
+| VLAN 310: Guest            | (no IP on the wire in PT) | SSID `DunderWiflin-Guest`                   | ⚠️ defined, not carried in PT      |
+| DMZ zone                   | `172.16.0.0/24`           | Exposed servers (WEB-PUBLIC, PROXY)         | `172.16.0.1` (ASA dmz)             |
+| VLAN 998: QUARANTINE       | -                         | Unused ports isolated + `shutdown`          | -                                  |
+| VLAN 999: NATIVE_BLACKHOLE | -                         | Native VLAN of all trunks: untagged dropped | -                                  |
 
 > `172.16.1.0/24` stays free between the DMZ (`.0`) and the DC (`.2`/`.3`): expansion reserve, unallocated.
 
