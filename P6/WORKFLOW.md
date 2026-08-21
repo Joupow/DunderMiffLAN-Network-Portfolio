@@ -46,15 +46,15 @@ PT diagram: wireless – WLC + LWAP, VLAN 300
 
 ## <a id="niveaux--équipements"></a>Tiers & equipment
 
-| Role                      | Equipment                             | Role in this part                                                                                    |
-| ------------------------- | ------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Wi-Fi controller          | **Generic WLC** - *new*               | Registers the 4 LAPs over CAPWAP, broadcasts Corp/Guest. Mgmt `.200`. **100% GUI** config.           |
-| Distribution (host)       | **DIST-SW1** (3560)                   | WLC on `Fa0/5` (300). SVI 300 Active + root. `VLAN300` DHCP pool. **VLAN 30 unchanged.**             |
-| Distribution (redundancy) | **DIST-SW2** (3560)                   | SVI 300 Standby. **Otherwise unchanged.**                                                            |
-| Access (APs)              | **ACC-SW1 → ACC-SW4**                 | `Fa0/7` = LAP (300 + hardening). `Fa0/6` (SW1) = autonomous AP. `Fa0/5` = **P5 voice phone, untouched.** |
-| Lightweight APs           | **4× LAP** (3702i-class): *new*       | CAPWAP to the WLC `.200`. Leases `.10-.13`.                                                          |
-| Autonomous AP             | **Access Point0** (AP-PT): *new*      | `TheBigOffice-Corp-Auto`, 2.4 GHz ch.6, WPA2-PSK. **Only working client data plane in PT.**          |
-| Test client               | **Laptop0** (WPC300N, 2.4 GHz)        | DHCP `.14`, proves Wi-Fi → wired.                                                                    |
+| Role                      | Equipment                        | Role in this part                                                                                        |
+| ------------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Wi-Fi controller          | **Generic WLC** - *new*          | Registers the 4 LAPs over CAPWAP, broadcasts Corp/Guest. Mgmt `.200`. **100% GUI** config.               |
+| Distribution (host)       | **DIST-SW1** (3560)              | WLC on `Fa0/5` (300). SVI 300 Active + root. `VLAN300` DHCP pool. **VLAN 30 unchanged.**                 |
+| Distribution (redundancy) | **DIST-SW2** (3560)              | SVI 300 Standby. **Otherwise unchanged.**                                                                |
+| Access (APs)              | **ACC-SW1 → ACC-SW4**            | `Fa0/7` = LAP (300 + hardening). `Fa0/6` (SW1) = autonomous AP. `Fa0/5` = **P5 voice phone, untouched.** |
+| Lightweight APs           | **4× LAP** (3702i-class): *new*  | CAPWAP to the WLC `.200`. Leases `.10-.13`.                                                              |
+| Autonomous AP             | **Access Point0** (AP-PT): *new* | `DunderWifLIN-Corp-Auto`, 2.4 GHz ch.6, WPA2-PSK. **Only working client data plane in PT.**              |
+| Test client               | **Laptop0** (WPC300N, 2.4 GHz)   | DHCP `.14`, proves Wi-Fi → wired.                                                                        |
 
 The whole P1/P2 campus, the P3 perimeter, the P4 datacenter and the P5 voice are **unchanged**: P6 only adds VLANs 300/301/310, the WLC, the APs and the client.
 
@@ -303,13 +303,13 @@ WLC GUI → Management: IPv4 `192.168.100.200` / GW `192.168.100.1`.
 
 GUI → Config → GLOBAL → Wireless LANs → New:
 
-| | Corp | Guest |
-|---|---|---|
-| SSID | `TheBigOffice-Corp` | `TheBigOffice-Guest` |
-| VLAN | 301 | 310 |
-| Auth | WPA2-PSK | WPA2-PSK |
-| Encryption | AES | AES |
-| Switching | **Local** | **Local** |
+| | Corp                | Guest                |
+| ---------- | ------------------- | -------------------- |
+| SSID | `DunderWifLIN-Corp` | `DunderWifLIN-Guest` |
+| VLAN | 301                 | 310                  |
+| Auth | WPA2-PSK            | WPA2-PSK             |
+| Encryption | AES                 | AES                  |
+| Switching | **Local**           | **Local**            |
 
 > **Central switching breaks in PT:** correct prod mode, but in PT it makes VLAN 301 get injected through the WLC's access port and the SSID stops broadcasting (L7).
 
@@ -353,7 +353,7 @@ On each LAP: Config → GLOBAL → Settings → DHCP enabled; WLC → Primary Co
 
 **Intent:** bring up the autonomous AP (direct bridge) on `ACC-SW1 Fa0/6` (access 300 + hardening like Step 9).
 
-GUI → Config → INTERFACE → Port 1 (radio): SSID `TheBigOffice-Corp-Auto` · **2.4 GHz Channel = 6** · WPA2-PSK/AES.
+GUI → Config → INTERFACE → Port 1 (radio): SSID `DunderWifLIN-Corp-Auto` · **2.4 GHz Channel = 6** · WPA2-PSK/AES.
 
 > ⚠️ **Don't confuse the channel with "Coverage Range = 36.00"** (incident I-2). Non-overlapping = 1/6/11.
 >
@@ -369,7 +369,7 @@ GUI → Config → INTERFACE → Port 1 (radio): SSID `TheBigOffice-Corp-Auto` �
 
 ### <a id="step-11--validation-client"></a>Step 11: Client validation (end-to-end)
 
-**Intent:** associate Laptop0 to `TheBigOffice-Corp-Auto` and prove Wi-Fi → wired.
+**Intent:** associate Laptop0 to `DunderWifLIN-Corp-Auto` and prove Wi-Fi → wired.
 
 > **Deviation DV2:** DHCP **worked** for the laptop (`.14`): the static IP `.250` wasn't needed. The autonomous AP path is a direct bridge (no CAPWAP tunnel), so DHCP goes through. The APIPA limitation (L6) applies only to the lightweight path.
 
@@ -528,15 +528,15 @@ show ip route                      ping 192.168.100.200            ping 192.168.
 
 ![Capture P6-16](../assets/captures/P6/Capture_P6_16.png)
 
-**<a id="p-18"></a> [P-18] · CAPWAP + SSID**: WLC default-group: **4 LAPs `Online`** (`.10-.13`), WLANs `TheBigOffice-Corp` (301) + `-Guest` (310)
+**<a id="p-18"></a> [P-18] · CAPWAP + SSID**: WLC default-group: **4 LAPs `Online`** (`.10-.13`), WLANs `DunderWifLIN-Corp` (301) + `-Guest` (310)
 
 ![Capture P6-15](../assets/captures/P6/Capture_P6_15.png)
 
-**<a id="p-18b"></a> [P-18b] · SSID broadcast on the client side**: Linksys `Connect`: `TheBigOffice-Corp` visible, WPA2-PSK. ⚠️ Proves the **LAPs broadcast** (control plane), **not** the data-plane association (see [P-19]/[P-20])
+**<a id="p-18b"></a> [P-18b] · SSID broadcast on the client side**: Linksys `Connect`: `DunderWifLIN-Corp` visible, WPA2-PSK. ⚠️ Proves the **LAPs broadcast** (control plane), **not** the data-plane association (see [P-19]/[P-20])
 
 ![Capture P6-05](../assets/captures/P6/Capture_P6_05.png)
 
-**<a id="p-19"></a> [P-19] · Autonomous AP (radio, fixed I-2)**: Config Port 1: SSID `TheBigOffice-Corp-Auto`, **2.4 GHz channel 6**, WPA2-PSK/AES
+**<a id="p-19"></a> [P-19] · Autonomous AP (radio, fixed I-2)**: Config Port 1: SSID `DunderWifLIN-Corp-Auto`, **2.4 GHz channel 6**, WPA2-PSK/AES
 
 ![Capture P6-01](../assets/captures/P6/Capture_P6_01.png)
 
