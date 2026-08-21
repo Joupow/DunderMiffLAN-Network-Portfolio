@@ -41,7 +41,7 @@ Three levels of documentation, with **one canonical home per content type**.
 | Consolidated production gaps                        | **this overview**: [Production gaps](#production-gaps)                              |
 
 
-## What a reviewer will challenge
+## What a reviewer could challenge
 
 **"Why Packet Tracer?"**
 
