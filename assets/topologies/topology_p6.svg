@@ -42,7 +42,7 @@
 </style>
 <rect y="3" class="st0" width="1180" height="740"/>
 <line class="st1" x1="280" y1="154" x2="265" y2="230"/>
-<rect y="0" class="st2" width="1180" height="46"/>
+<rect class="st2" width="1180" height="46"/>
 <text transform="matrix(1 0 0 1 26 30)" class="st0 st3 st4">P6 | Design intent</text>
 <path class="st5" d="M208,96h214c4.4,0,8,3.6,8,8v48c0,4.4-3.6,8-8,8H208c-4.4,0-8-3.6-8-8v-48C200,99.6,203.6,96,208,96z"/>
 <text transform="matrix(1 0 0 1 267.4053 120)" class="st0 st3 st6">DIST-SW1 3560</text>
@@ -115,7 +115,7 @@
 <text transform="matrix(1 0 0 1 495.7603 388)" class="st14 st15 st11">Fa0/6 (only working client data plane)</text>
 <path class="st28" d="M128,572h704c4.4,0,8,3,8,6.7v120.9c0,3.7-3.6,6.7-8,6.7H128c-4.4,0-8-3-8-6.7V578.7
 	C120,575,123.6,572,128,572z"/>
-<text transform="matrix(1 0 0 1 134 593)" class="st29 st3 st30">Design intent — enterprise Wi-Fi: WLC, CAPWAP, SSID/VLAN, HSRPv2</text>
+<text transform="matrix(1 0 0 1 134 593)" class="st29 st3 st30">Design intent | enterprise Wi-Fi: WLC, CAPWAP, SSID/VLAN, HSRPv2</text>
 <text transform="matrix(1 0 0 1 134 613)" class="st14 st8 st21">• Accepted hybrid architecture: control proven by the WLC (4 APs Online) · client data via an autonomous AP</text>
 <text transform="matrix(1 0 0 1 134 629)" class="st14 st8 st21">• VLAN 300 (Wi-Fi management): HSRPv2 active = DIST-SW1 (canonical) · standby = DIST-SW2 · VIP 192.168.100.1</text>
 <text transform="matrix(1 0 0 1 134 645)" class="st14 st8 st21">• SSID 301 Corp / 310 Guest · WPA2/AES · DHCP VLAN 300 on DIST-SW1 (.10-.50), WLC DHCP disabled</text>
