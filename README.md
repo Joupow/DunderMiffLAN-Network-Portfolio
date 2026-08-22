@@ -52,18 +52,20 @@ Each part of the lab then has its own documentary space containing:
 Dunder MiffLAN - Packet Tracer Portfolio /
 │
 ├── README.md               ← Showcase: project, skills, scope, repo map
-├── TECHNICAL_OVERVIEW.md   ← Architecture, prod, decisions, learnings  
-├── IPAM.md                 ← Addressing plan, VLAN/zones, Router-IDs, DHCP authority 
+├── TECHNICAL_OVERVIEW.md   ← Architecture, prod, decisions, learnings
+├── IPAM.md                 ← Addressing plan, VLAN/zones, Router-IDs, DHCP authority
+├── ABOUT_DUNDER_MIFFLAN.md ← Context: the fictional company, why the name, its limits
 │
 ├── P1/ … P6/               ← One part per folder
-│   ├── README.md           ← Frame: objective, scope, skills, validation matrix   
-│   ├── WORKFLOW.md         ← reproduced: annotated CLI, step-by-step validation, 
-│   └── Part_X.pkt/         ← lab .pkt files
-│ 
+│   ├── README.md           ← Frame: objective, scope, skills, validation matrix
+│   ├── WORKFLOW.md         ← reproduced: annotated CLI, step-by-step validation
+│   └── Part_X.pkt          ← lab .pkt file
+│
 ├── assets/
-│   ├── topologies/           ← topology_pX.svg + topology_global.svg
-│   ├── network-overview/     ← Topology captures in Packet Tracer: N0_pX.png
-│   └── captures/  P1/ … P6/  ← validation screenshots: Capture_PX_NN.png 
+│   ├── topologies/         ← topology_pX.svg + topology_global.svg
+│   ├── network-overview/   ← Topology captures in Packet Tracer: N0_pX.png
+│   ├── captures/  P1/ … P6/← validation screenshots: Capture_PX_NN.png
+│   └── branding/           ← identity assets, kept off the technical path
 └──
 ```
 
