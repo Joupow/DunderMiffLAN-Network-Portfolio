@@ -1,7 +1,7 @@
 ![DM_Logo](./assets/branding/Dunder_MiffLAN_Highlight.jpg)
 # 🎬 About Dunder MiffLAN
 
-## 🏢 Why this name?
+## ✏️ Why this name?
 
 **Dunder MiffLAN** is a fictional company inspired by *The Office* (*Dunder Mifflin*), reframed through the lens of network infrastructure.
 
@@ -28,7 +28,7 @@ That readability makes it a clean abstraction for a lab, where every technical b
 
 The point is not to model a real company, but to create a context where technical decisions have a **meaning you can actually explain**.
 
-## ⚙️ The contrast: an ordinary office on a not-so-ordinary network
+## ✨ The contrast: an ordinary office on a not-so-ordinary network
 
 Where *Dunder Mifflin* is just an office, *Dunder MiffLAN* exposes the infrastructure that could sit beneath it. What starts as a corporate LAN gradually brings in:
 
@@ -43,7 +43,7 @@ The contrast is the whole idea: **a plain-looking office can rest on a surprisin
 
 That is where the name lands, Dunder MiffLAN is the fictional company seen from the network engineer's seat.
 
-## 🚧 An honest limit: still a skin, for now
+## 🎨 An honest limit: still a skin, for now
 
 At this stage the Dunder MiffLAN identity is deliberately a **light narrative layer**. 
 
